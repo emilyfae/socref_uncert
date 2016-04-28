@@ -1,0 +1,86 @@
+---
+title: "Social Referencing and Uncertainty"
+author: "Emily & Mike"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    number_sections: true
+---
+
+<style type="text/css">
+body, td {
+   font-size: 14px;
+}
+code {
+  font-size: 11px;
+}
+pre {
+  font-size: 11px;
+}
+</style>
+
+Data analysis of social referencing and uncertainty study.
+
+# Data preprocessing
+
+Preliminaries.
+
+```{r echo=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(fig.width=8, fig.height=5, 
+                      echo=TRUE, warning=FALSE, message=FALSE, cache=TRUE)
+suppressPackageStartupMessages(c("dplyr","langcog","tidyr","ggplot2","lme4"))
+library(langcog)
+library(dplyr)
+library(ggplot2)
+library(rjson)
+library(stringr)
+library(tidyr)
+theme_set(theme_bw())
+```
+
+Read in files and consolidate to the same directory. 
+
+```{r}
+files <- dir("../datavyu/data/")
+d.raw <- data.frame()
+
+for (f in files) {
+  jf <- paste("../datavyu/data/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   social_ref = as.numeric(jd$reference.0_1))
+  d.raw <- bind_rows(d.raw, id)
+}
+
+d.raw$SID <- str_replace(d.raw$SID, ".csv", "")
+
+
+```
+
+```{r}
+demo <- read.csv("soc_ref_uncertainty_EH_demo2016.csv") 
+demo$age_years <- round(demo$age, 0)
+
+d <- left_join(d.raw, demo) %>%
+  select(SID, phase, social_ref, age_years) %>%
+  group_by(SID, phase, age_years)	%>%
+	summarise(social_ref = mean(social_ref)) 
+  
+
+```
+
+```{r}
+#plot probability of reference by phase
+qplot(phase, social_ref, data=d, geom = "line", color = age_years,
+  main="Time Course of Social Referencing", 
+  xlab="Phase", 
+  ylab="Probability of Reference") +
+  ylim(0,1) 
+```
+
+# Basic analyses
+
+
