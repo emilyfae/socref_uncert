@@ -89,8 +89,7 @@ Plot probability of reference by phase
 
 qplot(phase, phase_length, data = d, facets = age_years ~ trial_type)
 
-qplot(phase, social_ref, data = ds)
-
+ggplot(ds, aes(phase, social_ref)) + geom_smooth() + facet_grid(.~trial_type)
 
 
 ```
