@@ -73,16 +73,14 @@ trial_info <- read.csv("trial_info.csv")
 
 
 ```{r}
-dc <- left_join(d.raw, demo) 
-
-d <- dc %>%
+d <- left_join(d.raw, demo) %>%
   select(SID, phase, social_ref, age_years, line, Condition, phase_onset, phase_offset) %>%
   mutate(phase_length = phase_offset - phase_onset) %>%
-  left_join(trial_info, by = c("Condition","line")) %>%
-  group_by(SID, phase, age_years, trial_type, phase_length)	%>%
-	summarise(social_ref = mean(social_ref)) 
+  left_join(trial_info, by = c("Condition","line")) 
 
-
+ds <- d %>%
+  group_by(SID, phase, trial_type)	%>%
+	summarise(social_ref = mean(social_ref))
 
 ```
 
@@ -91,7 +89,9 @@ Plot probability of reference by phase
 
 qplot(phase, phase_length, data = d, facets = age_years ~ trial_type)
 
-qplot(phase, social_ref, data = d, color = trial_type) 
+qplot(phase, social_ref, data = ds)
+
+
 
 ```
 
