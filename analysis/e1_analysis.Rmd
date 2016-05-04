@@ -52,7 +52,9 @@ for (f in files) {
   id <- data.frame(SID = f,
                    line = jd$phase.ordinal,
                    phase = as.numeric(jd$phase.1_2_3_4),
-                   social_ref = as.numeric(jd$reference.0_1))
+                   social_ref = as.numeric(jd$reference.0_1),
+                   phase_onset = jd$phase.onset,
+                   phase_offset = jd$phase.offset)
   d.raw <- bind_rows(d.raw, id)
 }
 
@@ -74,16 +76,22 @@ trial_info <- read.csv("trial_info.csv")
 dc <- left_join(d.raw, demo) 
 
 d <- dc %>%
-  select(SID, phase, social_ref, age_years, line, Condition) %>%
+  select(SID, phase, social_ref, age_years, line, Condition, phase_onset, phase_offset) %>%
+  mutate(phase_length = phase_offset - phase_onset) %>%
   left_join(trial_info, by = c("Condition","line")) %>%
-  group_by(SID, phase, age_years, trial_type)	%>%
+  group_by(SID, phase, age_years, trial_type, phase_length)	%>%
 	summarise(social_ref = mean(social_ref)) 
+
+
+
 ```
 
 Plot probability of reference by phase
 ```{r}
 
-qplot(phase, social_ref, data = d, geom = "line", color = trial_type) 
+qplot(phase, phase_length, data = d, facets = age_years ~ trial_type)
+
+qplot(phase, social_ref, data = d, color = trial_type) 
 
 ```
 
