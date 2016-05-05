@@ -76,11 +76,11 @@ trial_info <- read.csv("trial_info.csv")
 d <- left_join(d.raw, demo) %>%
   select(SID, phase, social_ref, age_years, line, Condition, phase_onset, phase_offset) %>%
   mutate(phase_length = phase_offset - phase_onset) %>%
-  left_join(trial_info, by = c("Condition","line")) 
+  left_join(trial_info, by = c("Condition","line")) %>%
+  mutate(phase_name = factor(phase, levels = 1:4, 
+                             labels = c("label-request","request-slide",
+                                        "slide-touch","touch-response"))) 
 
-ds <- d %>%
-  group_by(SID, phase, trial_type)	%>%
-	summarise(social_ref = mean(social_ref))
 
 ```
 
@@ -91,9 +91,79 @@ qplot(phase, phase_length, data = d, facets = age_years ~ trial_type)
 
 ggplot(ds, aes(phase, social_ref)) + geom_smooth() + facet_grid(.~trial_type)
 
+```
+
+
+```{r}
+ds <- d %>%
+  select(SID, phase, social_ref, trial_type) %>%
+  separate(col = "trial_type", into = c("num_objs","familiarity"), sep = "_") 
+```
+
+```{r}
+mss <- ds %>%
+  group_by(SID, phase_name, num_objs, familiarity) %>%
+  summarise(social_ref = mean(social_ref))
+
+ms <- ds %>%
+  group_by(phase_name, familiarity, num_objs) %>%
+  multi_boot_standard(col = "social_ref") 
+
+ggplot(mss, aes(x = phase_name, y = social_ref, 
+               col = familiarity, group = familiarity)) + 
+  geom_jitter(width = .3, height = .05) +
+  geom_line(data = ms, aes(y = mean)) + 
+  geom_pointrange(data = ms, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(.~num_objs) + 
+  ylim(c(0,1)) + 
+  xlab("") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 
 ```
 
+get phase lengths and redo plot to include. 
+
+```{r}
+phase_lengths <- d %>% 
+  group_by(phase_name) %>% 
+  summarise(phase_length = mean(phase_length)) %>%
+  mutate(time = cumsum(phase_length),
+         middle_time = time - phase_length/2, 
+         middle_time_s = middle_time / 1000)
+
+ms <- left_join(ms, phase_lengths)
+mss <- left_join(mss, phase_lengths)
+
+ggplot(mss, aes(x = middle_time_s, y = social_ref, 
+               col = familiarity, group = familiarity)) + 
+  geom_jitter(width = .4, height = .05) +
+  geom_line(data = ms, aes(y = mean)) + 
+  geom_pointrange(data = ms, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(.~num_objs) + 
+  ylim(c(0,1)) + 
+  xlim(c(0, 9)) + 
+  xlab("Time (s)") + 
+  ylab("Probability of social referencing") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+```
+
+```
+
+
+```{r}
+
+ggplot(ds, aes(x = phase, y = social_ref, 
+               col = trial_type, group = trial_type)) + 
+  geom_jitter(width = .3, height = .05) +
+  geom_smooth(se=FALSE) + 
+  facet_grid(.~trial_type) + 
+  ylim(c(0,1))
+
+```
 # Basic analyses
 
 
