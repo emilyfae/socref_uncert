@@ -37,6 +37,8 @@ library(ggplot2)
 library(rjson)
 library(stringr)
 library(tidyr)
+library(lme4)
+library(xtable)
 theme_set(theme_bw())
 ```
 
@@ -62,7 +64,7 @@ d.raw$SID <- str_replace(d.raw$SID, ".csv", "")
 
 ```
 
-Read in trial info and demographics and join with raw data.
+Read in trial info and demographics. 
 
 ```{r}
 demo <- read.csv("../soc_ref_uncertainty_EH_demo2016.csv") 
@@ -71,6 +73,7 @@ demo$age_years <- round(demo$age, 0)
 trial_info <- read.csv("trial_info.csv")
 ```
 
+Join trial info and demographics with raw data.
 
 ```{r}
 d <- left_join(d.raw, demo) %>%
@@ -84,29 +87,23 @@ d <- left_join(d.raw, demo) %>%
 
 ```
 
-Plot probability of reference by phase
-```{r}
-
-qplot(phase, phase_length, data = d, facets = age_years ~ trial_type)
-
-ggplot(ds, aes(phase, social_ref)) + geom_smooth() + facet_grid(.~trial_type)
-
-```
-
+Create tidy data "ds".
 
 ```{r}
 ds <- d %>%
-  select(SID, phase, social_ref, trial_type) %>%
+  select(SID, phase, social_ref, trial_type, phase_name, age_years) %>%
   separate(col = "trial_type", into = c("num_objs","familiarity"), sep = "_") 
 ```
 
+Plot social referencing by familiarity and # items.
+
 ```{r}
 mss <- ds %>%
-  group_by(SID, phase_name, num_objs, familiarity) %>%
+  group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(social_ref = mean(social_ref))
 
 ms <- ds %>%
-  group_by(phase_name, familiarity, num_objs) %>%
+  group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "social_ref") 
 
 ggplot(mss, aes(x = phase_name, y = social_ref, 
@@ -116,14 +113,14 @@ ggplot(mss, aes(x = phase_name, y = social_ref,
   geom_pointrange(data = ms, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
-  facet_grid(.~num_objs) + 
+  facet_grid(age_years ~ num_objs) + 
   ylim(c(0,1)) + 
   xlab("") + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 
 ```
 
-get phase lengths and redo plot to include. 
+Get phase lengths and redo plot to include. 
 
 ```{r}
 phase_lengths <- d %>% 
@@ -151,19 +148,19 @@ ggplot(mss, aes(x = middle_time_s, y = social_ref,
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
-```
-
-
+#Basic analyses
 ```{r}
+lm <- glmer(social_ref ~ num_objs * familiarity * phase_name * age_years +
+              (1|SID),
+              data = ds, 
+              family = "binomial")
+              
+glmer_table <- xtable(coef(summary(lm)), caption = "Fixed-effect coefficients for logistic mixed effects model predicting social referencing in Experiment 1.") 
 
-ggplot(ds, aes(x = phase, y = social_ref, 
-               col = trial_type, group = trial_type)) + 
-  geom_jitter(width = .3, height = .05) +
-  geom_smooth(se=FALSE) + 
-  facet_grid(.~trial_type) + 
-  ylim(c(0,1))
-
+glmer_table
 ```
-# Basic analyses
+
+
+
 
 
