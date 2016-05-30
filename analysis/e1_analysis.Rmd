@@ -39,6 +39,8 @@ library(stringr)
 library(tidyr)
 library(lme4)
 library(xtable)
+library(knitr)
+library(markdown)
 theme_set(theme_bw())
 ```
 
@@ -56,7 +58,9 @@ for (f in files) {
                    phase = as.numeric(jd$phase.1_2_3_4),
                    social_ref = as.numeric(jd$reference.0_1),
                    phase_onset = jd$phase.onset,
-                   phase_offset = jd$phase.offset)
+                   phase_offset = jd$phase.offset, 
+                   num_looks = jd$reference.num_looks,
+                   exclude = jd$reference.exclude.)
   d.raw <- bind_rows(d.raw, id)
 }
 
@@ -68,7 +72,11 @@ Read in trial info and demographics.
 
 ```{r}
 demo <- read.csv("../soc_ref_uncertainty_EH_demo2016.csv") 
-demo$age_years <- round(demo$age, 0)
+demo$age <- str_replace(demo$age, "n/a", "")
+demo$age <- str_replace(demo$age, "N/A", "")
+demo$age <- as.numeric(demo$age)
+demo$age_years <- trunc(demo$age, digits = 0)
+demo$age_months <- demo$age*12
 
 trial_info <- read.csv("trial_info.csv")
 ```
@@ -77,34 +85,44 @@ Join trial info and demographics with raw data.
 
 ```{r}
 d <- left_join(d.raw, demo) %>%
-  select(SID, phase, social_ref, age_years, line, Condition, phase_onset, phase_offset) %>%
+  select(SID, phase, social_ref, num_looks, exclude, age_years, age_months, gender, line, Condition, phase_onset, phase_offset) %>%
   mutate(phase_length = phase_offset - phase_onset) %>%
-  left_join(trial_info, by = c("Condition","line")) %>%
-  mutate(phase_name = factor(phase, levels = 1:4, 
-                             labels = c("label-request","request-slide",
-                                        "slide-touch","touch-response"))) 
-
+  left_join(trial_info, by = c("Condition","line"))
 
 ```
 
-Create tidy data "ds".
+Create data set collapsed across phases 2 and 3
 
 ```{r}
-ds <- d %>%
-  select(SID, phase, social_ref, trial_type, phase_name, age_years) %>%
-  separate(col = "trial_type", into = c("num_objs","familiarity"), sep = "_") 
+dc <- d %>%
+  select(SID, trial, social_ref, num_looks, exclude, phase_name, familiarity, num_objs, age_months, age_years) %>%
+  spread(phase_name, social_ref) %>%
+  mutate(request_touch = pmax(request_slide, slide_touch))%>%
+  group_by(SID, trial)%>%
+  select(SID, trial, familiarity, num_objs, age_months, age_years, label_request, request_touch, touch_response, num_looks, exclude)%>%
+  gather("phase_name", "social_ref", label_request:touch_response)%>%
+  left_join(dc_phase, by = c("SID", "trial", "phase_name"))
 ```
 
-Plot social referencing by familiarity and # items.
+Plot social referencing by familiarity and # items with 4 time bins.
 
 ```{r}
-mss <- ds %>%
+mss <- d %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(social_ref = mean(social_ref))
 
-ms <- ds %>%
+ms <- d %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "social_ref") 
+
+msslooks <- d %>%
+  group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
+  summarise(num_looks = mean(num_looks))
+
+mslooks <- d %>%
+  group_by(phase_name, familiarity, num_objs, age_years) %>%
+  multi_boot_standard(col = "num_looks") 
+
 
 ggplot(mss, aes(x = phase_name, y = social_ref, 
                col = familiarity, group = familiarity)) + 
@@ -118,9 +136,21 @@ ggplot(mss, aes(x = phase_name, y = social_ref,
   xlab("") + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 
+ggplot(msslooks, aes(x = phase_name, y = num_looks, 
+               col = familiarity, group = familiarity)) + 
+  geom_jitter(width = .3, height = .05) +
+  geom_line(data = mslooks, aes(y = mean)) + 
+  geom_pointrange(data = mslooks, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ num_objs) + 
+  ylim(c(0,5)) + 
+  xlab("") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
 ```
 
-Get phase lengths and redo plot to include. 
+Get phase lengths and plot to include. 
 
 ```{r}
 phase_lengths <- d %>% 
@@ -148,19 +178,92 @@ ggplot(mss, aes(x = middle_time_s, y = social_ref,
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
-#Basic analyses
-```{r}
-lm <- glmer(social_ref ~ num_objs * familiarity * phase_name * age_years +
-              (1|SID),
-              data = ds, 
-              family = "binomial")
-              
-glmer_table <- xtable(coef(summary(lm)), caption = "Fixed-effect coefficients for logistic mixed effects model predicting social referencing in Experiment 1.") 
+Plot average phase lengths.
 
-glmer_table
+```{r}
+phase_lengths <- d %>% 
+  group_by(phase_name) %>% 
+  multi_boot_standard(col = "phase_length")
+
+ggplot(phase_lengths, aes(x = phase_name, y = mean)) + 
+  geom_bar(stat="identity") + 
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
+             position = position_dodge(width = .9))+
+  xlab("Phase") + 
+  ylab("Phase Length (ms)") 
+
+
+phase_lengths_dc <- dc %>% 
+  group_by(phase_name) %>% 
+  multi_boot_standard(col = "phase_length")
+
+ggplot(phase_lengths_dc, aes(x = phase_name, y = mean)) + 
+  geom_bar(stat="identity") + 
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
+             position = position_dodge(width = .9))+
+  xlab("Phase") + 
+  ylab("Phase Length (ms)") 
+
 ```
 
+#Planned analyses
 
+Separate mixed-effects logistic regression models for 3 phases.
 
+Label-Request phase
+```{r label, results="asis"}
+lm <- glmer(social_ref ~ num_objs * familiarity * age_months +
+              (1|SID),
+              data = filter(dc,phase_name == "label_request"), 
+              family = "binomial")
+
+tab <- kable(coef(summary(lm)), caption = "Mixed effects logistic regression model predicting social referencing")
+print(tab, type="html")
+```
+
+Request-Touch phase
+```{r label, results="asis"}
+lm <- glmer(social_ref ~ num_objs * familiarity * age_months +
+              (1|SID),
+              data = filter(dc,phase_name == "request_touch"), 
+              family = "binomial")
+
+tab <- kable(coef(summary(lm)), caption = "Mixed effects logistic regression model predicting social referencing")
+print(tab, type="html")
+```
+
+Touch-Response phase
+```{r label, results="asis"}
+lm <- glmer(social_ref ~ num_objs * familiarity * age_months +
+              (1|SID),
+              data = filter(dc,phase_name == "touch_response"), 
+              family = "binomial")
+
+tab <- kable(coef(summary(lm)), caption = "Mixed effects logistic regression model predicting social referencing")
+print(tab, type="html")
+```
+
+Omnibus model. Confirmitory plan is to look for 4-way interaction between number of ojects (1 vs 2), familiarity (novel vs familiar), phase (label vs request vs response). Study may be underpowered to detect 4-way interaction.
+
+```{r omnibus, results="asis"}
+lm <- glmer(social_ref ~ num_objs * familiarity * phase_name * age_months +
+              (1|SID),
+              data = dc, 
+              family = "binomial")
+
+tab <- kable(coef(summary(lm)), caption = "Mixed effects logistic regression model predicting social referencing")
+print(tab, type="html")
+```
+
+Linear mixed effects regression predicting number of looks.
+
+```{r lmer, results="asis"}
+lm <- lmer(num_looks ~ num_objs * familiarity * phase_name * age_months +
+              (1|SID),
+              data = dc)
+
+tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
+print(tab, type="html")
+```
 
 
