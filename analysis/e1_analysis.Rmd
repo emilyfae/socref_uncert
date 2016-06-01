@@ -56,7 +56,6 @@ for (f in files) {
   id <- data.frame(SID = f,
                    line = jd$phase.ordinal,
                    phase = as.numeric(jd$phase.1_2_3_4),
-                   social_ref = as.numeric(jd$reference.0_1),
                    phase_onset = jd$phase.onset,
                    phase_offset = jd$phase.offset, 
                    num_looks = jd$reference.num_looks,
@@ -85,16 +84,14 @@ Join trial info and demographics with raw data.
 
 ```{r}
 d <- left_join(d.raw, demo) %>%
-  select(SID, phase, social_ref, num_looks, exclude, age_years, age_months, gender, line, Condition, phase_onset, phase_offset) %>%
+  select(SID, phase, num_looks, exclude, age_years, age_months, gender, line, Condition, phase_onset, phase_offset) %>%
   mutate(phase_length = phase_offset - phase_onset) %>%
+  mutate(social_ref = as.numeric(num_looks>0))%>%
   left_join(trial_info, by = c("Condition","line")) 
-
-
-
 ```
 
 
-Create new phase collapsed across phases 2-3
+Calculate social ref, num looks, and exclude for a new phase that collapses across phases 2-3
 ```{r}
 sr_phase <- d %>%
     select(SID, trial, social_ref, phase_name) %>%
@@ -152,7 +149,6 @@ msslooks <- d %>%
 mslooks <- d %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "num_looks") 
-
 
 ggplot(mss, aes(x = phase_name, y = social_ref, 
                col = familiarity, group = familiarity)) + 
