@@ -314,4 +314,13 @@ tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model
 print(tab, type="html")
 ```
 
+Condition x age predicting decision latency (phase slide-touch).
+```{r lmer_latency, results="asis"}
+lm <- lmer(phase_length ~ num_objs * familiarity * age_months +
+              (1|SID),
+              data = filter(d, exclude == 0, phase_name == "slide_touch"))
+
+tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting response latency")
+print(tab, type="html")
+```
 
