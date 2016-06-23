@@ -47,11 +47,11 @@ theme_set(theme_bw())
 Read in files and consolidate to the same directory. 
 
 ```{r}
-files <- dir("../datavyu/data/")
+files <- dir("../data/")
 d.raw <- data.frame()
 
 for (f in files) {
-  jf <- paste("../datavyu/data/",f,sep="")
+  jf <- paste("../data/",f,sep="")
   jd <- read.csv(jf)
   id <- data.frame(SID = f,
                    line = jd$phase.ordinal,
@@ -76,6 +76,7 @@ demo$age <- str_replace(demo$age, "N/A", "")
 demo$age <- as.numeric(demo$age)
 demo$age_years <- trunc(demo$age, digits = 0)
 demo$age_months <- demo$age*12
+demo$Condition <- str_replace(demo$Condition, " ", "")
 
 trial_info <- read.csv("trial_info.csv")
 ```
@@ -185,7 +186,7 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ num_objs) + 
-  ylim(c(0,5)) + 
+  ylim(c(0,3)) + 
   xlab("") + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```

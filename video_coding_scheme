@@ -1,12 +1,12 @@
-Guidelines for coding video data from soc_ref_uncert experiment 1 in Datavyu
+88Guidelines for coding video data from soc_ref_uncert experiment 1 in Datavyu
 
 1st pass: code onset/offset for phases as follows:
 
-look, there's a __ / here... can you put the __ in the bucket?/ begin slide...end slide/child touches object/child puts object in bucket/
+look, there's a /__  here... can you put the __ in the bucket?/ begin slide...end slide/child touches object/child puts object in bucket/
 
-Phase 1 begins with the beginning of the utterance of the target label and ends at the end of the word “bucket”.
+Phase 1 begins with the beginning of the utterance of the target label and ends when the experimenter touches objects to begin slide/ the end of the word “bucket”.
 
-Phase 2 begins at the end of the word “bucket” and ends at the end of the slide (i.e., experimenter slides object into child’s reach).
+Phase 2 begins at the beginning of the slide/end of the word “bucket” and ends at the end of the slide (i.e., experimenter slides object into child’s reach/experimenter ends contact with object).
 
 Phase 3 begins at the end of the slide and ends at the child’s first touch of an object (does not necessarily have to be the object they end up putting in the bucket).
 
@@ -15,3 +15,4 @@ Phase 4 begins with the first touch of an object and ends with the child releasi
 2nd pass: code number of looks and exclusions for each phase
 
 Count the number of times the child looks all the way up to the experimenter’s face during a phase. Looks that begin/end outside of the current phase are included. If the child’s eyes flicker away for a moment during a look but do not come to rest somewhere other than the experimenter’s face, it should be coded as only one look. 
+
