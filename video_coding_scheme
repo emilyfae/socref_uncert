@@ -1,4 +1,4 @@
-88Guidelines for coding video data from soc_ref_uncert experiment 1 in Datavyu
+Guidelines for coding video data from soc_ref_uncert experiment 1 in Datavyu
 
 1st pass: code onset/offset for phases as follows:
 
@@ -6,7 +6,7 @@ look, there's a /__  here... can you put the __ in the bucket?/ begin slide...en
 
 Phase 1 begins with the beginning of the utterance of the target label and ends when the experimenter touches objects to begin slide/ the end of the word “bucket”.
 
-Phase 2 begins at the beginning of the slide/end of the word “bucket” and ends at the end of the slide (i.e., experimenter slides object into child’s reach/experimenter ends contact with object).
+Phase 2 begins at the beginning of the slide/end of the word “bucket” and ends at the end of the slide (i.e., experimenter slides object into child’s reach/experimenter clearly ends contact with object). If the experimenter is holding two objects and she lets go of them at different times, end phase 2 when she lets go of the second item (i.e., both hands are free of the object).
 
 Phase 3 begins at the end of the slide and ends at the child’s first touch of an object (does not necessarily have to be the object they end up putting in the bucket).
 
