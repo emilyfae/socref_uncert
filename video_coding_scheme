@@ -10,7 +10,7 @@ Phase 2 begins at the beginning of the slide/end of the word “bucket” and en
 
 Phase 3 begins at the end of the slide and ends at the child’s first touch of an object (does not necessarily have to be the object they end up putting in the bucket).
 
-Phase 4 begins with the first touch of an object and ends with the child releasing grasp of the object into the bucket.
+Phase 4 begins with the first touch of an object and ends with the child releasing grasp of the object into the bucket. If they put more than one object in the bucket (whether unknown or known, correct or incorrect), code the end of phase 4 when the child releases the first object into the bucket.
 
 2nd pass: code number of looks and exclusions for each phase
 
