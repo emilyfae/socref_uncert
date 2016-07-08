@@ -96,7 +96,16 @@ soc_ref_rel <- d.raw_c1 %>%
   left_join(d.raw_c2) %>%
   mutate(phase_onset_diff = phase_onset_c1- phase_onset_c2) %>%
   mutate(phase_offset_diff = phase_offset_c1 - phase_offset_c2) %>%
-  mutate(phase_onset_bin = abs(phase_onset_diff)<100) %>%
-  mutate(phase_offset_bin = abs(phase_offset_diff)<100) 
+  mutate(phase_onset_bin_100 = abs(phase_onset_diff)<100) %>%
+  mutate(phase_offset_bin_100 = abs(phase_offset_diff)<100) %>%
+  mutate(phase_onset_bin_200 = abs(phase_onset_diff)<200) %>%
+  mutate(phase_offset_bin_200 = abs(phase_offset_diff)<200) 
+
+summary(soc_ref_rel$phase_onset_diff)
+summary(soc_ref_rel$phase_offset_diff)
+summary(soc_ref_rel$phase_onset_bin_100)
+summary(soc_ref_rel$phase_offset_bin_100)
+summary(soc_ref_rel$phase_onset_bin_200)
+summary(soc_ref_rel$phase_offset_bin_200)
 ```
 
