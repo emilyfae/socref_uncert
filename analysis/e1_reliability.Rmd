@@ -28,6 +28,7 @@ Preliminaries.
 
 ```{r echo=FALSE}
 rm(list=ls())
+setwd("~/Desktop/soc_ref_uncert/analysis")
 knitr::opts_chunk$set(fig.width=8, fig.height=5, 
                       echo=TRUE, warning=FALSE, message=FALSE, cache=TRUE)
 suppressPackageStartupMessages(c("dplyr","langcog","tidyr","ggplot2","lme4"))
@@ -61,7 +62,7 @@ for (f in files) {
                    phase_onset_c1 = jd$phase.onset,
                    phase_offset_c1 = jd$phase.offset, 
                    num_looks_c1 = jd$reference.num_looks,
-                   exclude_c1 = jd$reference.exclude.)
+                   exclude_c1 = jd$reference.exclude)
   d.raw_c1 <- bind_rows(d.raw_c1, id)
 }
 
@@ -82,15 +83,33 @@ for (f in files) {
                    line = jd$phase.ordinal,
                    phase = as.numeric(jd$phase.1_2_3_4),
                    phase_onset_c2 = jd$phase.onset,
-                   phase_offset_c2 = jd$phase.offset, 
-                   num_looks_c2 = jd$reference.num_looks,
-                   exclude_c2 = jd$reference.exclude.)
+                   phase_offset_c2 = jd$phase.offset) 
   d.raw_c2 <- bind_rows(d.raw_c2, id)
 }
 
 d.raw_c2$SID <- str_replace(d.raw_c2$SID, ".csv", "")
 ```
 
+Coder 2 social referencing
+
+```{r}
+files <- dir("../data/coder_2_ref/")
+d.raw_c2_ref <- data.frame()
+
+for (f in files) {
+  jf <- paste("../data/coder_2_ref/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = jd$phase.ordinal + 1,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   num_looks_c2_ref = jd$reference.num_looks)
+  d.raw_c2_ref <- bind_rows(d.raw_c2_ref, id)
+}
+
+d.raw_c2_ref$SID <- str_replace(d.raw_c2_ref$SID, ".csv", "")
+```
+
+Combine coder 1 and coder 2 into dataframe and create difference score variables.  
 ```{r}
 soc_ref_rel <- d.raw_c1 %>%
   left_join(d.raw_c2) %>%
@@ -99,8 +118,11 @@ soc_ref_rel <- d.raw_c1 %>%
   mutate(phase_onset_bin_100 = abs(phase_onset_diff)<100) %>%
   mutate(phase_offset_bin_100 = abs(phase_offset_diff)<100) %>%
   mutate(phase_onset_bin_200 = abs(phase_onset_diff)<200) %>%
-  mutate(phase_offset_bin_200 = abs(phase_offset_diff)<200) 
+  mutate(phase_offset_bin_200 = abs(phase_offset_diff)<200)
+```
 
+Summarize difference scores for onsets and offsets. 
+```{r}
 summary(soc_ref_rel$phase_onset_diff)
 summary(soc_ref_rel$phase_offset_diff)
 summary(soc_ref_rel$phase_onset_bin_100)
@@ -109,3 +131,14 @@ summary(soc_ref_rel$phase_onset_bin_200)
 summary(soc_ref_rel$phase_offset_bin_200)
 ```
 
+Add coder 2 social referencing to dataframe. Correlate coder 1 with coder 2 for number of looks.
+
+```{r}
+soc_ref_rel_looks  <- soc_ref_rel %>%
+  left_join(d.raw_c2_ref) %>%
+  mutate(ref_diff = num_looks_c1- num_looks_c2_ref) %>%
+  mutate(ref_diff_bin = (ref_diff == 0))
+
+cor(soc_ref_rel_looks$num_looks_c1, soc_ref_rel_looks$num_looks_c2_ref)
+  
+```
