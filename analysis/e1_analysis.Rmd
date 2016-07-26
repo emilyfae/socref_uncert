@@ -203,10 +203,7 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ num_objs) + 
   ylim(c(0,3)) + 
-  xlab("") + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
-
-
 
 ```
 
@@ -287,6 +284,9 @@ ggplot(msslengths, aes(x = phase_name, y = phase_length,
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ num_objs) + 
+  ylim(c(0,10000)) +
+  xlab("Phase") + 
+  ylab("Phase Length (ms)") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
