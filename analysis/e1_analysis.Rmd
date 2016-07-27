@@ -47,11 +47,11 @@ theme_set(theme_bw())
 Read in files and consolidate to the same directory. 
 
 ```{r}
-files <- dir("../data/")
 d.raw <- data.frame()
+files <- dir("../data/coder_1")
 
 for (f in files) {
-  jf <- paste("../data/",f,sep="")
+  jf <- paste("../data/coder_1/",f,sep="")
   jd <- read.csv(jf)
   id <- data.frame(SID = f,
                    line = jd$phase.ordinal,
@@ -59,11 +59,28 @@ for (f in files) {
                    phase_onset = jd$phase.onset,
                    phase_offset = jd$phase.offset, 
                    num_looks = jd$reference.num_looks,
-                   exclude = jd$reference.exclude.)
+                   exclude = as.numeric(jd$reference.exclude))
+  d.raw <- bind_rows(d.raw, id)
+}
+
+files <- dir("../data/coder_2")
+for (f in files) {
+  jf <- paste("../data/coder_2/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = as.numeric(jd$phase.ordinal),
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset = as.numeric(jd$phase.onset),
+                   phase_offset = as.numeric(jd$phase.offset), 
+                   num_looks = as.numeric(jd$reference.num_looks),
+                   exclude = as.numeric(jd$reference.exclude))
   d.raw <- bind_rows(d.raw, id)
 }
 
 d.raw$SID <- str_replace(d.raw$SID, ".csv", "")
+
+
+
 
 ```
 
@@ -90,7 +107,6 @@ d <- left_join(d.raw, demo) %>%
   mutate(social_ref = as.numeric(num_looks>0))%>%
   left_join(trial_info, by = c("Condition","line")) 
 ```
-
 
 Calculate social ref, num looks, and exclude for a new phase that collapses across phases 2-3
 ```{r}
@@ -187,8 +203,8 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ num_objs) + 
   ylim(c(0,3)) + 
-  xlab("") + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
 ```
 
 Get phase lengths.
@@ -268,6 +284,9 @@ ggplot(msslengths, aes(x = phase_name, y = phase_length,
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ num_objs) + 
+  ylim(c(0,10000)) +
+  xlab("Phase") + 
+  ylab("Phase Length (ms)") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
