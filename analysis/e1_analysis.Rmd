@@ -204,7 +204,6 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   facet_grid(age_years ~ num_objs) + 
   ylim(c(0,3)) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
-
 ```
 
 Get phase lengths.
@@ -332,6 +331,11 @@ lm <- lmer(num_looks ~ num_objs * familiarity * phase_name * age_months +
 
 tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
 print(tab, type="html")
+
+coefs <- data.frame(coef(summary(lm)))
+# use normal distribution to approximate p-value
+coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
+coefs
 ```
 
 Condition x age predicting decision latency (phase slide-touch).
@@ -344,3 +348,56 @@ tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model
 print(tab, type="html")
 ```
 
+```{r}
+glm_mod <- glmer(social_ref ~ num_objs * familiarity * phase_name * age_months +
+              (1|SID), family = "binomial",
+              data = filter(dc, exclude == 0))
+
+glm_maximal_mod <- glmer(social_ref ~ num_objs * familiarity * 
+                           phase_name * age_months +
+                           (num_objs * familiarity * phase_name | SID), 
+                         family = "binomial",
+                         data = filter(dc, exclude == 0))
+```
+
+
+```{r}
+rt_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * scale(age_months) +
+                           (num_objs * familiarity | SID), 
+                         data = filter(dc, 
+                                       exclude == 0, 
+                                       phase_name == "request_touch"))
+
+tr_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * scale(age_months) +
+                           (num_objs * familiarity | SID), 
+                         data = filter(dc, 
+                                       exclude == 0, 
+                                       phase_name == "touch_response"))
+
+filter(dc, exclude == 0, phase_name == "request_touch") %>%
+  group_by(age_years, num_objs, familiarity) %>%
+  summarise(num_looks = mean(num_looks))
+
+filter(dc, exclude == 0, phase_name == "touch_response") %>%
+  group_by(age_years, num_objs, familiarity) %>%
+  summarise(num_looks = mean(num_looks))
+
+# takes a long time
+omni_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * 
+                           scale(age_months) * phase_name +
+                           (num_objs + familiarity + phase_name | SID), 
+                         data = filter(dc, exclude == 0))
+
+
+
+```
+
+
+```{r}
+glm_maximal_mod <- glmer(social_ref ~ num_objs * familiarity * age_months +
+                           (num_objs + familiarity | SID), 
+                         family = "binomial",
+                         data = filter(dc, 
+                                       exclude == 0, 
+                                       phase_name == "request_touch"))
+```
