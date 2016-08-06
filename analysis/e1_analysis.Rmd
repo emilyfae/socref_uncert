@@ -204,6 +204,17 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   facet_grid(age_years ~ num_objs) + 
   ylim(c(0,3)) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+#plot number of looks NO INDIVIDUAL DATA PLOTTED.
+ggplot(msslooks, aes(x = phase_name, y = num_looks, 
+               col = familiarity, group = familiarity)) + 
+  geom_line(data = mslooks, aes(y = mean)) + 
+  geom_pointrange(data = mslooks, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ num_objs) + 
+  ylim(c(0,2)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
 Get phase lengths.
