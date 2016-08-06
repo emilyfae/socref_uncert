@@ -161,22 +161,22 @@ Plot social referencing by familiarity and # items with 4 time bins.
 
 ```{r}
 #get means for participants by condition for social ref
-mss <- d %>%
+mss <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(social_ref = mean(social_ref))
 
 #get means and CIs across participants for social ref
-ms <- d %>%
+ms <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "social_ref") 
 
 #get means for participants by condition for number of looks
-msslooks <- d %>%
+msslooks <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(num_looks = mean(num_looks))
 
 #get means and CIs across participants for number of looks
-mslooks <- d %>%
+mslooks <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "num_looks") 
 
@@ -278,11 +278,11 @@ ggplot(phase_lengths_dc, aes(x = phase_name, y = mean)) +
 Plot phase lengths by condition by age. Slide-touch phase can be thought of to reflect decision time.
 
 ```{r}
-msslengths <- d %>%
+msslengths <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(phase_length = mean(phase_length))
 
-mslengths <- d %>%
+mslengths <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "phase_length") 
 
@@ -398,9 +398,6 @@ omni_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity *
                            scale(age_months) * phase_name +
                            (num_objs + familiarity + phase_name | SID), 
                          data = filter(dc, exclude == 0))
-
-
-
 ```
 
 
