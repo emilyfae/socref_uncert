@@ -73,14 +73,14 @@ d.raw_c1$SID <- str_replace(d.raw_c1$SID, ".csv", "")
 Coder 2
 
 ```{r}
-files <- dir("../data/coder_2/")
+files <- dir("../data/coder_2_phase/")
 d.raw_c2 <- data.frame()
 
 for (f in files) {
-  jf <- paste("../data/coder_2/",f,sep="")
+  jf <- paste("../data/coder_2_phase/",f,sep="")
   jd <- read.csv(jf)
   id <- data.frame(SID = f,
-                   line = jd$phase.ordinal,
+                   line = jd$phase.ordinal +1,
                    phase = as.numeric(jd$phase.1_2_3_4),
                    phase_onset_c2 = jd$phase.onset,
                    phase_offset_c2 = jd$phase.offset) 
@@ -88,6 +88,7 @@ for (f in files) {
 }
 
 d.raw_c2$SID <- str_replace(d.raw_c2$SID, ".csv", "")
+
 ```
 
 Coder 2 social referencing
@@ -139,6 +140,6 @@ soc_ref_rel_looks  <- soc_ref_rel %>%
   mutate(ref_diff = num_looks_c1- num_looks_c2_ref) %>%
   mutate(ref_diff_bin = (ref_diff == 0))
 
-cor(soc_ref_rel_looks$num_looks_c1, soc_ref_rel_looks$num_looks_c2_ref)
+table(soc_ref_rel_looks$ref_diff_bin)
   
 ```

@@ -79,7 +79,7 @@ for (f in files) {
 
 d.raw$SID <- str_replace(d.raw$SID, ".csv", "")
 
-
+d.raw <- distinct(d.raw, SID, line)
 
 
 ```
@@ -105,7 +105,8 @@ d <- left_join(d.raw, demo) %>%
   select(SID, phase, num_looks, exclude, age_years, age_months, gender, line, Condition, phase_onset, phase_offset) %>%
   mutate(phase_length = phase_offset - phase_onset) %>%
   mutate(social_ref = as.numeric(num_looks>0))%>%
-  left_join(trial_info, by = c("Condition","line")) 
+  left_join(trial_info, by = c("Condition","line"))%>%
+  mutate(first_half = between(trial, 1, 4)) 
 ```
 
 Calculate social ref, num looks, and exclude for a new phase that collapses across phases 2-3
@@ -161,6 +162,7 @@ Plot social referencing by familiarity and # items with 4 time bins.
 
 ```{r}
 #get means for participants by condition for social ref
+
 mss <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(social_ref = mean(social_ref))
@@ -179,6 +181,16 @@ msslooks <- filter(d, exclude == 0) %>%
 mslooks <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "num_looks") 
+
+#get means and CIs across conditions and participants for number of looks for first half vs. second half
+mslooks_half <- filter(d, exclude == 0) %>%
+  group_by(phase_name, familiarity, num_objs, first_half) %>%
+  multi_boot_standard(col = "num_looks") 
+
+msslooks_half <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, num_objs, familiarity, first_half) %>%
+  summarise(num_looks = mean(num_looks))
+
 
 #plot presence or absence of social referencing.
 ggplot(mss, aes(x = phase_name, y = social_ref, 
@@ -213,6 +225,17 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ num_objs) + 
+  ylim(c(0,2)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+#plot number of looks based on half.
+ggplot(msslooks_half, aes(x = phase_name, y = num_looks, 
+               col = familiarity, group = familiarity)) + 
+  geom_line(data = mslooks_half, aes(y = mean)) + 
+  geom_pointrange(data = mslooks, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(first_half ~ num_objs) + 
   ylim(c(0,2)) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
@@ -288,13 +311,12 @@ mslengths <- filter(d, exclude == 0) %>%
 
 ggplot(msslengths, aes(x = phase_name, y = phase_length, 
                col = familiarity, group = familiarity)) + 
-  geom_jitter(width = .3, height = .05) +
   geom_line(data = mslengths, aes(y = mean)) + 
   geom_pointrange(data = mslengths, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ num_objs) + 
-  ylim(c(0,10000)) +
+  ylim(c(0,7500)) +
   xlab("Phase") + 
   ylab("Phase Length (ms)") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
