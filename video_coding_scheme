@@ -16,3 +16,9 @@ Phase 4 begins with the first touch of an object and ends with the child releasi
 
 Count the number of times the child looks all the way up to the experimenter’s face during a phase. Looks that begin/end outside of the current phase are included. If the child’s eyes flicker away for a moment during a look but do not come to rest somewhere other than the experimenter’s face, it should be coded as only one look. 
 
+***UPDATED CODING SCHEME FOR EXPERIMENT 2***
+In the second pass, also code for number of questions and statements of uncertainty in each phase.
+-Number of questions: Count the number of times the child asks a clarifying question to the experimenter about the identity of the objects before them. This could including asking the experimenter to distinguish between two objects, or asking the experimenter to repeat the name of something that they are unfamiliar with. Questions that are not meant to resolve uncertainty should not be counted, for example: “Should I put the apple *and* the lion in the bucket?” Questions that are unrelated to the task should also not be counted. Questions that begin/end outside of the current phase are included. 
+-Number of Statements of Uncertainty: Count the number of times the child vocalizes a phrase that makes their uncertainty evident, such as “I don’t know which one the blicket is”. Statements of uncertainty that begin/end outside of the current phase are included. Statements of uncertainty unrelated to the task are not included.
+-Exclusion criteria: Because questions are being accounted for, DO NOT exclude phases in which the child looks at the experimenter because the experimenter is vocalizing to answer a question or statement of uncertainty. DO exclude phases where the experimenter vocalizes without being prompted by a child’s question or statement of uncertainty. 
+
