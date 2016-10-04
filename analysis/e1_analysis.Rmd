@@ -350,10 +350,13 @@ Phase Touch-Response
 ```{r lmer_tr, results="asis"}
 lm <- lmer(num_looks ~ num_objs * familiarity * age_months +
               (1|SID),
+
               data = filter(dc, exclude == 0, phase_name == "touch_response"))
 
 tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
 print(tab, type="html")
+
+
 ```
 
 Omnibus model. Confirmitory plan is to look for 4-way interaction between number of ojects (1 vs 2), familiarity (novel vs familiar), phase (label vs request vs response). Study may be underpowered to detect 4-way interaction.

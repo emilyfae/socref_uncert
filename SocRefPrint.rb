@@ -9,7 +9,7 @@ begin
 
   projName = $pj.getProjectName
 
-  output_name = "/Volumes/Experiments/SOC_REF_uncertainty/datavyu/data/" + projName + ".csv"
+  output_name = "/Volumes/Experiments/SOC_REF_uncertainty/datavyu/data/Benny/" + projName + ".csv"
 
   phases = getVariable("phase")
   references = getVariable("reference")
