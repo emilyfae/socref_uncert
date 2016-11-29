@@ -61,6 +61,8 @@ for (f in files) {
                    phase_onset = jd$phase.onset,
                    phase_offset = jd$phase.offset, 
                    num_looks = jd$reference.num_looks,
+                   num_ques = jd$reference.num_ques,
+                   num_sou = as.numeric(jd$reference.num_SOU),
                    exclude = as.numeric(jd$reference.exclude))
   d.raw <- bind_rows(d.raw, id)
 }
@@ -76,6 +78,8 @@ for (f in files) {
                    phase_onset = as.numeric(jd$phase.onset),
                    phase_offset = as.numeric(jd$phase.offset), 
                    num_looks = as.numeric(jd$reference.num_looks),
+                   num_ques = jd$reference.num_ques,
+                   num_sou = jd$reference.num_SOU,
                    exclude = as.numeric(jd$reference.exclude))
   d.raw <- bind_rows(d.raw, id)
 }
@@ -101,7 +105,7 @@ Join trial info and demographics with raw data.
 
 ```{r}
 d <- left_join(d.raw, demo) %>%
-  select(SID, phase, num_looks, exclude, age_years, age_months, gender, line, Condition, Gaze, phase_onset, phase_offset) %>%
+  select(SID, phase, num_looks, num_ques, num_sou, exclude, age_years, age_months, gender, line, Condition, Gaze, phase_onset, phase_offset) %>%
   mutate(phase_length = phase_offset - phase_onset) %>%
   mutate(social_ref = as.numeric(num_looks>0))%>%
   left_join(trial_info, by = c("Condition","line"))%>%
@@ -127,6 +131,41 @@ msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label-begin_slide
 mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
 ```
 
+Plot questions by trial type (familiar, novel, mutual exclusivity) and presence of referential gaze.
+
+Get means.
+```{r}
+#get means for participants by condition for number of looks
+mssques <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, trial_type, Gaze, age_years) %>%
+  summarise(num_ques = mean(num_ques))
+
+#get means and CIs across participants for number of looks
+msques <- filter(d, exclude == 0) %>%
+  group_by(phase_name, trial_type, Gaze, age_years) %>%
+  multi_boot_standard(col = "num_ques") 
+
+mssques$phase_name <- factor(mssques$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+
+msques$phase_name <- factor(msques$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+```
+
+
+```{r}
+#get means for participants by condition for number of looks
+msssou <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, trial_type, Gaze, age_years) %>%
+  summarise(num_sou = mean(num_sou))
+
+#get means and CIs across participants for number of looks
+mssou <- filter(d, exclude == 0) %>%
+  group_by(phase_name, trial_type, Gaze, age_years) %>%
+  multi_boot_standard(col = "num_sou") 
+
+msssou$phase_name <- factor(msssou$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+
+mssou$phase_name <- factor(mssou$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+```
 
 Plots.
 ```{r}
@@ -153,6 +192,68 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   ylim(c(0,2.5)) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
+
+
+Plots.
+```{r}
+#plot number of questions.
+ggplot(mssques, aes(x = phase_name, y = num_ques, 
+               col = trial_type, group = trial_type)) + 
+  geom_jitter(width = .3, height = .05) +
+  geom_line(data = msques, aes(y = mean)) + 
+  geom_pointrange(data = msques, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ Gaze) + 
+  ylim(c(0,1.5)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+#plot number of looks; no individual data plotted.
+ggplot(mssques, aes(x = phase_name, y = num_ques, 
+               col = trial_type, group = trial_type)) + 
+  geom_line(data = msques, aes(y = mean)) + 
+  geom_pointrange(data = msques, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ Gaze) + 
+  ylim(c(0,1)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+```
+
+
+Plots.
+```{r}
+#plot number of statements of uncertainty.
+ggplot(msssou, aes(x = phase_name, y = num_sou, 
+               col = trial_type, group = trial_type)) + 
+  geom_jitter(width = .3, height = .05) +
+  geom_line(data = mssou, aes(y = mean)) + 
+  geom_pointrange(data = mssou, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ Gaze) + 
+  ylim(c(0,1.5)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+#plot number of looks; no individual data plotted.
+ggplot(msssou, aes(x = phase_name, y = num_sou, 
+               col = trial_type, group = trial_type)) + 
+  geom_line(data = mssou, aes(y = mean)) + 
+  geom_pointrange(data = mssou, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ Gaze) + 
+  ylim(c(0,1)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+```
+
+
+Quality check
+```{r}
+d_qual <- d %>%
+  spread(trial_type, num_ques)
+```
+
 
 #Planned analyses
 
