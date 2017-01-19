@@ -108,10 +108,8 @@ d <- left_join(d.raw, demo) %>%
   left_join(trial_info, by = c("Condition","line"))%>%
   mutate(first_half = between(trial, 1, 4)) 
 
-d_filt <- d %>%
-  filter(phase_length > 50) %>%
-  mutate(looks_sec = (num_looks/phase_length)*1000) %>%
-  mutate(bilingual = (english < 95))
+d <- d %>%
+  mutate(looks_sec = (num_looks/phase_length)*1000) 
 ```
 
 Plot social referencing by familiarity and # items with 4 time bins.
@@ -217,6 +215,80 @@ ggplot(msslengths, aes(x = phase_name, y = phase_length,
 ```
 
 #Planned analyses
+
+##T-tests
+
+```{r}
+t <- msslooks 
+t$age <- str_replace(t$age_years, "2", "two")
+t$age <- str_replace(t$age, "3", "three")
+t$age <- str_replace(t$age, "4", "four")
+t$age <- str_replace(t$age, "5", "five")
+t <- t %>%
+  spread(familiarity, num_looks)
+```
+
+Labeling phase
+```{r}
+#Novel vs. Familiar, 2-year-olds
+t.test(subset(t$novel, t$phase_name == "label_request" & t$age == "two" & t$num_objs == 2),subset(t$familiar, t$phase_name == "label_request" & t$age == "two" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 3-year-olds
+t.test(subset(t$novel, t$phase_name == "label_request" & t$age == "three" & t$num_objs == 2),subset(t$familiar, t$phase_name == "label_request" & t$age == "three" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 4-year-olds
+t.test(subset(t$novel, t$phase_name == "label_request" & t$age == "four" & t$num_objs == 2),subset(t$familiar, t$phase_name == "label_request" & t$age == "four" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 5-year-olds
+t.test(subset(t$novel, t$phase_name == "label_request" & t$age == "five" & t$num_objs == 2),subset(t$familiar, t$phase_name == "label_request" & t$age == "five" & t$num_objs == 2), paired = TRUE)
+```
+
+Slide phase
+```{r}
+#Novel vs. Familiar, 2-year-olds
+t.test(subset(t$novel, t$phase_name == "request_slide" & t$age == "two" & t$num_objs == 2),subset(t$familiar, t$phase_name == "request_slide" & t$age == "two" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 3-year-olds
+t.test(subset(t$novel, t$phase_name == "request_slide" & t$age == "three" & t$num_objs == 2),subset(t$familiar, t$phase_name == "request_slide" & t$age == "three" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 4-year-olds
+t.test(subset(t$novel, t$phase_name == "request_slide" & t$age == "four" & t$num_objs == 2),subset(t$familiar, t$phase_name == "request_slide" & t$age == "four" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 5-year-olds
+t.test(subset(t$novel, t$phase_name == "request_slide" & t$age == "five" & t$num_objs == 2),subset(t$familiar, t$phase_name == "request_slide" & t$age == "five" & t$num_objs == 2), paired = TRUE)
+```
+
+Planning phase
+```{r}
+#Novel vs. Familiar, 2-year-olds
+t.test(subset(t$novel, t$phase_name == "slide_touch" & t$age == "two" & t$num_objs == 2),subset(t$familiar, t$phase_name == "slide_touch" & t$age == "two" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 3-year-olds
+t.test(subset(t$novel, t$phase_name == "slide_touch" & t$age == "three" & t$num_objs == 2),subset(t$familiar, t$phase_name == "slide_touch" & t$age == "three" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 4-year-olds
+t.test(subset(t$novel, t$phase_name == "slide_touch" & t$age == "four" & t$num_objs == 2),subset(t$familiar, t$phase_name == "slide_touch" & t$age == "four" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 5-year-olds
+t.test(subset(t$novel, t$phase_name == "slide_touch" & t$age == "five" & t$num_objs == 2),subset(t$familiar, t$phase_name == "slide_touch" & t$age == "five" & t$num_objs == 2), paired = TRUE)
+```
+
+Response phase
+```{r}
+#Novel vs. Familiar, 2-year-olds
+t.test(subset(t$novel, t$phase_name == "touch_response" & t$age == "two" & t$num_objs == 2),subset(t$familiar, t$phase_name == "touch_response" & t$age == "two" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 3-year-olds
+t.test(subset(t$novel, t$phase_name == "touch_response" & t$age == "three" & t$num_objs == 2),subset(t$familiar, t$phase_name == "touch_response" & t$age == "three" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 4-year-olds
+t.test(subset(t$novel, t$phase_name == "touch_response" & t$age == "four" & t$num_objs == 2),subset(t$familiar, t$phase_name == "touch_response" & t$age == "four" & t$num_objs == 2), paired = TRUE)
+
+#Novel vs. Familiar, 5-year-olds
+t.test(subset(t$novel, t$phase_name == "touch_response" & t$age == "five" & t$num_objs == 2),subset(t$familiar, t$phase_name == "touch_response" & t$age == "five" & t$num_objs == 2), paired = TRUE)
+```
+
+##LMER
 
 Separate mixed-effects linear regression models for 3 phases.
 
