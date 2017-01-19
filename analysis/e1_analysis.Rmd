@@ -64,6 +64,7 @@ for (f in files) {
 }
 
 files <- dir("../data/coder_2")
+
 for (f in files) {
   jf <- paste("../data/coder_2/",f,sep="")
   jd <- read.csv(jf)
@@ -78,10 +79,7 @@ for (f in files) {
 }
 
 d.raw$SID <- str_replace(d.raw$SID, ".csv", "")
-
-d.raw <- distinct(d.raw, SID, line)
-
-
+d.raw <- distinct(d.raw)
 ```
 
 Read in trial info and demographics. 
@@ -110,70 +108,19 @@ d <- left_join(d.raw, demo) %>%
   left_join(trial_info, by = c("Condition","line"))%>%
   mutate(first_half = between(trial, 1, 4)) 
 
-d <- d %>%
+d_filt <- d %>%
   filter(phase_length > 50) %>%
   mutate(looks_sec = (num_looks/phase_length)*1000) %>%
   mutate(bilingual = (english < 95))
 ```
 
-Calculate social ref, num looks, and exclude for a new phase that collapses across phases 2-3
-```{r}
-sr_phase <- d %>%
-    select(SID, trial, social_ref, phase_name) %>%
-    group_by(SID, trial) %>%
-    spread(phase_name, social_ref) %>%
-    mutate(request_touch = pmax(request_slide, slide_touch))%>%
-    gather("phase_name", "social_ref", label_request:request_touch)
-    
-nl_phase <- d %>%
-    select(SID, trial, num_looks, phase_name) %>%
-    group_by(SID, trial) %>%
-    spread(phase_name, num_looks) %>%
-    mutate(request_touch = request_slide + slide_touch)%>%
-    gather("phase_name", "num_looks", label_request:request_touch)
-
-ex_phase <- d %>%
-    select(SID, trial, exclude, phase_name) %>%
-    group_by(SID, trial) %>%
-    spread(phase_name, exclude) %>%
-    mutate(request_touch = pmax(request_slide, slide_touch))%>%
-    gather("phase_name", "exclude", label_request:request_touch)
-
-lgth_phase <- d %>%
-    select(SID, trial, phase_name, phase_length) %>%
-    group_by(SID, trial) %>%
-    spread(phase_name, phase_length) %>%
-    mutate(request_touch = pmax(request_slide, slide_touch))%>%
-    gather("phase_name", "phase_length", label_request:request_touch)
-    
-```
-
-Create dataframe with new phase collapsed across phases 2 and 3
-```{r}
-dc <- d %>%
-  select(SID, trial, social_ref, phase_name, phase_length, familiarity, num_objs, age_months, age_years) %>%
-  spread(phase_name, social_ref) %>%
-  mutate(request_touch = NA)%>%
-  group_by(SID, trial)%>%
-  select(SID, trial, familiarity, num_objs, age_months, age_years, label_request, request_touch, touch_response)%>%
-  gather("phase_name", "social_ref", label_request:touch_response)%>%
-  select(SID, trial, familiarity, num_objs, age_months, age_years, phase_name)%>%
-  left_join(sr_phase, by = c("SID", "trial", "phase_name"))%>%
-  left_join(nl_phase, by = c("SID", "trial", "phase_name"))%>%
-  left_join(ex_phase, by = c("SID", "trial", "phase_name"))%>%
-  left_join(lgth_phase, by = c("SID", "trial", "phase_name"))
-
-```
-
 Plot social referencing by familiarity and # items with 4 time bins.
 
 ```{r}
-#get means for participants by condition for number of looks
 msslooks <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(num_looks = mean(num_looks))
 
-#get means and CIs across participants for number of looks
 mslooks <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "num_looks") 
@@ -197,31 +144,7 @@ mslooks_sec <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "looks_sec") 
 
-#get means for participants by bilingual condition for social ref
-mss <- filter(d, exclude == 0) %>%
-  group_by(SID, phase_name, bilingual) %>%
-  summarise(num_looks = mean(num_looks))
-
-#get means and CIs across participants for social ref
-ms <- filter(d, exclude == 0) %>%
-  group_by(phase_name, bilingual) %>%
-  multi_boot_standard(col = "num_looks") 
-
-
-#plot bilingual
-#plot presence or absence of social referencing.
-ggplot(mss, aes(x = phase_name, y = num_looks, 
-               col = bilingual)) + 
-  geom_jitter(width = .3, height = .05) +
-  geom_line(data = ms, aes(y = mean)) + 
-  geom_pointrange(data = ms, 
-                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
-                  position = position_dodge(width =.1)) + 
-  ylim(c(0,4)) + 
-  xlab("") + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
-
-#plot number of looks NO INDIVIDUAL DATA PLOTTED.
+#plot number of looks.
 ggplot(msslooks, aes(x = phase_name, y = num_looks, 
                col = familiarity, group = familiarity)) + 
   geom_line(data = mslooks, aes(y = mean)) + 
@@ -253,43 +176,11 @@ ggplot(msslooks_sec, aes(x = phase_name, y = looks_sec,
   facet_grid(age_years ~ num_objs) + 
   ylim(c(0,.75)) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
-
-psych::describe(d$phase_length)
 ```
 
-Get phase lengths.
+Plot phase lengths.
 
 ```{r}
-phase_lengths <- d %>% 
-  group_by(phase_name) %>% 
-  summarise(phase_length = mean(phase_length)) %>%
-  mutate(time = cumsum(phase_length),
-         middle_time = time - phase_length/2, 
-         middle_time_s = middle_time / 1000)
-
-ms <- left_join(ms, phase_lengths)
-mss <- left_join(mss, phase_lengths)
-
-#plot to include phase lenghts.
-# ggplot(mss, aes(x = middle_time_s, y = social_ref, 
-#                col = familiarity, group = familiarity)) + 
-#   geom_jitter(width = .4, height = .05) +
-#   geom_line(data = ms, aes(y = mean)) + 
-#   geom_pointrange(data = ms, 
-#                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
-#                   position = position_dodge(width =.1)) + 
-#   facet_grid(.~num_objs) + 
-#   ylim(c(0,1)) + 
-#   xlim(c(0, 9)) + 
-#   xlab("Time (s)") + 
-#   ylab("Probability of social referencing") +
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
-```
-
-Plot average phase lengths.
-
-```{r}
-#plot phase lenghts of four phases.
 phase_lengths <- d %>% 
   group_by(phase_name) %>% 
   multi_boot_standard(col = "phase_length")
@@ -300,22 +191,9 @@ ggplot(phase_lengths, aes(x = phase_name, y = mean)) +
              position = position_dodge(width = .9))+
   xlab("Phase") + 
   ylab("Phase Length (ms)") 
-
-#plot phase lengths for 3 phases (2 and 3 collapsed)
-phase_lengths_dc <- dc %>% 
-  group_by(phase_name) %>% 
-  multi_boot_standard(col = "phase_length")
-
-ggplot(phase_lengths_dc, aes(x = phase_name, y = mean)) + 
-  geom_bar(stat="identity") + 
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
-             position = position_dodge(width = .9))+
-  xlab("Phase") + 
-  ylab("Phase Length (ms)") 
 ```
 
-Plot phase lengths by condition by age. Slide-touch phase can be thought of to reflect decision time.
-
+Plot phase lengths by condition by age. 
 ```{r}
 msslengths <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
