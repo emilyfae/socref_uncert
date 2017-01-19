@@ -90,6 +90,8 @@ Read in trial info and demographics.
 demo <- read.csv("../soc_ref_uncertainty_EH_demo2016.csv") 
 demo$age <- str_replace(demo$age, "n/a", "")
 demo$age <- str_replace(demo$age, "N/A", "")
+demo$english <- str_replace(demo$english, "n/a", "")
+demo$english <- str_replace(demo$english, "N/A", "")
 demo$age <- as.numeric(demo$age)
 demo$age_years <- trunc(demo$age, digits = 0)
 demo$age_months <- demo$age*12
@@ -102,11 +104,16 @@ Join trial info and demographics with raw data.
 
 ```{r}
 d <- left_join(d.raw, demo) %>%
-  select(SID, phase, num_looks, exclude, age_years, age_months, gender, line, Condition, phase_onset, phase_offset) %>%
+  select(SID, phase, num_looks, exclude, age_years, age_months, gender, line, Condition, phase_onset, phase_offset, english) %>%
   mutate(phase_length = phase_offset - phase_onset) %>%
   mutate(social_ref = as.numeric(num_looks>0))%>%
   left_join(trial_info, by = c("Condition","line"))%>%
   mutate(first_half = between(trial, 1, 4)) 
+
+d <- d %>%
+  filter(phase_length > 50) %>%
+  mutate(looks_sec = (num_looks/phase_length)*1000) %>%
+  mutate(bilingual = (english < 95))
 ```
 
 Calculate social ref, num looks, and exclude for a new phase that collapses across phases 2-3
@@ -161,17 +168,6 @@ dc <- d %>%
 Plot social referencing by familiarity and # items with 4 time bins.
 
 ```{r}
-#get means for participants by condition for social ref
-
-mss <- filter(d, exclude == 0) %>%
-  group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
-  summarise(social_ref = mean(social_ref))
-
-#get means and CIs across participants for social ref
-ms <- filter(d, exclude == 0) %>%
-  group_by(phase_name, familiarity, num_objs, age_years) %>%
-  multi_boot_standard(col = "social_ref") 
-
 #get means for participants by condition for number of looks
 msslooks <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
@@ -191,30 +187,38 @@ msslooks_half <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, first_half) %>%
   summarise(num_looks = mean(num_looks))
 
+#get means for participants by condition for number of looks: proportions
+msslooks_sec <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
+  summarise(looks_sec = mean(looks_sec))
 
+#get means and CIs across participants for number of looks: proportions
+mslooks_sec <- filter(d, exclude == 0) %>%
+  group_by(phase_name, familiarity, num_objs, age_years) %>%
+  multi_boot_standard(col = "looks_sec") 
+
+#get means for participants by bilingual condition for social ref
+mss <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, bilingual) %>%
+  summarise(num_looks = mean(num_looks))
+
+#get means and CIs across participants for social ref
+ms <- filter(d, exclude == 0) %>%
+  group_by(phase_name, bilingual) %>%
+  multi_boot_standard(col = "num_looks") 
+
+
+#plot bilingual
 #plot presence or absence of social referencing.
-ggplot(mss, aes(x = phase_name, y = social_ref, 
-               col = familiarity, group = familiarity)) + 
+ggplot(mss, aes(x = phase_name, y = num_looks, 
+               col = bilingual)) + 
   geom_jitter(width = .3, height = .05) +
   geom_line(data = ms, aes(y = mean)) + 
   geom_pointrange(data = ms, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
-  facet_grid(age_years ~ num_objs) + 
-  ylim(c(0,1)) + 
+  ylim(c(0,4)) + 
   xlab("") + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
-
-#plot number of looks.
-ggplot(msslooks, aes(x = phase_name, y = num_looks, 
-               col = familiarity, group = familiarity)) + 
-  geom_jitter(width = .3, height = .05) +
-  geom_line(data = mslooks, aes(y = mean)) + 
-  geom_pointrange(data = mslooks, 
-                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
-                  position = position_dodge(width =.1)) + 
-  facet_grid(age_years ~ num_objs) + 
-  ylim(c(0,3)) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 
 #plot number of looks NO INDIVIDUAL DATA PLOTTED.
@@ -238,6 +242,19 @@ ggplot(msslooks_half, aes(x = phase_name, y = num_looks,
   facet_grid(first_half ~ num_objs) + 
   ylim(c(0,2)) + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+#plot looks per second.
+ggplot(msslooks_sec, aes(x = phase_name, y = looks_sec, 
+               col = familiarity, group = familiarity)) + 
+  geom_line(data = mslooks_sec, aes(y = mean)) + 
+  geom_pointrange(data = mslooks_sec, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ num_objs) + 
+  ylim(c(0,.75)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+
+psych::describe(d$phase_length)
 ```
 
 Get phase lengths.
@@ -272,7 +289,6 @@ mss <- left_join(mss, phase_lengths)
 Plot average phase lengths.
 
 ```{r}
-
 #plot phase lenghts of four phases.
 phase_lengths <- d %>% 
   group_by(phase_name) %>% 
@@ -348,22 +364,26 @@ print(tab, type="html")
 
 Phase Touch-Response
 ```{r lmer_tr, results="asis"}
-lm <- lmer(num_looks ~ num_objs * familiarity * age_months +
+lm <- lmer(num_looks ~ num_objs * familiarity * age_years +
               (1|SID),
 
-              data = filter(dc, exclude == 0, phase_name == "touch_response"))
+              data = filter(d, exclude == 0, phase_name == "touch_response"))
 
 tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
 print(tab, type="html")
 
+coefs <- data.frame(coef(summary(lm)))
+# use normal distribution to approximate p-value
+coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
+coefs
 
 ```
 
 Omnibus model. Confirmitory plan is to look for 4-way interaction between number of ojects (1 vs 2), familiarity (novel vs familiar), phase (label vs request vs response). Study may be underpowered to detect 4-way interaction.
 ```{r lmer_om, results="asis"}
-lm <- lmer(num_looks ~ num_objs * familiarity * phase_name * age_months +
+lm <- lmer(num_looks ~ num_objs * familiarity * phase_name * age_years +
               (1|SID),
-              data = filter(dc, exclude == 0))
+              data = filter(d, exclude == 0))
 
 tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
 print(tab, type="html")
@@ -382,7 +402,29 @@ lm <- lmer(phase_length ~ num_objs * familiarity * age_months +
 
 tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting response latency")
 print(tab, type="html")
+
+coefs <- data.frame(coef(summary(lm)))
+# use normal distribution to approximate p-value
+coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
+coefs
 ```
+
+Condition x age predicting decision latency (phase touch-response).
+```{r lmer_latency, results="asis"}
+lm <- lmer(phase_length ~ num_objs * familiarity * age_months +
+              (1|SID),
+              data = filter(d, exclude == 0, phase_name == "touch_response"))
+
+tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting response latency")
+print(tab, type="html")
+
+coefs <- data.frame(coef(summary(lm)))
+# use normal distribution to approximate p-value
+coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
+coefs
+```
+
+
 
 ```{r}
 glm_mod <- glmer(social_ref ~ num_objs * familiarity * phase_name * age_months +
@@ -422,7 +464,11 @@ filter(dc, exclude == 0, phase_name == "touch_response") %>%
 omni_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * 
                            scale(age_months) * phase_name +
                            (num_objs + familiarity + phase_name | SID), 
-                         data = filter(dc, exclude == 0))
+                         data = filter(d, exclude == 0))
+
+
+
+
 ```
 
 
