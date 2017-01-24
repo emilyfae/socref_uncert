@@ -10,7 +10,7 @@ author-information: >
     \And {\large \bf Michael C. Frank} \\ \texttt{mcfrank@stanford.edu} \\ Department of Psychology \\ Stanford University}
 
 abstract: 
-    "abstract abstract."
+    "Recent evidence has demonstrated that children monitor epistemic uncertainty earlier than previously believed. However, developmental patterns across different metacognitive tasks have often been contradictory, perhaps due to task demands involved in explicit metacognitive reporting. The present research examined a spontaneous behavioral reaction to uncertainty, social referencing, during a word learning task among preschoolers. Children were asked to place a target object in a bucket after hearing the experimenter produce a label for the target. Referential ambiguity was manipulated through the number of objects present and their familiarity: when there were two unfamiliar objects and an unfamiliar label, the referent was unclear, when there were two familiar objects, or only one novel or familiar object, the referent was known or could be inferred. We found that children looked up to the experimenter more often while planning and executing a decision about which object to place in the bucket when there was referential ambiguity. Contrary to our expectations, children looked at the experimenter equally for ambiguous and unambiguous trials during the labeling itself, perhaps because there was little competition for their attention during this phase. Social referencing is a promising means of indexing epistemic uncertainty monitoring without explicit report."
     
 keywords:
     "social referencing; help seeking; word learning; uncertainty."
