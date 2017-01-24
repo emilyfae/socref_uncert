@@ -1,5 +1,5 @@
 ---
-title: "Children's social referencing reflects sensitivity to graded uncertainty"
+title: "Children's social referencing reflects sensitivity to epistemic uncertainty"
 bibliography: library.bib
 csl: apa6.csl
 document-params: "10pt, letterpaper"
