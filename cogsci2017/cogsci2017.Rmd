@@ -1,5 +1,5 @@
 ---
-title: "Children's social referencing as active information gathering"
+title: "Children's social referencing reflects sensitivity to graded uncertainty"
 bibliography: library.bib
 csl: apa6.csl
 document-params: "10pt, letterpaper"
@@ -38,147 +38,347 @@ library(tidyr)
 library(lme4)
 library(knitr)
 library(markdown)
+library(lmerTest)
 ```
 
-Introduction introduction
+There has been a great deal of debate over the extent to which young children are aware of their mental states, including epistemic uncertainty and ignorance. Although it was traditionally assumed that preschool-aged children were either unaware of their possible ignorance or underestimated it (Flavell, Schneider?), newer evidence shows that preschoolers can explicitly report on their uncertainty in their knowledge, and infants and toddlers react in ways that demonstrate sensitivity to uncertainty. For example, preschool-aged children can use a confidence scale to accurately report that they are less sure about inaccurate memory (Hembacher & Ghetti, 2014) or perceptual discrimination decisions (Lyons & Ghetti, Coughlin, Hembacher, Lyons & Ghetti). 
 
+Other research has investigated the spontaneous behaviors that infants and toddlers engage in in response to epistemic uncertainty. For example, Call and Carpenter (2002) had 2-year-olds choose between several tubes to find a hidden sticker. They found that the toddlers were more likely to peek inside a tube before choosing when they had not seen the baiting of the tubes compared to when they had. In another study, Goupil (year) found that 20-month-olds were more likely to seek help by looking at their parents when they were unable to respond accurately in a memory task. 
 
-The text of the paper should be formatted in two columns with an
-overall width of 7 inches (17.8 cm) and length of 9.25 inches (23.5
-cm), with 0.25 inches between the columns. Leave two line spaces
-between the last author listed and the text of the paper. The left
-margin should be 0.75 inches and the top margin should be 1 inch.
-\textbf{The right and bottom margins will depend on whether you use
-U.S. letter or A4 paper, so you must be sure to measure the width of
-the printed text.} Use 10 point Times Roman with 12 point vertical
-spacing, unless otherwise specified.
+This evidence suggests that humans are able to compute the likely accuracy of their decisions or beliefs and act accordingly from a young age. However, even older children have been found to fail at metacognitive tasks that appear to rely on uncertainty monitoring. For example, Hembacher & Ghetti (2014) found that 3-year-olds reported being equally confident for correct and incorrect memory decisions, and there is protracted development of other metacognitive judgments of performance, such as judgments of how well material has been learned, through adolescence (refs).
 
-The title should be in 14 point, bold, and centered. The title should
-be formatted with initial caps (the first letter of content words
-capitalized and the rest lower case). Each author's name should appear
-on a separate line, 11 point bold, and centered, with the author's
-email address in parentheses. Under each author's name list the
-author's affiliation and postal address in ordinary 10 point  type.
+Given these somewhat contradictory findings, it might be that the ability to detect or estimate uncertainty emerges early in development, but the ability to metacognitively reflect on these computations and translate them into strategic behavior develops more slowly. Similar arguments have been made with regard to the distinction between metacognitive monitoring and control; in the metacognitive theoretical framework proposed by Nelson and Narens (1990), metacognitive monitoring involves awareness of mental states, and metacognitive control involves acting upon these states, for example, by seeking new information to resolve gaps in knowledge. Many studies have found that children’s ability to report on the likely accuracy of their knowledge or performance developmentally precedes their ability to act on this awareness, for example, by spending more time learning difficult compared to easy materials (refs) or refusing to answer when uncertain (refs). Young children may demonstrate awareness of uncertainty by hesitating or seeking help when faced with a difficult task (refs), while older children become increasingly able to coordinate more sophisticated learning behaviors in response to uncertainty (refs).
 
-Indent the first line of each paragraph by 1/8~inch (except for the
-first paragraph of a new section). Do not add extra vertical space
-between paragraphs.
+Despite this progress in characterizing children’s uncertainty monitoring and related behaviors, there is still little known about the types and sources of uncertainty that children are able to monitor, and what spontaneous behaviors they may engage in in response to this monitoring. These issues tie into larger questions about children’s learning. A great deal of research has focused on characterizing the ways that young children make sense of input from their environment, for example, when acquiring language or concepts, but what role do children play in orchestrating the flow of information itself? Uncertainty monitoring may play a critical role in children’s information gathering behaviors.
 
-# First-Level Headings
+One possible instantiation of this interplay may be in children’s gaze following during word learning. Gaze following allows individuals to infer the likely referent of novel labels that occur in a speech stream, as speakers typically gaze at their intended referent (refs). However, at any given moment, there are multiple stimuli in the visual field that compete for attention. In some cases, a listener may be required to disengage from a salient or informative stimulus in order to reference a speaker’s gaze direction to resolve referential ambiguity. Thus, an optimal system might involve referencing a speaker’s gaze only when referential ambiguity is high and gaze direction information is necessary for disambiguation. Vaish, Demir and Baldwin (2010) found evidence to support this among 12-18-month-old infants. They had infants sit across from an experimenter with either one or two objects present. Infants were more likely to look up at the speaker when she produced a novel label when there were two objects, and therefore referential ambiguity, suggesting that they were sensitive to the need for disambiguating information.
 
-First level headings should be in 12 point , initial caps, bold and
-centered. Leave one line space above the heading and 1/4~line space
-below the heading.
+The present research uses a similar approach to investigate preschool-aged children’s sensitivity to uncertainty based on referential ambiguity. We aimed to replicate Vaish, Demir and Baldwin in a new age group, and investigate the time course of social referencing during an event in which children hear a label under ambiguous or unambiguous conditions and are asked to select the corresponding object. This procedure establishes social referencing as an implicit and spontaneous measure of uncertainty monitoring, which could potentially be used across a broad age range to investigate the development of uncertainty monitoring and corresponding behavior.
 
-## Second-Level Headings
-
-Second level headings should be 11 point , initial caps, bold, and
-flush left. Leave one line space above the heading and 1/4~ line
-space below the heading.
-
-### Third-Level Headings
-
-Third-level headings should be 10 point , initial caps, bold, and flush
-left. Leave one line space above the heading, but no space after the
-heading.
-
-# Formalities, Footnotes, and Floats
-
-Use standard APA citation format. Citations within the text should
-include the author's last name and year. If the authors' names are
-included in the sentence, place only the year in parentheses, as in
-[-@NewellSimon1972a], but otherwise place the entire reference in
-parentheses with the authors and year separated by a comma
-[@NewellSimon1972a]. List multiple references alphabetically and
-separate them by semicolons [@ChalnickBillman1988a; @NewellSimon1972a]. 
-Use the et. al. construction only after listing all the authors to a
-publication in an earlier reference and for citations with four or
-more authors.
-
-For more information on citations in R Markdown, see **[here](http://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html#citations).**
-
-## Footnotes
-
-Indicate footnotes with a number\footnote{Sample of the first
-footnote.} in the text. Place the footnotes in 9 point type at the
-bottom of the page on which they appear. Precede the footnote with a
-horizontal rule.\footnote{Sample of the second footnote.}
-
-## Figures
-
-All artwork must be very dark for purposes of reproduction and should
-not be hand drawn. Number figures sequentially, placing the figure
-number and caption, in 10 point, after the figure with one line space
-above the caption and one line space below it. If necessary, leave extra white space at
-the bottom of the page to avoid splitting the figure and figure
-caption. You may float figures to the top or bottom of a column, or
-set wide figures across both columns.
-
-## Two-column images
-
-You can read local images using png package for example and plot 
-it like a regular plot using grid.raster from the grid package. 
-With this method you have full control of the size of your image. **Note: Image must be in .png file format for the readPNG function to work.**
-
-You might want to display a wide figure across both columns. To do this, you change the `fig.env` chunk option to `figure*`. To align the image in the center of the page, set `fig.align` option to `center`. To format the width of your caption text, you set the `num.cols.cap` option to `2`.
-
-```{r 2-col-image, fig.env = "figure*", fig.pos = "h", fig.width=4, fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "This image spans both columns. And the caption text is limited to 0.8 of the width of the document."}
-img <- png::readPNG("figs/walrus.png")
-grid::grid.raster(img)
-```
-
-## One-column images
-
-Single column is the default option, but if you want set it explicitly, set `fig.env` to `figure`. Notice that the `num.cols` option for the caption width is set to `1`.
-
-```{r image, fig.env = "figure", fig.pos = "H", fig.align='center', fig.width=2, fig.height=2, set.cap.width=T, num.cols.cap=1, fig.cap = "Study design for Experiment 1."}
+```{r design, fig.env = "figure*", fig.pos = "h", fig.width=4, fig.height=2, fig.align = "center", set.cap.width=T, num.cols.cap=2, fig.cap = "Study design for Experiments 1 and 2."}
 img <- png::readPNG("figs/socref_design.png")
 grid::grid.raster(img)
 ```
 
+# Experiment 1
 
-## R Plots
+In Experiment 1, we examined whether children would reference a speaker's face more often when there was referential ambiguity in a label she produced. We were interested not only in children's referencing of gaze direction during the labeling itself, but referencing of the speaker's face after the labeling event while children decided which object was the intended referent. We predicted that children would seek confirmation of the accuracy of their choice from the speaker when they were uncertain, perhaps expecting an emotional reaction or explicit approval.
 
-You can use R chunks directly to plot graphs. And you can use latex floats in the
-fig.pos chunk option to have more control over the location of your plot on the page. For more information on latex placement specifiers see **[here](https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions)**
+To test this, we had children sit across from an experimenter who labeled an object on the table between them. Across trials, there were either one or two objects, which were either familiar or unfamiliar to the child. We expected children to be uncertain about the label's referent only on trials with two unfamiliar objects. After labeling an object, the experimenter asked the child to place the named object in a bucket. We measured the number of times the child looked up to the experimenter's face during four discreet phases of the trial: the labeling event ("label" phase), the sliding of the object(s) into the child's reach ("slide" phase), the time before the child touched an object once they were within reach ("planning" phase), and the time between touching an object and dropping it in the bucket ("response" phase). 
 
-```{r plot, fig.env="figure", fig.pos = "H", fig.align = "center", fig.width=2, fig.height=2, fig.cap = "R plot" }
-x <- 0:100
-y <- 2 * (x + rnorm(length(x), sd = 3) + 3)
+We predicted that children would look to the experimenter more often on two-object novel trials compared to the other three trial types during the labeling, planning, and response phases, which would indicate that they recognized the need for disambiguating information. We did not predict that children would look more for these trial types during the slide phase, when they would more likely be looking at the objects themselves.
 
-ggplot2::ggplot(data = data.frame(x, y), 
-       aes(x = x, y = y)) + 
-  geom_point() + 
-  geom_smooth(method = "lm")
+## Methods
+
+```{r include=FALSE}
+d.raw <- data.frame()
+files <- dir("../data/coder_1")
+
+for (f in files) {
+  jf <- paste("../data/coder_1/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
+                   line = jd$phase.ordinal,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset = jd$phase.onset,
+                   phase_offset = jd$phase.offset, 
+                   num_looks = jd$reference.num_looks,
+                   exclude = as.numeric(jd$reference.exclude))
+  d.raw <- bind_rows(d.raw, id)
+}
+
+files <- dir("../data/coder_2")
+
+for (f in files) {
+  jf <- paste("../data/coder_2/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
+                   line = as.numeric(jd$phase.ordinal),
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset = as.numeric(jd$phase.onset),
+                   phase_offset = as.numeric(jd$phase.offset), 
+                   num_looks = as.numeric(jd$reference.num_looks),
+                   exclude = as.numeric(jd$reference.exclude))
+  d.raw <- bind_rows(d.raw, id)
+}
 ```
 
+```{r include=FALSE}
+demo <- read.csv("../soc_ref_uncertainty_EH_demo2016.csv") 
+demo$age <- as.numeric(demo$age)
+demo$age_years <- trunc(demo$age, digits = 0)
+demo$age_months <- demo$age*12
 
-## Tables
-
-Number tables consecutively; place the table number and title (in
-10 point) above the table with one line space above the caption and
-one line space below it, as in Table 1. You may float
-tables to the top or bottom of a column, set wide tables across both
-columns.
-
-You can use the xtable function in the xtable package.
-
-```{r xtable, results="asis"}
-n <- 100
-x <- rnorm(n)
-y <- 2*x + rnorm(n)
-out <- lm(y ~ x)
-
-tab1 <- xtable::xtable(summary(out)$coef, digits=c(0, 2, 2, 1, 2), 
-                      caption = "This table prints across one column.")
-
-print(tab1, type="latex", comment = F, table.placement = "H")
+trial_info <- read.csv("trial_info_e1.csv")
 ```
+
+```{r include=FALSE}
+d <- left_join(d.raw, demo) %>%
+  select(SID, phase, num_looks, exclude, age_years, age_months, gender, line, Condition, phase_onset, phase_offset, english) %>%
+  mutate(phase_length = phase_offset - phase_onset) %>%
+  mutate(social_ref = as.numeric(num_looks>0))%>%
+  left_join(trial_info, by = c("Condition","line"))%>%
+  mutate(first_half = between(trial, 1, 4)) 
+
+d <- filter(d, phase_length > 50) %>%
+  mutate(looks_sec = (num_looks/phase_length)*1000) 
+
+age_months <- d %>%
+  group_by(age_years) %>%
+  multi_boot_standard(col = "age_months")
+
+age_months$age_years <- factor(age_months$age_years,
+levels = c(2, 3, 4, 5),
+labels = c("two", "three", "four", "five"))
+```
+
+### Participants
+
+We recruited a planned sample of 80 children ages 2-5 years from the Children’s Discovery Museum in San Jose, California. The sample included 20 2-year-olds (mean age `r round(age_months$mean[age_months$age_years=="two"], digits = 2)` months), 20 3-year-olds (mean age `r round(age_months$mean[age_months$age_years=="three"], digits = 2)` months), 20 4-year-olds (mean age `r round(age_months$mean[age_months$age_years=="four"], digits = 2)` months), and 20 5-year-olds (mean age `r round(age_months$mean[age_months$age_years=="five"], digits = 2)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 10), because they were unable to complete at least half of the trials in the task (*n* = 4), because of parental interference (*n* = 1), or due to experimenter or technical errors (*n* = 5). 
+
+### Stimuli and Design
+
+In this task, children were presented with one or two objects, heard a label, and were asked to put the labeled object in a bucket. Half of the objects were selected to be familiar to children (e.g., a cow) and half were selected to be novel (e.g., a nozzle). There were four trial types: one-familiar, one-novel, two-familiar, and two-novel. There were three of each trial type, for a total of twelve trials, and trial types were presented sequentially in an order that was counterbalanced across participants. The assignment of individual objects to trial types was counterbalanced. On familiar trials, the familiar label for the target object was used (e.g., “cow”). On novel trials, a novel label was used (e.g., “dawnoo”). 
+
+The critical manipulation was of referential ambiguity; on one-familiar and two-familiar trials, there was no referential ambiguity, as children were expected to be certain about the objects and their labels. Similarly, on one-novel trials, children were expected to be certain about the label referent as there was only one option. However, on two-novel trials, there was referential ambiguity, as the novel label could apply to either novel object (Figure \ref{fig:design}).
+
+### Procedure
+
+Throughout the study, the child sat at one end of a large circular table, and the experimenter stood at the opposite end. Each trial of the task proceeded as follows: the experimenter placed one or two objects on either side of the table; for one-object trials, the the location of the object (left or right) alternated between trials. After placing the objects, the experimenter gazed at the center of the table and said “Hey look, there’s a (target) here.” The experimenter waited approximately two seconds (based on a visual metronome placed within view) before saying, “Can you put the (target) in the bucket?” She then pushed the object(s) forward within reach of the child, and placed a plastic bucket in the center of the table, also within reach of the child. If the child did not respond or asked a question, the experimenter repeated the question, “Can you put the (target) in the bucket?”; if the child remained hesitant to answer, the experimenter said “Can you take a guess?” Prior to the twelve experimental trials, there were two training trials: a one-familiar trial and a two-familiar trial, to acquaint the child with the procedure. A camera placed to the side of the experimenter captured the participant’s face, so that their looking behavior could be coded from video.
+
+### Coding procedure
+
+Videos were coded using DataVyu software (http://datavyu.org). First, each trial was divided into four temporal phases: a “labeling” phase, which began at the utterance of the target label and ended when the experimenter began to slide the objects, a “slide” phase, which encompassed the sliding of the objects into the child’s reach, a “planning” phase, which began at the end of the slide and ended when the child touched an object, and a “response” phase, which began when the child touched an object and ended when the child released the object into the bucket. After onsets and offsets of these phases had been coded, the coder noted the number of looks the child made to the experimenter’s face during each phase. A second coder coded the number of looks for ¼ of the trials for each participant to establish reliability. *include reliability data here*
+
+## Results and Discussion
+
+```{r include=FALSE}
+msslooks <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
+  summarise(num_looks = mean(num_looks))
+
+mslooks <- filter(d, exclude == 0) %>%
+  group_by(phase_name, familiarity, num_objs, age_years) %>%
+  multi_boot_standard(col = "num_looks") 
+
+msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label","slide", "planning", "response"))
+mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label","slide", "planning", "response"))
+
+msslooks$num_objs <- factor(msslooks$num_objs,
+levels = c(1,2),
+labels = c("One object", "Two objects"))
+
+mslooks$num_objs <- factor(mslooks$num_objs,
+levels = c(1,2),
+labels = c("One object", "Two objects"))
+
+msslooks$age_years <- factor(msslooks$age_years,
+levels = c(2, 3, 4, 5),
+labels = c("2 years", "3 years", "4 years", "5 years"))
+
+mslooks$age_years <- factor(mslooks$age_years,
+levels = c(2, 3, 4, 5),
+labels = c("2 years", "3 years", "4 years", "5 years"))
+```
+
+```{r results_e1, fig.height=4, fig.width=7, fig.env='figure*', fig.align='center', fig.pos='h', fig.cap='Results of Experiment 1. Number of looks to the experimenter across phases and conditions.'}
+ggplot(msslooks, aes(x = phase_name, y = num_looks, 
+               col = familiarity, group = familiarity)) + 
+  geom_line(data = mslooks, aes(y = mean)) + 
+  geom_pointrange(data = mslooks, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ num_objs) + 
+  ylim(c(0,2))+  
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
+  labs(x = "Phase", y = "Number of Looks") 
+```
+
+```{r include = FALSE}
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(num_objs = factor(num_objs), 
+         familiarity = factor(familiarity), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name))
+```
+
+```{r lmer_e1, results="asis"}
+l_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs * familiarity | SID),
+           data = filter(lmer_data, phase_name == "label"))
+
+label_lm <- summary(l_lm)
+
+s_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs | SID),
+           data = filter(lmer_data, phase_name == "slide"))
+
+slide_lm <- summary(s_lm)
+
+p_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs + familiarity | SID),
+           data = filter(lmer_data, phase_name == "planning"))
+
+planning_lm <- summary(p_lm)
+
+r_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs  | SID),
+           data = filter(lmer_data, phase_name == "response"))
+
+response_lm <- summary(r_lm)
+```
+
+The descriptive results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To quantify the main and interactive effects of referential ambiguity and age on looking, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | SID)`. A single model with phase as a factor did not converge.
+
+We did not find any main or interactive effects of number of objects, familiarity, or age on number of looks during the label phase or the slide phase. However, we found an interactive effect of number of objects and familiarity during the planning ($\beta$ = `r round(planning_lm$coefficients[5], digits = 2)`) and response phases ($\beta$ = `r round(response_lm$coefficients[5], digits = 2)`), such that 2-novel trials were associated with more looking. There was no interaction with age in either phase.
+
+In summary, we found that children ages 2-5 looked to the experimenter more often when planning and executing a response under uncertainty. This suggests that they were aware that they did not have sufficient knowledge to answer independently, and they attempted to resolve their uncertainty using social referencing. However, we did not find the expected effect of referential ambiguity in the label phase.  There are a number of reasons we might have observed this null effect. One possibility is that children failed to predict that they would need more information until later in the trial, when they were actually faced with planning and executing a decision. Another possibility is that children's looking was at ceiling during the labeling phase, perhaps because children look at someone who is speaking regardless of the need for referential disambiguation. A third possibility is that this is an artifact of our design, in which the experimenter gazed at the center of the table rather than the referent of her label. Children may have realized that the experimenter's gaze direction during labeling was not a source of disambiguating information. Experiment 2 seeks to examine this possibility. 
+
+# Experiment 2
+
+Experiment 2 was designed to replicate Experiment 1 and address the possibility that the experimenter's gaze pattern during labeling had an effect on children's social referencing. To test this possibility, we manipulated the experimenter's gaze behavior between participants. For half of the sample, the experimenter gazed at the center of the table during labeling (i.e., reproducing Experiment 1), and for the remaining half, the experimenter looked at the object she was referring to during labeling. In Experiment 1, we did not observe an effect of age on looking. Thus, we restricted the current sample to 3- and 4-year-olds. Finally, since we did not observe any difference between the one-familiar and one-novel trials, we eliminated single-object trials, leaving the 2-familiar and 2-novel trials. In addition to these trials, we added 1-novel-1-familiar trials to examine children's looking patterns when 2 objects are present and an unfamiliar label are produced, but the label referent can be deduced through the principle of mutual exclusivity.  
+## Methods
+
+```{r}
+rm(list=ls())
+
+d.raw <- data.frame()
+files <- dir("../data_e2/coder_1")
+
+for (f in files) {
+  jf <- paste("../data_e2/coder_1/",f,sep="")
+  jd <- read.csv(jf)
+  
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
+                   line = jd$phase.ordinal,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset = jd$phase.onset,
+                   phase_offset = jd$phase.offset, 
+                   num_looks = jd$reference.num_looks,
+                   num_ques = as.numeric(jd$reference.num_ques),
+                   num_sou = jd$reference.num_SOU,
+                   exclude = as.numeric(jd$reference.exclude))
+  d.raw <- bind_rows(d.raw, id)}
+```
+
+```{r}
+demo <- read.csv("../demo_soc_ref_uncert_exp2.csv") 
+demo$age <- as.numeric(demo$age)
+demo$age_years <- trunc(demo$age, digits = 0)
+demo$age_months <- demo$age*12
+demo$Condition <- str_replace(demo$Condition, " ", "")
+
+trial_info <- read.csv("trial_info_e2.csv")
+```
+
+```{r}
+d <- left_join(d.raw, demo) %>%
+  select(SID, phase, num_looks, num_ques, num_sou, exclude, age_years, age_months, gender, line, Condition, Gaze, phase_onset, phase_offset) %>%
+  mutate(phase_length = phase_offset - phase_onset) %>%
+  mutate(social_ref = as.numeric(num_looks>0))%>%
+  left_join(trial_info, by = c("Condition","line"))%>%
+  mutate(first_half = between(trial, 1, 4))
+
+age_months <- d %>%
+  group_by(age_years) %>%
+  multi_boot_standard(col = "age_months")
+
+age_months$age_years <- factor(age_months$age_years,
+levels = c(3, 4),
+labels = c("three", "four"))
+```
+
+### Participants
+
+We recruited a planned sample of 80 children ages 3-4 years from the Children’s Discovery Museum in San Jose, California. The sample included 40 3-year-olds (mean age `r round(age_months$mean[age_months$age_years=="three"], digits = 2)` months) and 40 4-year-olds (mean age `r round(age_months$mean[age_months$age_years=="four"], digits = 2)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 9), because they were unable to complete at least half of the trials in the task (*n* = 7), or due to experimenter or technical errors (*n* = 4).
+
+### Stimuli and Design
+
+The stimuli and design were similar to Experiment 1, except that we eliminated 1-object trials. Instead, we included three trial types: 2-familiar ("familiar"), 2-novel ("novel"), and 1-novel-1-familiar ("mutual exclusivity"). There were four of each trial type, totaling twelve trials. In addition, we manipulated the experimenter’s gaze behavior between participants. For half of the participants, she looked at the center of the table on every trial; for the remaining half, she looked at the object she referred to on every trial.
+
+### Procedure
+
+The procedure was identical to Experiment 1, except that there were three practice trials rather than two, so that children could experience every trial type. 
+
+## Results and Discussion
+
+```{r}
+msslooks <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, trial_type, Gaze, age_years) %>%
+  summarise(num_looks = mean(num_looks))
+
+mslooks <- filter(d, exclude == 0) %>%
+  group_by(phase_name, trial_type, Gaze, age_years) %>%
+  multi_boot_standard(col = "num_looks") 
+
+msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label","slide", "planning", "response"))
+mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label","slide", "planning", "response"))
+
+msslooks$trial_type <- factor(msslooks$trial_type, labels = c("familiar","mutual exclusivity", "novel"))
+mslooks$trial_type <- factor(mslooks$trial_type, labels = c("familiar","mutual exclusivity", "novel"))
+
+msslooks$Gaze <- factor(msslooks$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Referential gaze", "No referential gaze"))
+
+mslooks$Gaze <- factor(mslooks$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Referential gaze", "No referential gaze"))
+
+msslooks$age_years <- factor(msslooks$age_years,
+levels = c(3, 4),
+labels = c("3 years", "4 years"))
+
+mslooks$age_years <- factor(mslooks$age_years,
+levels = c(3, 4),
+labels = c("3 years", "4 years"))
+
+msslooks <- msslooks %>%
+  mutate(familiarity = trial_type)
+
+mslooks <- mslooks %>%
+  mutate(familiarity = trial_type)
+```
+
+```{r results_e2, fig.height=3, fig.width=7, fig.env='figure*', fig.align='center', fig.pos='h', fig.cap='Results of Experiment 2. Number of looks to the experimenter across phases and conditions.'}
+ggplot(msslooks, aes(x = phase_name, y = num_looks, 
+               col = familiarity, group = trial_type)) + 
+  geom_line(data = mslooks, aes(y = mean)) + 
+  geom_pointrange(data = mslooks, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ Gaze) + 
+  ylim(c(0,2)) + 
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
+  labs(x = "Phase", y = "Number of Looks") +  
+  theme_bw() 
+```
+
+```{r}
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(trial_type = factor(trial_type), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name), 
+         gaze = factor(Gaze))
+
+maximal_mod <- lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
+                           (trial_type | SID), 
+                         data = lmer_data)
+
+g_lm <- summary(maximal_mod)
+```
+
+The descriptive results of Experiment 2 are presented in Figure \ref{fig:results_e2}. To quantify the main and interactive effects of familiarity, number of objects, gaze behavior, and age on looking, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ familiarity * age in months * gaze * phase + (familiarity | SID)`. 
+
+#General Discussion
+
 
 # Acknowledgements
 
-Place acknowledgments (including funding information) in a section at
-the end of the paper.
+We thank Kinedu Inc. for providing funding support for this project. We also thank Veronica Cristiano for assisting with data collection.
 
 # References 
 
