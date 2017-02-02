@@ -44,6 +44,7 @@ library(lme4)
 library(xtable)
 library(knitr)
 library(markdown)
+library(lmerTest)
 theme_set(theme_bw())
 ```
 
@@ -57,7 +58,7 @@ for (f in files) {
   jf <- paste("../data_e2/coder_1/",f,sep="")
   jd <- read.csv(jf)
   
-  id <- data.frame(SID = f,
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
                    line = jd$phase.ordinal,
                    phase = as.numeric(jd$phase.1_2_3_4),
                    phase_onset = jd$phase.onset,
@@ -98,6 +99,12 @@ d <- d %>%
   filter(phase_length > 50) %>%
   filter(age_years > 2) %>%
   mutate(looks_sec = (num_looks/phase_length)*1000)
+
+d_age <- d %>%
+  select(SID, age_years)%>%
+  unique
+
+table(d_age$age_years)
 ```
 
 Plot social referencing by trial type (familiar, novel, mutual exclusivity) and presence of referential gaze.
@@ -114,9 +121,8 @@ mslooks <- filter(d, exclude == 0) %>%
   group_by(phase_name, trial_type, Gaze, age_years) %>%
   multi_boot_standard(col = "num_looks") 
 
-msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
-
-mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label","slide", "planning", "response"))
+mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label","slide", "planning", "response"))
 ```
 
 Get mean questions for plots.
@@ -160,7 +166,7 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ Gaze) + 
   ylim(c(0,2)) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))
 
 #plot number of questions.
 ggplot(mssques, aes(x = phase_name, y = num_ques, 
@@ -187,30 +193,30 @@ ggplot(msssou, aes(x = phase_name, y = num_sou,
 
 Looks per second. Do not prefer this measure- I think response time and looking behavior are meaningfully correlated.
 ```{r}
-#get means for participants by condition for number of looks
-msslooks <- filter(d, exclude == 0) %>%
-  group_by(SID, phase_name, trial_type,  age_years, Gaze) %>%
-  summarise(looks_sec = mean(looks_sec))
-
-#get means and CIs across participants for number of looks
-mslooks <- filter(d, exclude == 0) %>%
-  group_by(phase_name, trial_type, age_years, Gaze) %>%
-  multi_boot_standard(col = "looks_sec", na.rm = TRUE) 
-
-msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
-
-mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
-
-#plot looks per second.
-ggplot(msslooks, aes(x = phase_name, y = looks_sec, 
-               col = trial_type, group = trial_type)) + 
-  geom_line(data = mslooks, aes(y = mean)) + 
-  geom_pointrange(data = mslooks, 
-                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
-                  position = position_dodge(width =.1)) + 
-  facet_grid(age_years ~Gaze) + 
-  ylim(c(0,1)) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+# #get means for participants by condition for number of looks
+# msslooks <- filter(d, exclude == 0) %>%
+#   group_by(SID, phase_name, trial_type,  age_years, Gaze) %>%
+#   summarise(looks_sec = mean(looks_sec))
+# 
+# #get means and CIs across participants for number of looks
+# mslooks <- filter(d, exclude == 0) %>%
+#   group_by(phase_name, trial_type, age_years, Gaze) %>%
+#   multi_boot_standard(col = "looks_sec", na.rm = TRUE) 
+# 
+# msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+# 
+# mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+# 
+# #plot looks per second.
+# ggplot(msslooks, aes(x = phase_name, y = looks_sec, 
+#                col = trial_type, group = trial_type)) + 
+#   geom_line(data = mslooks, aes(y = mean)) + 
+#   geom_pointrange(data = mslooks, 
+#                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+#                   position = position_dodge(width =.1)) + 
+#   facet_grid(age_years ~Gaze) + 
+#   ylim(c(0,1)) + 
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
 #Planned analyses
@@ -362,47 +368,18 @@ t.test(subset(t$familiar, t$phase_name == "touch-release" & t$age == "four" & t$
 
 
 ```{r}
-#separate linear models for each phase
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(trial_type = factor(trial_type), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name), 
+         gaze = factor(Gaze))
 
-# lb_maximal_mod <- lmer(num_looks ~ trial_type * age_years +
-#                            (trial_type | SID), 
-#                          data = filter(d, 
-#                                        exclude == 0, 
-#                                        phase_name == "label-begin_slide"))
-# 
-# be_maximal_mod <- lmer(num_looks ~ trial_type * Gaze * age_years +
-#                            (trial_type * Gaze | SID), 
-#                          data = filter(d, 
-#                                        exclude == 0, 
-#                                        phase_name == "begin_slide-end_slide"))
-# 
-# st_maximal_mod <- lmer(num_looks ~ trial_type * Gaze * scale(age_months) +
-#                            (trial_type * Gaze | SID), 
-#                          data = filter(d, 
-#                                        exclude == 0, 
-#                                        phase_name == "end_slide-touch"))
+# note phase name not in random effecvts
+maximal_mod <- lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
+                           (trial_type | SID), 
+                         data = lmer_data)
 
-tr_maximal_mod <- lmer(num_looks ~ trial_type *  age_years +
-                           (1| SID), 
-                         data = filter(d, 
-                                       exclude == 0, 
-                                       phase_name == "touch-release", 
-                                       Gaze == "gaze"))
-
-tr_maximal_mod <- lmer(num_looks ~ trial_type *  age_years +
-                           (1| SID), 
-                         data = filter(d, 
-                                       exclude == 0, 
-                                       phase_name == "touch-release", 
-                                       Gaze == "no_gaze"))
-
-
-
-# maximal model; does not converge
-# omni_maximal_mod <- lmer(num_looks ~ factor(trial_type) * Gaze * 
-#                            scale(age_months) * phase_name +
-#                            (trial_type + Gaze + phase_name | SID), 
-#                          data = filter(d, exclude == 0))
 ```
 
 #Conclusions

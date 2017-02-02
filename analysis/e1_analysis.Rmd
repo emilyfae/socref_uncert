@@ -41,6 +41,7 @@ library(lme4)
 library(xtable)
 library(knitr)
 library(markdown)
+library(lmerTest)
 theme_set(theme_bw())
 ```
 
@@ -53,7 +54,7 @@ files <- dir("../data/coder_1")
 for (f in files) {
   jf <- paste("../data/coder_1/",f,sep="")
   jd <- read.csv(jf)
-  id <- data.frame(SID = f,
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
                    line = jd$phase.ordinal,
                    phase = as.numeric(jd$phase.1_2_3_4),
                    phase_onset = jd$phase.onset,
@@ -68,7 +69,7 @@ files <- dir("../data/coder_2")
 for (f in files) {
   jf <- paste("../data/coder_2/",f,sep="")
   jd <- read.csv(jf)
-  id <- data.frame(SID = f,
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
                    line = as.numeric(jd$phase.ordinal),
                    phase = as.numeric(jd$phase.1_2_3_4),
                    phase_onset = as.numeric(jd$phase.onset),
@@ -77,9 +78,6 @@ for (f in files) {
                    exclude = as.numeric(jd$reference.exclude))
   d.raw <- bind_rows(d.raw, id)
 }
-
-d.raw$SID <- str_replace(d.raw$SID, ".csv", "")
-d.raw <- distinct(d.raw)
 ```
 
 Read in trial info and demographics. 
@@ -108,13 +106,20 @@ d <- left_join(d.raw, demo) %>%
   left_join(trial_info, by = c("Condition","line"))%>%
   mutate(first_half = between(trial, 1, 4)) 
 
-d <- d %>%
+d <- filter(d, phase_length > 50) %>%
   mutate(looks_sec = (num_looks/phase_length)*1000) 
+
+d_age <- d %>%
+  select(SID, age_years)%>%
+  unique
+
+table(d_age$age_years)
 ```
 
 Plot social referencing by familiarity and # items with 4 time bins.
 
 ```{r}
+#number of looks
 msslooks <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(num_looks = mean(num_looks))
@@ -123,7 +128,7 @@ mslooks <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "num_looks") 
 
-#get means and CIs across conditions and participants for number of looks for first half vs. second half
+#first half vs. second half
 mslooks_half <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, first_half) %>%
   multi_boot_standard(col = "num_looks") 
@@ -132,12 +137,11 @@ msslooks_half <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, first_half) %>%
   summarise(num_looks = mean(num_looks))
 
-#get means for participants by condition for number of looks: proportions
+#looks per second
 msslooks_sec <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
   summarise(looks_sec = mean(looks_sec))
 
-#get means and CIs across participants for number of looks: proportions
 mslooks_sec <- filter(d, exclude == 0) %>%
   group_by(phase_name, familiarity, num_objs, age_years) %>%
   multi_boot_standard(col = "looks_sec") 
@@ -266,167 +270,198 @@ t.test(subset(t$novel, t$phase_name == "slide_touch" & t$age == "two" & t$num_ob
 #Novel vs. Familiar, 3-year-olds
 t.test(subset(t$novel, t$phase_name == "slide_touch" & t$age == "three" & t$num_objs == 2),subset(t$familiar, t$phase_name == "slide_touch" & t$age == "three" & t$num_objs == 2), paired = TRUE)
 
-#Novel vs. Familiar, 4-year-olds
+#Novel vs. Familiar, 4-year-olds**
 t.test(subset(t$novel, t$phase_name == "slide_touch" & t$age == "four" & t$num_objs == 2),subset(t$familiar, t$phase_name == "slide_touch" & t$age == "four" & t$num_objs == 2), paired = TRUE)
 
-#Novel vs. Familiar, 5-year-olds
+#Novel vs. Familiar, 5-year-olds ^
 t.test(subset(t$novel, t$phase_name == "slide_touch" & t$age == "five" & t$num_objs == 2),subset(t$familiar, t$phase_name == "slide_touch" & t$age == "five" & t$num_objs == 2), paired = TRUE)
 ```
 
 Response phase
 ```{r}
-#Novel vs. Familiar, 2-year-olds
+#Novel vs. Familiar, 2-year-olds *
 t.test(subset(t$novel, t$phase_name == "touch_response" & t$age == "two" & t$num_objs == 2),subset(t$familiar, t$phase_name == "touch_response" & t$age == "two" & t$num_objs == 2), paired = TRUE)
 
-#Novel vs. Familiar, 3-year-olds
+#Novel vs. Familiar, 3-year-olds **
 t.test(subset(t$novel, t$phase_name == "touch_response" & t$age == "three" & t$num_objs == 2),subset(t$familiar, t$phase_name == "touch_response" & t$age == "three" & t$num_objs == 2), paired = TRUE)
 
-#Novel vs. Familiar, 4-year-olds
+#Novel vs. Familiar, 4-year-olds **
 t.test(subset(t$novel, t$phase_name == "touch_response" & t$age == "four" & t$num_objs == 2),subset(t$familiar, t$phase_name == "touch_response" & t$age == "four" & t$num_objs == 2), paired = TRUE)
 
-#Novel vs. Familiar, 5-year-olds
+#Novel vs. Familiar, 5-year-olds **
 t.test(subset(t$novel, t$phase_name == "touch_response" & t$age == "five" & t$num_objs == 2),subset(t$familiar, t$phase_name == "touch_response" & t$age == "five" & t$num_objs == 2), paired = TRUE)
 ```
 
 ##LMER
 
-Separate mixed-effects linear regression models for 3 phases.
+```{r}
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(num_objs = factor(num_objs), 
+         familiarity = factor(familiarity), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name))
+  
+maximal_mod <- lmer(num_looks ~ num_objs * familiarity *  
+                      age_c * phase_name +
+                      (num_objs * familiarity | SID), 
+                    data = lmer_data)
 
-Phase Label-Request
+summary(maximal_mod)
+```
+
+
 ```{r lmer_lr, results="asis"}
-lm <- lmer(num_looks ~ num_objs * familiarity * age_months +
-              (1|SID),
-              data = filter(dc, exclude == 0, phase_name == "label_request"))
+lr_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs * familiarity | SID),
+           data = filter(lmer_data, phase_name == "label_request"))
 
-tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
-print(tab, type="html")
+summary(lr_lm)
+
+rs_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs | SID),
+           data = filter(lmer_data, phase_name == "request_slide"))
+
+summary(rs_lm)
+
+st_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs + familiarity | SID),
+           data = filter(lmer_data, phase_name == "slide_touch"))
+
+summary(st_lm)
+
+tr_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs  | SID),
+           data = filter(lmer_data, phase_name == "touch_response"))
+
+summary(tr_lm)
 ```
 
 Phase Request-Touch
 ```{r lmer_rt, results="asis"}
-lm <- lmer(num_looks ~ num_objs * familiarity * age_months +
-              (1|SID),
-              data = filter(dc, exclude == 0, phase_name == "request_touch"))
-
-tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
-print(tab, type="html")
+# lm <- lmer(num_looks ~ num_objs * familiarity * age_months +
+#               (1|SID),
+#               data = filter(dc, exclude == 0, phase_name == "request_touch"))
+# 
+# tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
+# print(tab, type="html")
 ```
 
 Phase Touch-Response
 ```{r lmer_tr, results="asis"}
-lm <- lmer(num_looks ~ num_objs * familiarity * age_years +
-              (1|SID),
-
-              data = filter(d, exclude == 0, phase_name == "touch_response"))
-
-tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
-print(tab, type="html")
-
-coefs <- data.frame(coef(summary(lm)))
-# use normal distribution to approximate p-value
-coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
-coefs
+# lm <- lmer(num_looks ~ num_objs * familiarity * age_years +
+#               (1|SID),
+# 
+#               data = filter(d, exclude == 0, phase_name == "touch_response"))
+# 
+# tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
+# print(tab, type="html")
+# 
+# coefs <- data.frame(coef(summary(lm)))
+# # use normal distribution to approximate p-value
+# coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
+# coefs
 
 ```
 
 Omnibus model. Confirmitory plan is to look for 4-way interaction between number of ojects (1 vs 2), familiarity (novel vs familiar), phase (label vs request vs response). Study may be underpowered to detect 4-way interaction.
 ```{r lmer_om, results="asis"}
-lm <- lmer(num_looks ~ num_objs * familiarity * phase_name * age_years +
-              (1|SID),
-              data = filter(d, exclude == 0))
-
-tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
-print(tab, type="html")
-
-coefs <- data.frame(coef(summary(lm)))
-# use normal distribution to approximate p-value
-coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
-coefs
+# lm <- lmer(num_looks ~ num_objs * familiarity * phase_name * age_years +
+#               (1|SID),
+#               data = filter(d, exclude == 0))
+# 
+# tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting social referencing")
+# print(tab, type="html")
+# 
+# coefs <- data.frame(coef(summary(lm)))
+# # use normal distribution to approximate p-value
+# coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
+# coefs
 ```
 
 Condition x age predicting decision latency (phase slide-touch).
-```{r lmer_latency, results="asis"}
-lm <- lmer(phase_length ~ num_objs * familiarity * age_months +
-              (1|SID),
-              data = filter(d, exclude == 0, phase_name == "slide_touch"))
-
-tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting response latency")
-print(tab, type="html")
-
-coefs <- data.frame(coef(summary(lm)))
-# use normal distribution to approximate p-value
-coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
-coefs
+```{r lmer_latency_, results="asis"}
+# lm <- lmer(phase_length ~ num_objs * familiarity * age_months +
+#               (1|SID),
+#               data = filter(d, exclude == 0, phase_name == "slide_touch"))
+# 
+# tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting response latency")
+# print(tab, type="html")
+# 
+# coefs <- data.frame(coef(summary(lm)))
+# # use normal distribution to approximate p-value
+# coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
+# coefs
 ```
 
 Condition x age predicting decision latency (phase touch-response).
 ```{r lmer_latency, results="asis"}
-lm <- lmer(phase_length ~ num_objs * familiarity * age_months +
-              (1|SID),
-              data = filter(d, exclude == 0, phase_name == "touch_response"))
-
-tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting response latency")
-print(tab, type="html")
-
-coefs <- data.frame(coef(summary(lm)))
-# use normal distribution to approximate p-value
-coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
-coefs
+# lm <- lmer(phase_length ~ num_objs * familiarity * age_months +
+#               (1|SID),
+#               data = filter(d, exclude == 0, phase_name == "touch_response"))
+# 
+# tab <- kable(coef(summary(lm)), caption = "Mixed effects linear regression model predicting response latency")
+# print(tab, type="html")
+# 
+# coefs <- data.frame(coef(summary(lm)))
+# # use normal distribution to approximate p-value
+# coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
+# coefs
 ```
 
 
 
 ```{r}
-glm_mod <- glmer(social_ref ~ num_objs * familiarity * phase_name * age_months +
-              (1|SID), family = "binomial",
-              data = filter(dc, exclude == 0))
-
-glm_maximal_mod <- glmer(social_ref ~ num_objs * familiarity * 
-                           phase_name * age_months +
-                           (num_objs * familiarity * phase_name | SID), 
-                         family = "binomial",
-                         data = filter(dc, exclude == 0))
+# glm_mod <- glmer(social_ref ~ num_objs * familiarity * phase_name * age_months +
+#               (1|SID), family = "binomial",
+#               data = filter(dc, exclude == 0))
+# 
+# glm_maximal_mod <- glmer(social_ref ~ num_objs * familiarity * 
+#                            phase_name * age_months +
+#                            (num_objs * familiarity * phase_name | SID), 
+#                          family = "binomial",
+#                          data = filter(dc, exclude == 0))
 ```
 
 
 ```{r}
-rt_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * scale(age_months) +
-                           (num_objs * familiarity | SID), 
-                         data = filter(dc, 
-                                       exclude == 0, 
-                                       phase_name == "request_touch"))
-
-tr_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * scale(age_months) +
-                           (num_objs * familiarity | SID), 
-                         data = filter(dc, 
-                                       exclude == 0, 
-                                       phase_name == "touch_response"))
-
-filter(dc, exclude == 0, phase_name == "request_touch") %>%
-  group_by(age_years, num_objs, familiarity) %>%
-  summarise(num_looks = mean(num_looks))
-
-filter(dc, exclude == 0, phase_name == "touch_response") %>%
-  group_by(age_years, num_objs, familiarity) %>%
-  summarise(num_looks = mean(num_looks))
-
-# takes a long time
-omni_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * 
-                           scale(age_months) * phase_name +
-                           (num_objs + familiarity + phase_name | SID), 
-                         data = filter(d, exclude == 0))
-
-
-
+# rt_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * scale(age_months) +
+#                            (num_objs * familiarity | SID), 
+#                          data = filter(dc, 
+#                                        exclude == 0, 
+#                                        phase_name == "request_touch"))
+# 
+# tr_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * scale(age_months) +
+#                            (num_objs * familiarity | SID), 
+#                          data = filter(dc, 
+#                                        exclude == 0, 
+#                                        phase_name == "touch_response"))
+# 
+# filter(dc, exclude == 0, phase_name == "request_touch") %>%
+#   group_by(age_years, num_objs, familiarity) %>%
+#   summarise(num_looks = mean(num_looks))
+# 
+# filter(dc, exclude == 0, phase_name == "touch_response") %>%
+#   group_by(age_years, num_objs, familiarity) %>%
+#   summarise(num_looks = mean(num_looks))
+# 
+# # takes a long time
+# omni_maximal_mod <- lmer(num_looks ~ factor(num_objs) * familiarity * 
+#                            scale(age_months) * phase_name +
+#                            (num_objs + familiarity + phase_name | SID), 
+#                          data = filter(d, exclude == 0))
+# 
+# 
+# 
 
 ```
 
 
 ```{r}
-glm_maximal_mod <- glmer(social_ref ~ num_objs * familiarity * age_months +
-                           (num_objs + familiarity | SID), 
-                         family = "binomial",
-                         data = filter(dc, 
-                                       exclude == 0, 
-                                       phase_name == "request_touch"))
+# glm_maximal_mod <- glmer(social_ref ~ num_objs * familiarity * age_months +
+#                            (num_objs + familiarity | SID), 
+#                          family = "binomial",
+#                          data = filter(dc, 
+#                                        exclude == 0, 
+#                                        phase_name == "request_touch"))
 ```
