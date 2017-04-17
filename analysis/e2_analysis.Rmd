@@ -45,12 +45,15 @@ library(xtable)
 library(knitr)
 library(markdown)
 library(lmerTest)
+library(pwr)
 theme_set(theme_bw())
 ```
 
 Read in files and consolidate to the same directory. 
 
 ```{r}
+rm(list=ls())
+
 d.raw <- data.frame()
 files <- dir("../data_e2/coder_1")
 
@@ -68,9 +71,6 @@ for (f in files) {
                    num_sou = jd$reference.num_SOU,
                    exclude = as.numeric(jd$reference.exclude))
   d.raw <- bind_rows(d.raw, id)}
-
-d.raw$SID <- str_replace(d.raw$SID, ".csv", "")
-d.raw <- distinct(d.raw)
 ```
 
 Read in trial info and demographics. 
@@ -80,49 +80,68 @@ demo <- read.csv("../demo_soc_ref_uncert_exp2.csv")
 demo$age <- as.numeric(demo$age)
 demo$age_years <- trunc(demo$age, digits = 0)
 demo$age_months <- demo$age*12
-demo$Condition <- str_replace(demo$Condition, " ", "")
 
-trial_info <- read.csv("trial_info_e2.csv")
+trial_info <- read.csv("../trial_info_e2.csv")
 ```
 
 Join trial info and demographics with raw data.
 
 ```{r}
 d <- left_join(d.raw, demo) %>%
-  select(SID, phase, num_looks, num_ques, num_sou, exclude, age_years, age_months, gender, line, Condition, Gaze, phase_onset, phase_offset) %>%
+  dplyr::select(SID, phase, num_looks, num_ques, num_sou, exclude, age_years, age_months, line, Condition, Gaze, phase_onset, phase_offset) %>%
   mutate(phase_length = phase_offset - phase_onset) %>%
   mutate(social_ref = as.numeric(num_looks>0))%>%
   left_join(trial_info, by = c("Condition","line"))%>%
-  mutate(first_half = between(trial, 1, 4)) 
+  mutate(first_half = between(trial, 1, 4))
 
-d <- d %>%
-  filter(phase_length > 50) %>%
-  filter(age_years > 2) %>%
-  mutate(looks_sec = (num_looks/phase_length)*1000)
+age_months <- d %>%
+  group_by(age_years) %>%
+  multi_boot_standard(col = "age_months")
 
-d_age <- d %>%
-  select(SID, age_years)%>%
-  unique
-
-table(d_age$age_years)
+age_months$age_years <- factor(age_months$age_years,
+levels = c(3, 4),
+labels = c("three", "four"))
 ```
 
 Plot social referencing by trial type (familiar, novel, mutual exclusivity) and presence of referential gaze.
 
 Get means.
 ```{r}
-#get means for participants by condition for number of looks
 msslooks <- filter(d, exclude == 0) %>%
   group_by(SID, phase_name, trial_type, Gaze, age_years) %>%
   summarise(num_looks = mean(num_looks))
 
-#get means and CIs across participants for number of looks
 mslooks <- filter(d, exclude == 0) %>%
   group_by(phase_name, trial_type, Gaze, age_years) %>%
   multi_boot_standard(col = "num_looks") 
 
 msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label","slide", "planning", "response"))
 mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label","slide", "planning", "response"))
+
+msslooks$trial_type <- factor(msslooks$trial_type, labels = c("familiar","mutual exclusivity", "novel"))
+mslooks$trial_type <- factor(mslooks$trial_type, labels = c("familiar","mutual exclusivity", "novel"))
+
+msslooks$Gaze <- factor(msslooks$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Referential gaze", "No referential gaze"))
+
+mslooks$Gaze <- factor(mslooks$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Referential gaze", "No referential gaze"))
+
+msslooks$age_years <- factor(msslooks$age_years,
+levels = c(3, 4),
+labels = c("3 years", "4 years"))
+
+mslooks$age_years <- factor(mslooks$age_years,
+levels = c(3, 4),
+labels = c("3 years", "4 years"))
+
+msslooks <- msslooks %>%
+  mutate(familiarity = trial_type)
+
+mslooks <- mslooks %>%
+  mutate(familiarity = trial_type)
 ```
 
 Get mean questions for plots.
@@ -135,9 +154,33 @@ msques <- filter(d, exclude == 0) %>%
   group_by(phase_name, trial_type, Gaze, age_years) %>%
   multi_boot_standard(col = "num_ques") 
 
-mssques$phase_name <- factor(mssques$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+mssques$phase_name <- factor(mssques$phase_name, levels = c("label","slide", "planning", "response"))
+msques$phase_name <- factor(msques$phase_name, levels = c("label","slide", "planning", "response"))
 
-msques$phase_name <- factor(msques$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+mssques$trial_type <- factor(mssques$trial_type, labels = c("familiar","mutual exclusivity", "novel"))
+msques$trial_type <- factor(msques$trial_type, labels = c("familiar","mutual exclusivity", "novel"))
+
+mssques$Gaze <- factor(mssques$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Referential gaze", "No referential gaze"))
+
+msques$Gaze <- factor(msques$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Referential gaze", "No referential gaze"))
+
+mssques$age_years <- factor(mssques$age_years,
+levels = c(3, 4),
+labels = c("3 years", "4 years"))
+
+msques$age_years <- factor(msques$age_years,
+levels = c(3, 4),
+labels = c("3 years", "4 years"))
+
+mssques <- mssques %>%
+  mutate(familiarity = trial_type)
+
+msques <- msques %>%
+  mutate(familiarity = trial_type)
 ```
 
 Get mean statements of ignorance for plots.
@@ -150,79 +193,113 @@ mssou <- filter(d, exclude == 0) %>%
   group_by(phase_name, trial_type, Gaze, age_years) %>%
   multi_boot_standard(col = "num_sou") 
 
-msssou$phase_name <- factor(msssou$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+msssou$phase_name <- factor(msssou$phase_name, levels = c("label","slide", "planning", "response"))
+mssou$phase_name <- factor(mssou$phase_name, levels = c("label","slide", "planning", "response"))
 
-mssou$phase_name <- factor(mssou$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+msssou$trial_type <- factor(msssou$trial_type, labels = c("familiar","mutual exclusivity", "novel"))
+mssou$trial_type <- factor(mssou$trial_type, labels = c("familiar","mutual exclusivity", "novel"))
+
+msssou$Gaze <- factor(msssou$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Referential gaze", "No referential gaze"))
+
+mssou$Gaze <- factor(mssou$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Referential gaze", "No referential gaze"))
+
+msssou$age_years <- factor(msssou$age_years,
+levels = c(3, 4),
+labels = c("3 years", "4 years"))
+
+mssou$age_years <- factor(mssou$age_years,
+levels = c(3, 4),
+labels = c("3 years", "4 years"))
+
+msssou <- msssou %>%
+  mutate(familiarity = trial_type)
+
+mssou <- mssou %>%
+  mutate(familiarity = trial_type)
 ```
 
 Plots.
 ```{r}
 #plot number of looks.
 ggplot(msslooks, aes(x = phase_name, y = num_looks, 
-               col = trial_type, group = trial_type)) + 
+               col = familiarity, group = trial_type)) + 
   geom_line(data = mslooks, aes(y = mean)) + 
   geom_pointrange(data = mslooks, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ Gaze) + 
-  ylim(c(0,2)) + 
-  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))
+  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
+  labs(x = "Phase", y = "Number of Looks")  +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized() 
 
 #plot number of questions.
-ggplot(mssques, aes(x = phase_name, y = num_ques, 
-               col = trial_type, group = trial_type)) + 
-  geom_line(data = msques, aes(y = mean)) + 
-  geom_pointrange(data = msques, 
-                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
-                  position = position_dodge(width =.1)) + 
-  facet_grid(age_years ~ Gaze) + 
-  ylim(c(0,1.5)) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
-
-#plot number of statements of uncertainty.
 ggplot(msssou, aes(x = phase_name, y = num_sou, 
-               col = trial_type, group = trial_type)) + 
+               col = familiarity, group = trial_type)) + 
   geom_line(data = mssou, aes(y = mean)) + 
   geom_pointrange(data = mssou, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ Gaze) + 
-  ylim(c(0,.25)) + 
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
+  labs(x = "Phase", y = "Number of Statements of Uncertainty")  +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized()
+
+
+#plot number of statements of uncertainty.
+ggplot(mssques, aes(x = phase_name, y = num_ques, 
+               col = familiarity, group = trial_type)) + 
+  geom_line(data = msques, aes(y = mean)) + 
+  geom_pointrange(data = msques, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ Gaze) + 
+  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
+  labs(x = "Phase", y = "Number of Questions")  +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized() 
 ```
 
 Looks per second. Do not prefer this measure- I think response time and looking behavior are meaningfully correlated.
-```{r}
-# #get means for participants by condition for number of looks
-# msslooks <- filter(d, exclude == 0) %>%
-#   group_by(SID, phase_name, trial_type,  age_years, Gaze) %>%
-#   summarise(looks_sec = mean(looks_sec))
-# 
-# #get means and CIs across participants for number of looks
-# mslooks <- filter(d, exclude == 0) %>%
-#   group_by(phase_name, trial_type, age_years, Gaze) %>%
-#   multi_boot_standard(col = "looks_sec", na.rm = TRUE) 
-# 
-# msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
-# 
-# mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
-# 
-# #plot looks per second.
-# ggplot(msslooks, aes(x = phase_name, y = looks_sec, 
-#                col = trial_type, group = trial_type)) + 
-#   geom_line(data = mslooks, aes(y = mean)) + 
-#   geom_pointrange(data = mslooks, 
-#                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
-#                   position = position_dodge(width =.1)) + 
-#   facet_grid(age_years ~Gaze) + 
-#   ylim(c(0,1)) + 
-#   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
+```{r eval= FALSE}
+#get means for participants by condition for number of looks
+msslooks <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, trial_type,  age_years, Gaze) %>%
+  summarise(looks_sec = mean(looks_sec))
+
+#get means and CIs across participants for number of looks
+mslooks <- filter(d, exclude == 0) %>%
+  group_by(phase_name, trial_type, age_years, Gaze) %>%
+  multi_boot_standard(col = "looks_sec", na.rm = TRUE)
+
+msslooks$phase_name <- factor(msslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+
+mslooks$phase_name <- factor(mslooks$phase_name, levels = c("label-begin_slide","begin_slide-end_slide","end_slide-touch","touch-release"))
+
+#plot looks per second.
+ggplot(msslooks, aes(x = phase_name, y = looks_sec,
+               col = trial_type, group = trial_type)) +
+  geom_line(data = mslooks, aes(y = mean)) +
+  geom_pointrange(data = mslooks,
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper),
+                  position = position_dodge(width =.1)) +
+  facet_grid(age_years ~Gaze) +
+  ylim(c(0,1)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
 #Planned analyses
 
 ##T-tests.
-```{r}
+```{r eval= FALSE}
 t <- msslooks 
 t$age <- str_replace(t$age_years, "3", "three")
 t$age <- str_replace(t$age, "4", "four")
@@ -234,7 +311,7 @@ t <- t %>%
 
 Labeling phase
 
-```{r}
+```{r eval= FALSE}
 #Novel vs. Familiar, 3-year-olds 
 t.test(subset(t$novel, t$phase_name == "label-begin_slide" & t$age == "three" & t$Gaze == "gaze"),subset(t$familiar, t$phase_name == "label-begin_slide" & t$age == "three" & t$Gaze == "gaze"), paired = TRUE)
 
@@ -256,7 +333,7 @@ t.test(subset(t$familiar, t$phase_name == "label-begin_slide" & t$age == "four" 
 
 Planning Phase
 
-```{r}
+```{r eval= FALSE}
 #Novel vs. Familiar, 3-year-olds
 t.test(subset(t$novel, t$phase_name == "end_slide-touch" & t$age == "three" & t$Gaze == "gaze"),subset(t$familiar, t$phase_name == "end_slide-touch" & t$age == "three" & t$Gaze == "gaze"), paired = TRUE)
 
@@ -278,7 +355,7 @@ t.test(subset(t$familiar, t$phase_name == "end_slide-touch" & t$age == "four" & 
 
 Response phase
 
-```{r}
+```{r eval= FALSE}
 #Novel vs. Familiar, 3-year-olds **
 t.test(subset(t$novel, t$phase_name == "touch-release" & t$age == "three" & t$Gaze == "gaze"),subset(t$familiar, t$phase_name == "touch-release" & t$age == "three" & t$Gaze == "gaze"), paired = TRUE)
 
@@ -302,7 +379,7 @@ t.test(subset(t$familiar, t$phase_name == "touch-release" & t$age == "four" & t$
 
 Labeling phase
 
-```{r}
+```{r eval= FALSE}
 #Novel vs. Familiar, 3-year-olds 
 t.test(subset(t$novel, t$phase_name == "label-begin_slide" & t$age == "three" & t$Gaze == "no_gaze"),subset(t$familiar, t$phase_name == "label-begin_slide" & t$age == "three" & t$Gaze == "no_gaze"), paired = TRUE)
 
@@ -324,7 +401,7 @@ t.test(subset(t$familiar, t$phase_name == "label-begin_slide" & t$age == "four" 
 
 Planning phase
 
-```{r}
+```{r eval= FALSE}
 #Novel vs. Familiar, 3-year-olds *
 t.test(subset(t$novel, t$phase_name == "end_slide-touch" & t$age == "three" & t$Gaze == "no_gaze"),subset(t$familiar, t$phase_name == "end_slide-touch" & t$age == "three" & t$Gaze == "no_gaze"), paired = TRUE)
 
@@ -346,7 +423,7 @@ t.test(subset(t$familiar, t$phase_name == "end_slide-touch" & t$age == "four" & 
 
 Response phase
 
-```{r}
+```{r eval= FALSE}
 #Novel vs. Familiar, 3-year-olds *
 t.test(subset(t$novel, t$phase_name == "touch-release" & t$age == "three" & t$Gaze == "no_gaze"),subset(t$familiar, t$phase_name == "touch-release" & t$age == "three" & t$Gaze == "no_gaze"), paired = TRUE)
 
@@ -366,7 +443,6 @@ t.test(subset(t$novel, t$phase_name == "touch-release" & t$age == "four" & t$Gaz
 t.test(subset(t$familiar, t$phase_name == "touch-release" & t$age == "four" & t$Gaze == "no_gaze"),subset(t$mutual, t$phase_name == "touch-release" & t$age == "four" & t$Gaze == "no_gaze"), paired = TRUE)
 ```
 
-
 ```{r}
 lmer_data <- d %>%
   filter(!exclude) %>%
@@ -375,11 +451,68 @@ lmer_data <- d %>%
          phase_name = factor(phase_name), 
          gaze = factor(Gaze))
 
-# note phase name not in random effecvts
 maximal_mod <- lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
                            (trial_type | SID), 
                          data = lmer_data)
 
+g_lm <- summary(maximal_mod)
 ```
+
+
+```{r eval= FALSE}
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(trial_type = factor(trial_type), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name), 
+         gaze = factor(Gaze))
+
+maximal_mod <- lmer(num_ques ~ trial_type *  age_c * gaze * phase_name +
+                           (trial_type | SID), 
+                         data = lmer_data)
+
+g_lm <- summary(maximal_mod)
+```
+
+
+Reliability within trial type.
+
+```{r}
+wide.novel <- d %>% 
+  filter(trial_type == "novel", phase == "4") %>%
+  dplyr::select(SID, trial, num_looks)
+
+wide.novel$trial[wide.novel$trial == "1" | wide.novel$trial == "2"] <- "one"
+wide.novel$trial[wide.novel$trial == "4" | wide.novel$trial == "5"] <- "two"
+wide.novel$trial[wide.novel$trial == "7" | wide.novel$trial == "8"] <- "three"
+wide.novel$trial[wide.novel$trial == "10" | wide.novel$trial == "11"] <- "four"
+
+wide.novel <- wide.novel %>%
+  spread(trial, num_looks)
+
+alpha.nov <- as.matrix(dplyr::select(wide.novel, -SID))
+alpha(x = alpha.nov)
+
+
+wide.familiar <- d %>% 
+  filter(trial_type == "familiar", phase == "4") %>%
+  dplyr::select(SID, trial, num_looks)
+
+wide.familiar$trial[wide.familiar$trial == "1" | wide.familiar$trial == "3"] <- "one"
+wide.familiar$trial[wide.familiar$trial == "4" | wide.familiar$trial == "6"] <- "two"
+wide.familiar$trial[wide.familiar$trial == "7" | wide.familiar$trial == "9"] <- "three"
+wide.familiar$trial[wide.familiar$trial == "10" | wide.familiar$trial == "12"] <- "four"
+
+wide.familiar <- wide.familiar %>%
+  spread(trial, num_looks)
+
+alpha.fam <- as.matrix(dplyr::select(wide.familiar, -SID))
+alpha(x = alpha.fam)
+
+
+pwr.r.test(n = , r = .3, sig.level = .05, power = .80)
+```
+
+
 
 #Conclusions
