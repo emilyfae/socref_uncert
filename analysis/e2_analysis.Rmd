@@ -296,6 +296,38 @@ ggplot(msslooks, aes(x = phase_name, y = looks_sec,
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5))
 ```
 
+Timecourse of task.
+
+```{r}
+#do children look at the speaker more often in the gaze condition as the trials move forward?
+msslooks_half <- filter(halfs, exclude == 0) %>%
+  group_by(SID, phase_name, trial_type, Gaze, first_half) %>%
+  summarise(num_looks = mean(num_looks))
+
+mslooks_half <- filter(halfs, exclude == 0) %>%
+  group_by(phase_name, trial_type, Gaze, first_half) %>%
+  multi_boot_standard(col = "num_looks") 
+
+msslooks_half$phase_name <- factor(msslooks_half$phase_name, levels = c("label","slide", "planning", "response"))
+mslooks_half$phase_name <- factor(mslooks_half$phase_name, levels = c("label","slide", "planning", "response"))
+
+
+#plot number of looks based on half.
+ggplot(msslooks_half, aes(x = phase_name, y = num_looks, 
+               col = trial_type, group = trial_type)) + 
+  geom_line(data = mslooks_half, aes(y = mean)) + 
+  geom_pointrange(data = mslooks_half, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper, shape = trial_type), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(first_half ~ Gaze) + 
+  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
+  labs(x = "Phase", y = "Number of Looks")  +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized() 
+```
+
+
 #Planned analyses
 
 ##T-tests.
@@ -512,6 +544,22 @@ alpha(x = alpha.fam)
 
 pwr.r.test(n = , r = .3, sig.level = .05, power = .80)
 ```
+
+timecourse of task.
+```{r}
+lmer_data_trial <- d %>%
+  filter(!exclude) %>%
+  mutate(trial_type = factor(trial_type), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name), 
+         trial = as.numeric(trial),
+         gaze = factor(Gaze))
+
+summary(lmer(num_looks ~  age_c * gaze * trial +
+                           (1 | SID), 
+                         data = filter(lmer_data_halfs, trial_type == "novel", phase_name == "response")))
+```
+
 
 
 
