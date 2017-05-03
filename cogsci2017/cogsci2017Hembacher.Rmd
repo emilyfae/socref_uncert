@@ -43,6 +43,7 @@ library(ggthemes)
 ```
 
 Preschoolers quickly learn new concepts, rules, and language. They also actively explore and ask questions in ways that seem targeted to maximize learning [@Chouinard2007; @Schulz2007]. However, we still have an incomplete understanding of young children’s ability to monitor their own mental states, in particular, their epistemic uncertainty [@Sodian2012]. Do preschool-aged children monitor uncertainty and actively guide their learning behaviors on the basis of this monitoring, or is early learning better characterized as a process of integrating information that is largely generated externally, for example, by social partners who act as teachers [@Csibra2006]? 
+
 A hallmark of successful uncertainty monitoring is being less confident when the probability of accuracy is lower [@Robinson1997]. This ability includes awareness of complete ignorance, but also of graded evidence in mental representations, which is considered important for predicting outcomes and regulating behavior [@Lyons2011]. During adulthood, accurately representing one's own learning progress allows for efficient self-directed study and predicts learning outcomes [@Dunlosky2012]. There is mixed evidence about whether young children can accomplish this type of self-monitoring. For example, 3-year-olds report being equally confident about correct and incorrect responses in memory tasks [@Hembacher2014]. Preschoolers report being less confident when they are wrong in other tasks, but they are typically overconfident overall [@Coughlin2015; @Lipowski2013]. However, these studies may underestimate young children's uncertainty monitoring, as they typically rely on explicit metacognitive reports. Children may learn to respond appropriately to uncertainty in everyday learning situations before they can bring it fully into consciousness and report on it.
 
 Several studies have provided evidence that children's spontaneous information-seeking behaviors might track uncertainty. Call and Carpenter [-@Call2001] had 2-year-olds choose between several tubes to find a hidden sticker. They found that the toddlers were more likely to peek inside a tube before choosing when they had not seen the baiting of the tubes compared to when they had, suggesting they were aware of their ignorance and managed to delay their response until they were sufficiently confident. In another study, Goupil, Romand-Monnier, and Kouider [-@Goupil2016] found that 20-month-olds were more likely to seek help by looking at their parents when they were unable to respond accurately in a memory task. These spontaneous information-gathering behaviors may provide a window into early uncertainty monitoring, and allow us to ask questions about its development.
@@ -66,6 +67,34 @@ We were interested in the amount of social referencing children exhibited across
 
 ```{r}
 load("soc_ref_e1.RData")
+accuracy <- read.csv("accuracy_e1.csv")
+accuracy_key <- read.csv("accuracy_key.csv")
+
+acc <- accuracy %>%
+  gather("trial", "response", X1:X12)
+
+acc$trial <- as.numeric(str_replace(acc$trial, "X", ""))
+
+acc<- acc%>%
+  left_join(accuracy_key)%>%
+  mutate(acc = response == answer)
+
+both <- acc%>%
+  filter(response == "LR" | response=="RL")
+
+both_n_kids <- length(unique(both$ID))
+both_n_trials <- length(both$ID)
+
+acc_ms <- acc%>%
+  filter(answer != "ambiguous")%>%
+  group_by(ID, answer)%>%
+  summarise(acc = mean(acc))
+
+acc_mss <- acc%>%
+  filter(answer != "ambiguous")%>%
+  group_by(answer)%>%
+  multi_boot_standard(col = "acc")
+  
 
 age_months <- d %>%
   group_by(age_years) %>%
