@@ -6,7 +6,7 @@ document-params: "10pt, letterpaper"
 
 author-information: > 
     \author{{\large \bf Emily  Hembacher} \\ \texttt{ehembach@stanford.edu} \\ Department of Psychology \\ Stanford University
-    \And {\large \bf Benjamin deMayo} \\ \texttt{bedemayo@stanford.edu} \\ Department of Psychology \\ Stanford University
+    \And {\large \bf Benjamin deMayo} \\ \texttt{bdemayo@stanford.edu} \\ Department of Psychology \\ Stanford University
     \And {\large \bf Michael C. Frank} \\ \texttt{mcfrank@stanford.edu} \\ Department of Psychology \\ Stanford University} 
 
 abstract: 
