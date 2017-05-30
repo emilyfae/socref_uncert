@@ -193,6 +193,7 @@ acc <- accuracy %>%
   gather("trial", "acc", X1:X12)
 
 acc$trial <- as.numeric(str_replace(acc$trial, "X", ""))
+acc$acc <- as.factor(acc$acc)
 
 #gaze acc
 accuracy_gaze <- read.csv("../data_e2/accuracy_e2.csv")
@@ -205,18 +206,11 @@ acc_gaze$trial <- as.numeric(str_replace(acc_gaze$trial, "X", ""))
 acc_gaze$response <- str_replace(acc_gaze$response, "LR", "L")
 acc_gaze$response <- str_replace(acc_gaze$response, "RL", "R")  
 
-
 #combine with data file
 acc_g <- acc_gaze %>%
   left_join(accuracy_key)%>%
   mutate(acc_gaze = response == gaze_answer)%>%
   select(SID, trial, acc_gaze, response)
-
-acc_g$trial <- as.character(acc_g$trial)
-acc$trial <- as.character(acc$trial)
-
-acc_g$SID <- as.character(acc_g$SID)
-acc$SID <- as.character(acc$SID)
 
 acc <- acc %>%
   left_join(acc_g)
@@ -225,10 +219,6 @@ acc$trial <- as.numeric(acc$trial)
 
 d<- d%>%
   left_join(acc)
-
-
-length(unique(d$trial))
-
 
 d$acc[d$trial_type == "novel"] <- d$acc_gaze[d$trial_type == "novel"]
 d$acc[d$response == "NC" | d$response == "B"] <- NA
