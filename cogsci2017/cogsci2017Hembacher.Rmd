@@ -205,6 +205,7 @@ In addition, we manipulated between participants whether or not the experimenter
 ## Methods
 
 ```{r}
+rm(list=ls())
 load("soc_ref_e2.RData")
 
 halfs<- d %>%
