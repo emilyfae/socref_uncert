@@ -7,8 +7,8 @@ author-information: "\\author{{\\large \\bf Emily  Hembacher} \\\\ \\texttt{ehem
   \\\\ Department of Psychology \\\\ Stanford University} \n"
 bibliography: socref.bib
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 document-params: 11pt, letterpaper
 keywords: social referencing; help seeking; word learning; uncertainty.
 csl: apa6.csl
@@ -160,23 +160,21 @@ Videos were coded using DataVyu software (http://datavyu.org). For each particip
   \hline
 Experiment & Phase & Mean & SD \\ 
   \hline
-  1 & Label & `r plength1$label$mean` & `r plength1$label$sd` \\ 
-  1 & Slide & `r plength1$slide$mean` & `r plength1$slide$sd` \\ 
-  1 & Planning & `r plength1$planning$mean` & `r plength1$planning$sd` \\ 
-  1 & Response & `r plength1$response$mean` & `r plength1$response$sd` \\
-  2 & Label & `r plength2$label$mean` & `r plength2$label$sd` \\ 
-  2 & Slide & `r plength2$slide$mean` & `r plength2$slide$sd` \\ 
-  2 & Planning & `r plength2$planning$mean` & `r plength2$planning$sd` \\ 
-  2 & Response & `r plength2$response$mean` & `r plength2$response$sd` \\ 
+  1 & Label & `r round(plength1$label$mean, digits = 2)` & `r round(plength1$label$sd, digits = 2)` \\ 
+  1 & Slide & `r round(plength1$slide$mean, digits = 2)` & `r round(plength1$slide$sd, digits = 2)` \\ 
+  1 & Planning & `r round(plength1$planning$mean, digits = 2)` & `r round(plength1$planning$sd, digits = 2)` \\ 
+  1 & Response & `r round(plength1$response$mean, digits = 2)` & `r round(plength1$response$sd, digits = 2)` \\
+  \hline
+  2 & Label & `r round(plength2$label$mean, digits = 2)` & `r round(plength2$label$sd, digits = 2)` \\ 
+  2 & Slide & `r round(plength2$slide$mean, digits = 2)` & `r round(plength2$slide$sd, digits = 2)` \\ 
+  2 & Planning & `r round(plength2$planning$mean, digits = 2)` & `r round(plength2$planning$sd, digits = 2)` \\ 
+  2 & Response & `r round(plength2$response$mean, digits = 2)` & `r round(plength2$response$sd, digits = 2)` \\ 
    \hline
 \end{tabular}
-\caption{Phase durations for Experiments 1 and 2.\label{tab:phases}} 
+\caption{Phase durations in milliseconds for Experiments 1 and 2.\label{tab:phases}} 
 \end{table}
 
-However, note that we are interested in comparing the amount of social referencing across ambiguity conditions and not across phases directly.
-
-Table \ref{tab:phases}
-
+Table \ref{tab:phases} displays the average durations of each of the four phases. The label and response phases are longer on average than the planning and slide phases. However, note that we are interested in comparing the amount of social referencing across ambiguity conditions and not across phases directly.
 
 ```{r}
 rm(list=ls())
@@ -217,12 +215,11 @@ acc_table <- acc_mss_e2 %>%
 acc_table$Exp <- factor(acc_table$Exp, levels = c("1","2"))
 ```  
 
-```{r acc_tab, results="asis", eval = FALSE}
-##table is not printing, not sure why
+```{r xtable, results="asis"}
 acc_tab <- xtable::xtable(acc_table, digits = 2, 
                       caption = "Accuracy Rates.")
 
-print(acc_tab, type="latex", comment = F, table.placement = "b",
+print(acc_tab, type="latex", comment = F, table.placement = "h",
       floating.environment = "table", include.rownames=TRUE)
 ```
 
@@ -243,7 +240,7 @@ rl <- length(d$acc[d$response_orig == "RL"])/n
 tot <- 100*(length(d$acc[d$response_orig == "NC"]) + length(d$acc[d$response_orig == "LR"]))/n
 ```
 
-We next examined children's accuracy (i.e., their rates of putting the correct item in the bucket for two-familiar trials, in which there was a correct response). Children sometimes put two items in the bucket (`r round(tot, digits = 0)`% of trials). If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children's accuracy is displayed in Table 1. Overall children generally chose the correct item, indicating that they understood the task and were motivated to answer correctly.
+We next examined children's accuracy (i.e., their rates of putting the correct item in the bucket for two-familiar trials, in which there was a correct response). Children sometimes put two items in the bucket (`r round(tot, digits = 0)`% of trials). If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children's accuracy is displayed in Table \ref{tab:xtable} . Overall children generally chose the correct item, indicating that they understood the task and were motivated to answer correctly.
 
 ```{r}
 #get means for plot
@@ -396,7 +393,7 @@ acc_mod <- summary(glmer(acc ~ trial_type * gaze + age_c  +
                        family = "binomial"))
 ```
 
-We calculated children's accuracy using the same criteria as Experiment 1. For Experiment 2, we examined children's accuracy for familiar and mutual exclusivity trials, as well as novel trials in the Gaze condition, as all of these had a "correct" answer. Children's accuracy for Experiment 2 is presented in Table 1. 
+We calculated children's accuracy using the same criteria as Experiment 1. For Experiment 2, we examined children's accuracy for familiar and mutual exclusivity trials, as well as novel trials in the Gaze condition, as all of these had a "correct" answer. Children's accuracy for Experiment 2 is presented in Table \ref {tab:xtable}. 
 
 To quantify the effects of trial type gaze condition, and age in months on the probability of accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r round(acc_mod$coefficients[2], digits = 2)`, *p* < .001) and mutual trials ($\beta$ = `r round(acc_mod$coefficients[3], digits = 2)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r round(acc_mod$coefficients[6], digits = 2)`, *p* < .001) and mutual trials ($\beta$ = `r round(acc_mod$coefficients[7], digits = 2)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r round(acc_mod$coefficients[5], digits = 2)`, *p* = .12). 
 
@@ -492,7 +489,6 @@ In summary, children were more likely to look up the experimenter as they execut
 
 ```{r}
 #get means for accuracy plot
-
 d$age_years <- as.factor(d$age_years)
 
 msslooks_acc <- filter(d, exclude == 0, !is.na(acc)) %>%
@@ -515,7 +511,9 @@ levels = c(3, 4),
 labels = c("3 years", "4 years"))
 ```
 
-```{r acc_results_e2, fig.width=8, fig.height=5,out.width="5.75in", out.height="3.5in", fig.env='figure*', fig.align='center', fig.pos='h', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.'}
+```{r eval = FALSE}
+
+#```{r acc_results_e2, fig.width=8, fig.height=5,out.width="5.75in", out.height="3.5in", fig.env='figure*', fig.align='center', fig.pos='h', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.'}
 
 ggplot(msslooks_acc, aes(x = phase_name, y = num_looks, 
                col = acc, group = acc)) + 
@@ -524,7 +522,7 @@ ggplot(msslooks_acc, aes(x = phase_name, y = num_looks,
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(~age_years) + 
-  scale_y_continuous(limits=c(0,3), breaks=c(0,1,2)) +
+  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
   theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
   labs(x = "Phase", y = "Number of Looks")  +
   ggthemes::theme_few() +
