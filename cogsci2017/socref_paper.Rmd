@@ -56,6 +56,7 @@ library(knitr)
 library(markdown)
 library(lmerTest)
 library(ggthemes)
+library(psych)
 ```
 
 Preschoolers quickly learn new concepts, rules, and language. They also actively explore [@Schulz2007] and ask questions [@Chouinard2007] in ways that seem targeted to maximize learning. These behaviors appear to require children to monitor epistemic states of ignorance and uncertainty, but previous research has provided mixed evidence about young children’s capacity for monitoring mental states [@Sodian2012]. To better understand how young children actively construct meaning from their environment, more evidence is needed about the relation between epistemic uncertainty and information seeking in early childhood. Do young children monitor uncertainty and engage in active learning behaviors based on this monitoring, or is early learning better characterized as a process of integrating information that is generated externally, for example, by social partners who act as teachers [@Csibra2006]?
@@ -108,6 +109,9 @@ In Experiment 1, we examined whether children would visually reference a speaker
 We were interested in the amount of social referencing children exhibited across the trial. We considered four different phases of each trial based on the notion that children might expect different social information at different stages of the task. Specifically, we predicted that children might expect the speaker's gaze direction to be informative during the labeling itself, as speakers tend to look at objects they refer to. We predicted that later in the trial, as children reached for an object and placed it in the bucket, they might expect evaluative feedback about their choice (e.g., facial expressions of encouragement or discouragement). 
 
 ```{r}
+load("../analysis/soc_ref_e2.RData")
+plength2 <- psych::describeBy(d$phase_length, d$phase_name)
+
 load("../analysis/soc_ref_e1.RData")
 
 age_months <- d %>%
@@ -120,6 +124,8 @@ labels = c("two", "three", "four", "five"))
 
 halfs<- d %>%
   mutate(first_half = between(trial, 1, 4)) 
+
+plength1 <- psych::describeBy(d$phase_length, d$phase_name)
 ```
 
 ## Methods
@@ -148,28 +154,34 @@ Videos were coded using DataVyu software (http://datavyu.org). For each particip
 
 ###Phase durations and accuracy
 
-The mean durations of the phases are presented in Figure \ref{fig:phases_e1}. The phases varied in length as expected with the label and response phases being longest. However, note that we are interested in comparing the amount of social referencing across ambiguity conditions and not across phases directly.
+\begin{table}[t]
+\centering
+\begin{tabular}{lrrrr}
+  \hline
+Experiment & Phase & Mean & SD \\ 
+  \hline
+  1 & Label & `r plength1$label$mean` & `r plength1$label$sd` \\ 
+  1 & Slide & `r plength1$slide$mean` & `r plength1$slide$sd` \\ 
+  1 & Planning & `r plength1$planning$mean` & `r plength1$planning$sd` \\ 
+  1 & Response & `r plength1$response$mean` & `r plength1$response$sd` \\
+  2 & Label & `r plength2$label$mean` & `r plength2$label$sd` \\ 
+  2 & Slide & `r plength2$slide$mean` & `r plength2$slide$sd` \\ 
+  2 & Planning & `r plength2$planning$mean` & `r plength2$planning$sd` \\ 
+  2 & Response & `r plength2$response$mean` & `r plength2$response$sd` \\ 
+   \hline
+\end{tabular}
+\caption{Phase durations for Experiments 1 and 2.\label{tab:phases}} 
+\end{table}
 
-```{r phases_e1, fig.env = "figure", fig.pos = "h", fig.align='center', set.cap.width=T, fig.width=4, fig.height=2, fig.cap='Mean durations of trial phases in Experiment 1.'}
+However, note that we are interested in comparing the amount of social referencing across ambiguity conditions and not across phases directly.
 
-#phase lengths
-phase_lengths <- d %>% 
-  group_by(phase_name) %>% 
-  multi_boot_standard(col = "phase_length")
+Table \ref{tab:phases}
 
-phase_lengths$phase_name <- factor(phase_lengths$phase_name, levels = c("label","slide", "planning", "response"))
-
-ggplot(phase_lengths, aes(x = phase_name, y = mean)) + 
-  geom_bar(stat="identity") + 
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
-             position = position_dodge(width = .9))+
-  xlab("Phase") + 
-  ylab("Phase Length (ms)")  +
-  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
-  ggthemes::theme_few() 
-```
 
 ```{r}
+rm(list=ls())
+load("../analysis/soc_ref_e1.RData")
+
 #Get accuracy for BOTH experiments for table
 acc_mss_e1 <- d%>%
   filter(answer != "ambiguous", exclude == 0)%>%
@@ -321,7 +333,7 @@ response_lm <- summary(r_lm)
 
 ###Social referencing
 
-Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. Inter-rater reliability for the number of looks in each phase was high, intraclass correlation *r* = .97, *p*<.001. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | Subject ID)`. A single model with phase as a factor did not converge.
+Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. Inter-rater reliability for the number of looks in each phase was high, intraclass correlation *r* = .97, *p*<.001. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge.
 
 We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the label or slide phases. Thus, mere novelty or the presence of multiple objects was not enough to increase social referencing. However, we found an interaction effect of number of objects and familiarity during the planning ($\beta$ = `r round(planning_lm$coefficients[5], digits = 2)`, *p* < .001) and response phases ($\beta$ = `r round(response_lm$coefficients[5], digits = 2)`, *p* < .001), such that 2-novel trials were associated with more looking. There was no interaction with age in either phase.^[https://github.com/emilyfae/socref_uncert] In summary, children looked to the experimenter more often when planning and executing a response under uncertainty. These results suggest that children were aware that they did not have sufficient knowledge to answer independently, and referenced the speaker to resolve this uncertainty.
 
@@ -338,9 +350,6 @@ In addition, we manipulated between participants whether or not the experimenter
 ```{r}
 rm(list=ls())
 load("../analysis/soc_ref_e2.RData")
-
-halfs<- d %>%
-  mutate(first_half = between(trial, 1, 4)) 
 
 age_months <- d %>%
   group_by(age_years) %>%
@@ -367,29 +376,7 @@ The procedure was identical to Experiment 1, except that there were three practi
 
 ###Phase durations and accuracy
 
-```{r phases_e2, fig.env = "figure", fig.pos = "h", fig.align='center', set.cap.width=T, fig.width=4, fig.height=2, fig.cap='Mean durations of trial phases in Experiment 2.'}
-
-#phase lengths
-phase_lengths <- d %>% 
-  group_by(phase_name) %>% 
-  multi_boot_standard(col = "phase_length")
-
-phase_lengths$phase_name <- factor(phase_lengths$phase_name, levels = c("label","slide", "planning", "response"))
-phase_lengths$phase_name <- factor(phase_lengths$phase_name, levels = c("label","slide", "planning", "response"))
-
-ggplot(phase_lengths, aes(x = phase_name, y = mean)) + 
-  geom_bar(stat="identity") + 
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
-             position = position_dodge(width = .9))+
-  xlab("Phase") + 
-  ylab("Phase Length (ms)")  +
-  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
-  ggthemes::theme_few() 
-```
-
-The mean durations of the phases for Experiment 2 are presented in Figure \ref{fig:phases_e2}. They varied in length similar to Experiment 1. 
-
-We calculated children's accuracy using the same criteria as Experiment 1. For Experiment 2, we examined children's accuracy for familiar and mutual exclusivity trials, as well as novel trials in the Gaze condition, as all of these had a "correct" answer. Children's accuracy for Experiment 2 is presented in Table 1. 
+The mean durations of the phases for Experiment 2 are presented in Table \ref{tab:phases}. They varied in length similar to Experiment 1. 
 
 ```{r}
 lmer_data <- d %>%
@@ -403,14 +390,35 @@ lmer_data <- d %>%
 lmer_data$trial_type <- relevel(lmer_data$trial_type, ref = "familiar")
 lmer_data$gaze <- relevel(lmer_data$gaze, ref = "no_gaze")
 
-g_lm <- summary(glmer(acc ~ trial_type * gaze  +
+acc_mod <- summary(glmer(acc ~ trial_type * gaze + age_c  +
                            (1| SID), 
                          data = lmer_data,
                        family = "binomial"))
 ```
 
+We calculated children's accuracy using the same criteria as Experiment 1. For Experiment 2, we examined children's accuracy for familiar and mutual exclusivity trials, as well as novel trials in the Gaze condition, as all of these had a "correct" answer. Children's accuracy for Experiment 2 is presented in Table 1. 
 
-###Social referencing
+To quantify the effects of trial type gaze condition, and age in months on the probability of accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r round(acc_mod$coefficients[2], digits = 2)`, *p* < .001) and mutual trials ($\beta$ = `r round(acc_mod$coefficients[3], digits = 2)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r round(acc_mod$coefficients[6], digits = 2)`, *p* < .001) and mutual trials ($\beta$ = `r round(acc_mod$coefficients[7], digits = 2)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r round(acc_mod$coefficients[5], digits = 2)`, *p* = .12). 
+
+###Social referencing and referential ambiguity
+
+```{r}
+lmer_data$phase_name <- relevel(lmer_data$phase_name, ref = "slide")
+
+g_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
+                           (trial_type | SID), 
+                         data = lmer_data))
+```
+
+Children's social referencing based on trial type and gaze condition are presented in Figure \ref{fig:results_e2}. Inter-rater reliability for the number of looks in each phase was again high, intraclass correlation *r* = .97, *p*<.001. To quantify the main and interactive effects of familiarity, gaze informativity, phase, and age on social referencing, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ familiarity * age in months * gaze * phase + (familiarity | subject)`. In contrast to Experiment 1, a model with phase as a predictor converged.
+
+First, do children reference a speaker more often when the objects and label are novel? Phase interacted with familiarity such that the response phase of novel trials was associated with significantly more looks ($\beta$ = `r round(g_lm$coefficients[17], digits = 2)`, *p* < .001). This result is consistent with our finding from the analysis of the response phase in Experiment 1. However, in contrast to Experiment 1, we did not observe that looking was significantly greater for novel trials in the planning phase.
+
+We were also interested in whether mutual exclusivity trials would elicit an intermediate amount of uncertainty. We observed a three-way interaction of familiarity, gaze, and phase, such that the response phase of mutual exclusivity trials in the no-referential-gaze condition was associated with significantly more looks ($\beta$ = `r round(g_lm$coefficients[36], digits = 2)`, *p* < .01). Thus, mutual exclusivity trials were associated with greater looking only when the experimenter did not provide informative gaze. This finding is intriguing given that children should be able to solve mutual exclusivity trials without gaze information. Instead, they appear to remain relatively uncertain while making a decision if excluding the familiar object is their only cue to reference, but this uncertainty is resolved if the speaker's gaze is informative. On the other hand, informative gaze during labeling did not lessen social referencing for novel trials, suggesting that gaze information alone was not sufficient to reduce uncertainty. Instead, both gaze information and mutual exclusivity provided evidence about a label-object pairing, and children required both types of evidence to feel certain about their response. 
+
+Finally, we observed a four-way interaction such that the response phase of novel trials in the gaze condition was associated with more looking with increasing age ($\beta$ = `r round(g_lm$coefficients[46], digits = 2)`, *p* < .01), suggesting that children may become more selective in their social referencing as they get older. It may be that children improve in their ability to monitor the need for disambiguating information, or they may become more likely to recognize that social information can be a source of disambiguation. 
+
+We did not observe social referencing during the label phase, even when referential gaze was available. This result rules out the possibility that children were less selective during labeling because they learned that gaze direction was not informative. 
 
 ```{r}
 #get means for plot
@@ -449,11 +457,10 @@ msslooks <- msslooks %>%
 
 mslooks <- mslooks %>%
   mutate(familiarity = trial_type)
-
-d$acc <- as.factor(d$acc)
 ```
 
-```{r results_e2, fig.width=8, fig.height=5,out.width="5.75in", out.height="3.5in", fig.env='figure*', fig.align='center', fig.pos='h', fig.cap='Results of Experiment 2. Number of looks to the experimenter across phases and trial types. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.'}
+
+```{r results_e2, fig.width=8, fig.height=5,out.width="5.75in", out.height="3.5in", fig.env='figure*', fig.align='center', fig.pos='h', fig.cap='Results of Experiment 2. Number of looks to the experimenter across phases and trial types. Error bars are 95 percent confidence intervals.'}
 
 ggplot(msslooks, aes(x = phase_name, y = num_looks, 
                col = familiarity, group = familiarity)) + 
@@ -469,45 +476,31 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   langcog::scale_colour_solarized() 
 ```
 
+###Social referencing and accuracy
 
 ```{r}
-lmer_data <- d %>%
-  filter(!exclude) %>%
-  mutate(trial_type = factor(trial_type), 
-         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
-         phase_name = factor(phase_name), 
-         gaze = factor(Gaze),
-         acc = factor(acc))
+lmer_data$acc <- relevel(lmer_data$acc, ref = "0")
 
-lmer_data$phase_name <- relevel(lmer_data$phase_name, ref = "slide")
-
-g_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
-                           (trial_type | SID), 
-                         data = lmer_data))
-
-acc_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
+acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
                            (1 | SID), 
                          data = lmer_data))
 ```
 
-Results of Experiment 2 are presented in Figure \ref{fig:results_e2}. Inter-rater reliability for the number of looks in each phase was again high, intraclass correlation *r* = .97, *p*<.001. To quantify the main and interactive effects of familiarity, gaze informativity, phase, and age on social referencing, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ familiarity * age in months * gaze * phase + (familiarity | Subject ID)`. In contrast to Experiment 1, a model with phase as a predictor converged.
+To quantify the relation between accuracy and social referencing across phases, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ accuracy * age in months * phase + (1 | subject)`. Results showed that accuracy and phase interacted such that children looked at the experimenter significantly more during the labeling phase of accurate trials ($\beta$ = `r round(acclooks_mod$coefficients[8], digits = 2)`, *p* < .001), and significantly less in the response phase of accurate trials ($\beta$ = `r round(acclooks_mod$coefficients[10], digits = 2)`, *p* < .001). There was also a three-way interaction between accuracy, age, and phase such that there was significantly less looking to the experimenter in the response phase of accurate trials as age increased ($\beta$ = `r round(acclooks_mod$coefficients[16], digits = 2)`, *p* < .01).
 
-First, do children reference a speaker more often when the objects and label are novel? Phase interacted with familiarity such that the response phase of novel trials was associated with significantly more looks ($\beta$ = `r round(g_lm$coefficients[17], digits = 2)`, *p* < .001). This result is consistent with our finding from the analysis of the response phase in Experiment 1. However, in contrast to Experiment 1, we did not observe that looking was significantly greater for novel trials in the planning phase.
-
-We were also interested in whether mutual exclusivity trials would elicit an intermediate amount of uncertainty. We observed a three-way interaction of familiarity, gaze, and phase, such that the response phase of mutual exclusivity trials in the no-referential-gaze condition was associated with significantly more looks ($\beta$ = `r round(g_lm$coefficients[36], digits = 2)`, *p* < .01). Thus, mutual exclusivity trials were associated with greater looking only when the experimenter did not provide informative gaze. This finding is intriguing given that children should be able to solve mutual exclusivity trials without gaze information. Instead, they appear to remain relatively uncertain while making a decision if excluding the familiar object is their only cue to reference, but this uncertainty is resolved if the speaker's gaze is informative. On the other hand, informative gaze during labeling did not lessen social referencing for novel trials, suggesting that gaze information alone was not sufficient to reduce uncertainty. Instead, both gaze information and mutual exclusivity provided evidence about a label-object pairing, and children required both types of evidence to feel certain about their response. 
-
-Finally, we observed a four-way interaction such that the response phase of novel trials in the gaze condition was associated with more looking with increasing age ($\beta$ = `r round(g_lm$coefficients[46], digits = 2)`, *p* < .01), suggesting that children may become more selective in their social referencing as they get older. It may be that children improve in their ability to monitor the need for disambiguating information, or they may become more likely to recognize that social information can be a source of disambiguation. 
-
-We did not observe social referencing during the label phase, even when referential gaze was available. This result rules out the possibility that children were less selective during labeling because they learned that gaze direction was not informative. 
+In summary, children were more likely to look up the experimenter as they executed their response when they answered incorrectly, suggesting that referencing may have been prompted by epistemic uncertainty. This pattern increased with age. Additionally, children were more likely to answer correctly if they referenced the speaker during the labeling phase. This could be due to children obtaining referential information based on the experimenter's gaze in the gaze condition, or it could represent trials in which children were more engaged in the task. 
 
 ```{r}
 #get means for accuracy plot
+
+d$age_years <- as.factor(d$age_years)
+
 msslooks_acc <- filter(d, exclude == 0, !is.na(acc)) %>%
-  group_by(SID, phase_name, acc, age_years, Gaze) %>%
+  group_by(SID, phase_name, acc, age_years) %>%
   summarise(num_looks = mean(num_looks))
 
 mslooks_acc <- filter(d, exclude == 0, !is.na(acc)) %>%
-  group_by(acc, phase_name, age_years, Gaze) %>%
+  group_by(acc, phase_name, age_years) %>%
   multi_boot_standard(col = "num_looks") 
 
 msslooks_acc$phase_name <- factor(msslooks_acc$phase_name, levels = c("label","slide", "planning", "response"))
@@ -530,14 +523,13 @@ ggplot(msslooks_acc, aes(x = phase_name, y = num_looks,
   geom_pointrange(data = mslooks_acc, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
-  facet_grid(Gaze~age_years) + 
+  facet_grid(~age_years) + 
   scale_y_continuous(limits=c(0,3), breaks=c(0,1,2)) +
   theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
   labs(x = "Phase", y = "Number of Looks")  +
   ggthemes::theme_few() +
   langcog::scale_colour_solarized() 
 ```
-
 
 #General Discussion
 
