@@ -203,6 +203,7 @@ acc_gaze <- accuracy_gaze %>%
   gather("trial", "response", X1:X12)
 
 acc_gaze$trial <- as.numeric(str_replace(acc_gaze$trial, "X", ""))
+
 acc_gaze$response <- str_replace(acc_gaze$response, "LR", "L")
 acc_gaze$response <- str_replace(acc_gaze$response, "RL", "R")  
 
@@ -217,10 +218,12 @@ acc <- acc %>%
 
 acc$trial <- as.numeric(acc$trial)
 
+
+
 d<- d%>%
   left_join(acc)
 
-d$acc[d$trial_type == "novel"] <- d$acc_gaze[d$trial_type == "novel"]
+d$acc[d$trial_type == "novel" & d$Gaze == "gaze" & d$acc_gaze] <- 1
 d$acc[d$response == "NC" | d$response == "B"] <- NA
 ```
 
