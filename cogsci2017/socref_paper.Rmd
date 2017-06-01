@@ -60,9 +60,9 @@ library(psych)
 library(broman)
 ```
 
-Preschoolers quickly learn new concepts, rules, and language. They also actively explore [@Schulz2007] and ask questions [@Chouinard2007] in ways that seem targeted to maximize learning. These behaviors appear to require children to monitor epistemic states of ignorance and uncertainty, but previous research has provided mixed evidence about young children’s capacity for monitoring mental states [@Sodian2012]. To better understand how young children actively construct meaning from their environment, more evidence is needed about the relation between epistemic uncertainty and information seeking in early childhood. Do young children monitor uncertainty and engage in active learning behaviors based on this monitoring, or is early learning better characterized as a process of integrating information that is generated externally, for example, by social partners who act as teachers [@Csibra2006]?
+Preschoolers quickly learn new concepts, rules, and language. They also actively explore [@Schulz2007] and ask questions [@Chouinard2007] in ways that seem targeted to maximize learning. These behaviors appear to require children to monitor epistemic states of ignorance and uncertainty, but young children have generally been credited with limited ability to monitor mental states [@Sodian2012]. To better understand how young children actively construct meaning from their environment, more evidence is needed about the relation between epistemic uncertainty and information seeking in early childhood. Do young children monitor uncertainty and engage in active learning behaviors based on this monitoring, or is early learning better characterized as a process of integrating information that is generated externally, for example, by social partners who act as teachers [@Csibra2006]?
 
-Early metacognitive studies suggested that young children had limited capacities to reflect on their own thoughts or knowledge. For example, in one study [@Markman1977], first-graders failed to recognize that they did not understand the instructions for a task unless they were prompted to act it out, while older children successfully identified the gaps in their understanding. In another study, 5-year-olds were found to have limited awareness of their own ongoing thoughts [@Flavell1995]. However, this and other studies tended to rely on children’s explicit verbal reports about their mental operations, often in a free-response format, which might underestimate their ability to track epistemic states. 
+Early metacognitive studies suggested that young children had limited capacities to reflect on their own thoughts or knowledge. For example, in one study [@Markman1977], first-graders failed to recognize that they did not understand the instructions for a task unless they were prompted to act it out, while older children successfully identified the gaps in their understanding without prompting. In another study, 5-year-olds were found to have limited awareness of their own ongoing thoughts [@Flavell1995]. However, these and other studies tended to rely on children’s explicit verbal reports about their mental operations, often in a free-response format, which might underestimate children's ability to track epistemic states. 
 
 Recently, others have attempted to characterize children’s uncertainty monitoring through tasks that do not require a verbal response from children. For example, in one study, 3- to 5-year-olds completed perceptual discrimination and lexical identification tasks and report on their certainty in their choice by using a pictorial confidence scale [@Lyons2011a]. Preschoolers reported being less confident when they responded incorrectly, suggesting that they were aware of the likelihood of accuracy based on their epistemic states. In another study, 3.5-year-olds completed a memory task in which they could opt out of responding to individual trials [@Balcomb2008]. Children performed worse on trials they had opted out of when they were forced to answer them later on, suggesting that children used the opt-out option strategically to avoid answering when they were uncertain about their responses. On the other hand, Hembacher and Ghetti (2014)[-@Hembacher2014] found that 3-year-olds reported being equally confident for correct and incorrect responses in a memory task using a pictorial confidence scale, while 4- and 5-year-olds were less confident when incorrect. In sum, preschool-aged children demonstrate an emerging awareness of epistemic uncertainty in laboratory tasks that do not require a verbal or open-ended response. However, even the competencies reported in these studies may underestimate children’s ability to track epistemic uncertainty and act on it. The following section outlines an emerging body of research that suggests that children actively gather data to support learning from a young age, in a way that reflects sensitivity to epistemic uncertainty.
 
@@ -127,6 +127,20 @@ halfs<- d %>%
   mutate(first_half = between(trial, 1, 4)) 
 
 plength1 <- psych::describeBy(d$phase_length, d$phase_name)
+
+phases1 <- data.frame()
+phases2 <- data.frame()
+phases1 <- bind_rows(phases1, plength1$label, plength1$slide, plength1$planning, plength1$response)%>%
+  select(mean, sd)%>%
+  mutate(phase = c("label","slide","planning","response"), Experiment = "1")
+phases2 <- bind_rows(phases2, plength2$label, plength2$slide, plength2$planning, plength2$response)%>%
+  select(mean, sd)%>%
+  mutate(phase = c("label","slide","planning","response"), Experiment = "2")
+
+phases <- bind_rows(phases1, phases2)%>%
+  select(Experiment, phase, mean, sd)
+
+save(phases, file = "phases.RData")
 ```
 
 ## Methods
@@ -156,29 +170,6 @@ Videos were coded using DataVyu software (http://datavyu.org). For each particip
 ###Phase durations and accuracy
 
 
-```{r eval = FALSE}
-\begin{table}[t]
-\centering
-\begin{tabular}{lrrrr}
-  \hline
-Experiment & Phase & Mean & SD \\ 
-  \hline
-  1 & Label & `r myround(plength1$label$mean, 2)` & `r myround(plength1$label$sd, 2)` \\ 
-  1 & Slide & `r myround(plength1$slide$mean, 2)` & `r myround(plength1$slide$sd, 2)` \\ 
-  1 & Planning & `r myround(plength1$planning$mean, 2)` & `r myround(plength1$planning$sd, 2)` \\ 
-  1 & Response & `r myround(plength1$response$mean, 2)` & `r myround(plength1$response$sd, 2)` \\
-  \hline
-  2 & Label & `r myround(plength2$label$mean, 2)` & `r myround(plength2$label$sd, 2)` \\ 
-  2 & Slide & `r myround(plength2$slide$mean, 2)` & `r myround(plength2$slide$sd, 2)` \\ 
-  2 & Planning & `r myround(plength2$planning$mean, 2)` & `r myround(plength2$planning$sd, 2)` \\ 
-  2 & Response & `r myround(plength2$response$mean, 2)` & `r myround(plength2$response$sd, 2)` \\ 
-   \hline
-\end{tabular}
-\caption{Phase durations in milliseconds for Experiments 1 and 2.\label{tab:phases}} 
-\end{table}
-```
-
-Table \ref{tab:phases} displays the average durations of each of the four phases. The label and response phases are longer on average than the planning and slide phases. However, note that we are interested in comparing the amount of social referencing across ambiguity conditions and not across phases directly.
 
 ```{r}
 load("../analysis/soc_ref_e1.RData")
@@ -197,14 +188,10 @@ tot <- 100*(lr + rl) #percent of trials with two objects placed in bucket
 
 #Get accuracy for BOTH experiments for table
 acc_mss_e1 <- d%>%
-  filter(answer != "ambiguous", exclude == 0)%>%
-  group_by(num_objs, familiarity, age_years)%>%
-  multi_boot_standard(col = "acc")
-
-acc_table_1 <- acc_mss_e1 %>%
-  filter(num_objs == 2)%>%
-  mutate(trial_type = "2-fam")%>%
-  mutate(Gaze = "no gaze")%>%
+  filter(familiarity == "familiar", exclude == 0, num_objs == 2)%>%
+  mutate(trial_type = "2-fam", Gaze = "no gaze")%>%
+  group_by(trial_type, Gaze, age_years)%>%
+  multi_boot_standard(col = "acc")%>%
   mutate(Exp = "1")
 
 load("../analysis/soc_ref_e2.RData")
@@ -214,7 +201,8 @@ d$acc <- as.numeric(as.character(d$acc))
 acc_mss_e2 <- d%>%
   filter(!is.na(acc), exclude == 0)%>%
   group_by(trial_type, Gaze, age_years)%>%
-  multi_boot_standard(col = "acc", na.rm = TRUE)
+  multi_boot_standard(col = "acc", na.rm = TRUE)%>%
+  mutate(Exp = "2")
 
 acc_mss_e2$Gaze <- factor(acc_mss_e2$Gaze,
 levels = c("gaze","no_gaze"),
@@ -224,22 +212,29 @@ acc_mss_e2$trial_type <- factor(acc_mss_e2$trial_type,
 levels = c("familiar","mutual", "novel"),
 labels = c("2-fam", "mutual", "2-nov"))
 
-acc_table <- acc_mss_e2 %>%
-  mutate(Exp = "2")%>%
-  bind_rows(acc_table_1)%>%
+acc_table <- acc_mss_e1 %>%
+  bind_rows(acc_mss_e2)%>%
   select(Exp, trial_type, Gaze, age_years, mean, ci_lower, ci_upper)
-
-acc_table$Exp <- factor(acc_table$Exp, levels = c("1","2"))
 ```  
 
-```{r xtable, echo = FALSE, results="asis"}
-tab <- xtable(acc_table, caption = "Accuracy Rates", label = "tab:mytable")
-names(tab) <- c('Experiment','Trial Type','Gaze Condition', 'Age in Years','Mean Accuracy', 'CI lower bound', 'CI upper bound')
+```{r acc_table, echo = FALSE, results="asis"}
+acc_table <- xtable(acc_table, caption = "Accuracy Rates", label = "tab:acc_table")
+names(acc_table) <- c('Experiment','Trial Type','Gaze Condition', 'Age in Years','Mean Accuracy', 'CI lower bound', 'CI upper bound')
 
-print(tab, type="latex", comment = F, table.placement = "h")
+print(acc_table, type="latex", comment = F, table.placement = "h", hline.after = c(-1,0, 4,nrow(acc_table)))
 ```
 
-We next examined children's accuracy (i.e., their rates of putting the correct item in the bucket for two-familiar trials, in which there was a correct response). Children sometimes put two items in the bucket (`r tot`% of trials). If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children also occasionally declined to choose an item (`r myround(nc*100, 2)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Table \ref{tab:mytable}. Overall children generally chose the correct item, indicating that they understood the task and were motivated to answer correctly.
+```{r phasetable, echo = FALSE, results="asis"}
+load("phases.RData")
+phases <- xtable(phases, caption = "Phase Durations", label = "tab:phases")
+names(phases) <- c('Experiment','Phase','Mean Duration', 'SD')
+
+print(phases, type="latex", comment = F, table.placement = "h", hline.after = c(-1,0, 4,nrow(phases)))
+```
+
+Table \ref{tab:phases} displays the average durations of each of the four phases. The label and response phases are longer on average than the planning and slide phases. However, note that we are interested in comparing the amount of social referencing across ambiguity conditions and not across phases directly.
+
+We next examined children's accuracy (i.e., their rates of putting the correct item in the bucket for two-familiar trials, in which there was a correct response). Children sometimes put two items in the bucket (`r tot`% of trials). If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children also occasionally declined to choose an item (`r myround(nc*100, 2)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Table \ref{tab:acc_table}. Overall children generally chose the correct item, indicating that they understood the task and were motivated to answer correctly.
 
 ```{r}
 rm(list=ls())
@@ -512,7 +507,7 @@ levels = c(3, 4),
 labels = c("3 years", "4 years"))
 ```
 
-```{r acc_results_e2, fig.width=8, fig.height=5,out.width="5.75in", out.height="3.5in", fig.env='figure*', fig.align='center', fig.pos='h', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.'}
+```{r acc_results_e2, fig.width=8, fig.height=4,out.width="6in", out.height="3in", fig.env='figure*', fig.align='center', fig.pos='h', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.'}
 
 ggplot(msslooks_acc, aes(x = phase_name, y = num_looks, 
                col = acc, group = acc)) + 
@@ -521,7 +516,7 @@ ggplot(msslooks_acc, aes(x = phase_name, y = num_looks,
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(~age_years) + 
-  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  scale_y_continuous(limits=c(0,2.5), breaks=c(0,1,2)) +
   theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
   labs(x = "Phase", y = "Number of Looks")  +
   ggthemes::theme_few() +

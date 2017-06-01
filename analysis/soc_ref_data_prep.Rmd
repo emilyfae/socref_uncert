@@ -224,6 +224,7 @@ d<- d%>%
   left_join(acc)
 
 d$acc[d$trial_type == "novel" & d$Gaze == "gaze" & d$acc_gaze] <- 1
+d$acc[d$trial_type == "novel" & d$Gaze == "gaze" & !d$acc_gaze] <- 0
 d$acc[d$response == "NC" | d$response == "B"] <- NA
 ```
 
