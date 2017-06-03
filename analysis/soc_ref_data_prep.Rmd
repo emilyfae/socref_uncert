@@ -99,36 +99,20 @@ acc <- accuracy %>%
   gather("trial", "acc", X1:X12)
 acc$trial <- as.numeric(str_replace(acc$trial, "X", ""))
 
-d<- d%>%
-  left_join(acc)
-
 #original responses
-accuracy <- read.csv("../data/accuracy_e1.csv")
-accuracy_key <- read.csv("accuracy_key_e1.csv")
+responses <- read.csv("../data/accuracy_e1.csv")
 
-acc <- accuracy %>%
+response <- responses %>%
   gather("trial", "response", X1:X12)%>%
-  mutate(response_orig = response)
+  mutate(response_orig = response)%>%
+  select(SID, trial, response_orig)
 
-acc$trial <- as.numeric(str_replace(acc$trial, "X", ""))
-acc$response <- str_replace(acc$response, "LR", "L")
-acc$response <- str_replace(acc$response, "RL", "R")  
-
-accuracy_key$Condition <- as.character(accuracy_key$Condition)
+response$trial <- as.numeric(str_replace(response$trial, "X", ""))
 
 d<- d%>%
   left_join(acc)%>%
-  left_join(accuracy_key)%>%
-  mutate(acc = response == answer)
+  left_join(response)
 
-
-#to fix any trials in which experimenter placed single item on wrong side of table.
-d$acc[d$num_objs == 1 & d$response != "NC"] <- TRUE  
-
-ms <- d%>%
-  filter(answer != "ambiguous", exclude == 0, response != "NC", response != "B")%>%
-  group_by(familiarity, num_objs, age_years)%>%
-  multi_boot_standard(col = "acc")
 ```
 
 Save.
