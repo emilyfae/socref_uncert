@@ -93,6 +93,16 @@ labels = c("two", "three", "four", "five"))
 Accuracy.
 
 ```{r}
+accuracy <- read.csv("../data/accuracy_e1_2.csv")
+
+acc <- accuracy %>%
+  gather("trial", "acc", X1:X12)
+acc$trial <- as.numeric(str_replace(acc$trial, "X", ""))
+
+d<- d%>%
+  left_join(acc)
+
+#original responses
 accuracy <- read.csv("../data/accuracy_e1.csv")
 accuracy_key <- read.csv("accuracy_key_e1.csv")
 
@@ -119,18 +129,8 @@ ms <- d%>%
   filter(answer != "ambiguous", exclude == 0, response != "NC", response != "B")%>%
   group_by(familiarity, num_objs, age_years)%>%
   multi_boot_standard(col = "acc")
-
-#item analysis
-ms_item <- d%>%
-  filter(answer != "ambiguous", exclude == 0, response != "NC", response != "B")%>%
-  group_by(trial, Condition)%>%
-  multi_boot_standard(col = "acc")
-
-errors<- d %>%
-   filter(answer != "ambiguous", num_objs == 2, exclude == 0, response != "NC", response != "B", acc == FALSE)%>%
-  select(SID, trial, acc)%>%
-  unique
 ```
+
 Save.
 ```{r}
 save(d, file = "soc_ref_e1.RData")
@@ -217,8 +217,6 @@ acc <- acc %>%
   left_join(acc_g)
 
 acc$trial <- as.numeric(acc$trial)
-
-
 
 d<- d%>%
   left_join(acc)
