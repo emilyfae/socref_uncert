@@ -1,0 +1,242 @@
+---
+title: "Social Referencing and Uncertainty"
+author: "Emily & Mike"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    number_sections: true
+---
+
+<style type="text/css">
+body, td {
+   font-size: 14px;
+}
+code {
+  font-size: 11px;
+}
+pre {
+  font-size: 11px;
+}
+</style>
+
+Data analysis of social referencing and uncertainty study.
+
+# Data preprocessing
+
+Preliminaries.
+
+```{r echo=FALSE}
+rm(list=ls())
+setwd("~/Desktop/soc_ref_uncert/analysis")
+knitr::opts_chunk$set(fig.width=8, fig.height=5, 
+                      echo=TRUE, warning=FALSE, message=FALSE, cache=TRUE)
+suppressPackageStartupMessages(c("dplyr","langcog","tidyr","ggplot2","lme4"))
+library(langcog)
+library(dplyr)
+library(ggplot2)
+library(rjson)
+library(stringr)
+library(tidyr)
+library(lme4)
+library(xtable)
+library(knitr)
+library(markdown)
+theme_set(theme_bw())
+```
+
+Read in files and consolidate to the same directory. 
+
+Coder 1
+
+```{r}
+files <- dir("../data/coder_1/")
+d.raw_c1 <- data.frame()
+
+for (f in files) {
+  jf <- paste("../data/coder_1/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = jd$phase.ordinal,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset_c1 = jd$phase.onset,
+                   phase_offset_c1 = jd$phase.offset, 
+                   num_looks_c1 = jd$reference.num_looks,
+                   exclude_c1 = jd$reference.exclude)
+  d.raw_c1 <- bind_rows(d.raw_c1, id)
+}
+
+files <- dir("../data/coder_1_ref/")
+
+for (f in files) {
+  jf <- paste("../data/coder_1_ref/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = jd$phase.ordinal + 1,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset_c1 = jd$phase.onset,
+                   phase_offset_c1 = jd$phase.offset, 
+                   num_looks_c1 = jd$reference.num_looks,
+                   exclude_c1 = jd$reference.exclude)
+  d.raw_c1 <- bind_rows(d.raw_c1, id)
+}
+
+d.raw_c1$SID <- str_replace(d.raw_c1$SID, ".csv", "")
+
+```
+
+Coder 2
+
+```{r}
+files <- dir("../data/coder_2/")
+d.raw_c2_ref <- data.frame()
+
+for (f in files) {
+  jf <- paste("../data/coder_2/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = jd$phase.ordinal,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   num_looks_c2_ref = jd$reference.num_looks)
+  d.raw_c2_ref <- bind_rows(d.raw_c2_ref, id)
+}
+
+files <- dir("../data/coder_2_ref/")
+
+for (f in files) {
+  jf <- paste("../data/coder_2_ref/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = jd$phase.ordinal + 1,  #NOTE- have to add 1 here because script output lines 1-48 and manual export was 0-47
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   num_looks_c2_ref = jd$reference.num_looks)
+  d.raw_c2_ref <- bind_rows(d.raw_c2_ref, id)
+}
+
+d.raw_c2_ref$SID <- str_replace(d.raw_c2_ref$SID, ".csv", "")
+```
+
+```{r} 
+linevec <- c(1:16)
+
+relmat_e1 <- d.raw_c1 %>%
+  select(SID, line, num_looks_c1) %>%
+  left_join(d.raw_c2_ref)%>%
+  select(-phase)%>%
+  filter(line %in% linevec)%>%
+  select(-SID, -line)
+
+psych::ICC(relmat_e1, missing = FALSE, alpha = 0.05)
+```
+
+
+
+
+Experiment 2
+
+Coder 1
+
+```{r}
+rm(list=ls())
+
+files <- dir("../data_e2/coder_1/")
+d.raw_c1 <- data.frame()
+
+for (f in files) {
+  jf <- paste("../data_e2/coder_1/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = jd$phase.ordinal + 1, 
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset_c1 = jd$phase.onset,
+                   phase_offset_c1 = jd$phase.offset, 
+                   num_looks_c1 = jd$reference.num_looks,
+                   exclude_c1 = jd$reference.exclude)
+  d.raw_c1 <- bind_rows(d.raw_c1, id)
+}
+
+d.raw_c1$SID <- str_replace(d.raw_c1$SID, ".csv", "")
+
+files <- dir("../data_e2/coder_2_ref/")
+d.raw_c2_ref <- data.frame()
+
+for (f in files) {
+  jf <- paste("../data_e2/coder_2_ref/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = jd$phase.ordinal + 1, 
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset_c2 = jd$phase.onset,
+                   phase_offset_c2 = jd$phase.offset, 
+                   num_looks_c2 = jd$reference.num_looks,
+                   exclude_c2 = jd$reference.exclude)
+  d.raw_c2_ref <- bind_rows(d.raw_c2_ref, id)
+}
+
+d.raw_c2_ref$SID <- str_replace(d.raw_c2_ref$SID, ".csv", "")
+```
+
+```{r} 
+linevec <- c(1:16)
+
+relmat_e2 <- d.raw_c1 %>%
+  select(SID, line, num_looks_c1) %>%
+  left_join(d.raw_c2_ref)%>%
+  select(SID, line, num_looks_c1, num_looks_c2)%>%
+  filter(line %in% linevec)%>%
+  select(-SID, -line)
+
+
+psych::ICC(relmat_e2, missing = FALSE, alpha = 0.05)
+```
+
+
+
+Reliability of phase onsets and offsets (only a subset of the sample)
+
+```{r}
+files <- dir("../data/coder_2_phase/")
+d.raw_c2 <- data.frame()
+
+for (f in files) {
+  jf <- paste("../data/coder_2_phase/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = f,
+                   line = jd$phase.ordinal +1,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset_c2 = jd$phase.onset,
+                   phase_offset_c2 = jd$phase.offset) 
+  d.raw_c2 <- bind_rows(d.raw_c2, id)
+}
+
+d.raw_c2$SID <- str_replace(d.raw_c2$SID, ".csv", "")
+
+```
+
+Combine coder 1 and coder 2 into dataframe and create difference score variables.  
+```{r}
+soc_ref_rel <- d.raw_c1 %>%
+  left_join(d.raw_c2) %>%
+  mutate(phase_onset_diff = phase_onset_c1- phase_onset_c2) %>%
+  mutate(phase_offset_diff = phase_offset_c1 - phase_offset_c2) %>%
+  mutate(phase_onset_bin_100 = abs(phase_onset_diff)<100) %>%
+  mutate(phase_offset_bin_100 = abs(phase_offset_diff)<100) %>%
+  mutate(phase_onset_bin_200 = abs(phase_onset_diff)<200) %>%
+  mutate(phase_offset_bin_200 = abs(phase_offset_diff)<200)
+```
+
+Add coder 2 social referencing to dataframe. Correlate coder 1 with coder 2 for number of looks.
+
+```{r}
+soc_ref_rel_looks  <- soc_ref_rel %>%
+  left_join(d.raw_c2_ref) %>%
+  mutate(ref_diff = num_looks_c1- num_looks_c2_ref) %>%
+  mutate(ref_diff_bin = (ref_diff == 0))
+
+
+
+```
+
+
+
+  
