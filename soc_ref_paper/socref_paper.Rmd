@@ -11,26 +11,7 @@ output: kmr::apa_manuscript
 document-params: "a4paper,man,apacite,floatsintext"
 keywords: social referencing; help seeking; word learning; uncertainty.
 csl: apa6.csl
-abstract: The ability to monitor epistemic uncertainty is critical for self-directed
-  learning. However, we still know little about young children's ability to detect
-  uncertainty in their knowledge. Here we asked whether a spontaneous information
-  gathering behavior -- social referencing -- is related to epistemic uncertainty
-  during early childhood. Children ages 2-5 completed a word-learning task in which
-  they were presented with one or two objects, heard a label, and were asked to put
-  the labeled object in a bucket. Referential ambiguity was manipulated through the
-  number of objects present and their familiarity. In Experiment 1, when there were
-  two novel objects and a novel label, the referent was ambiguous; when there were
-  two familiar objects, or only one novel or familiar object, the referent was known
-  or could be inferred. In Experiment 2, there were either two novel objects, two
-  familiar objects, or one familiar and one novel object; in the latter case the referent
-  could be inferred by excluding the familiar object. To further manipulate the availability
-  of referential cues, the experimenter gazed at either the target or the center of
-  the table while labeling the object. In both experiments, children looked at the
-  experimenter more often while making their response when the referent was ambiguous.
-  In Experiment 2, children also looked at the experimenter more when there was one
-  familiar and one novel object, but only when the experimenter's gaze during labeling
-  was uninformative. These results suggest that children's social referencing is a
-  sensitive index of graded epistemic uncertainty.
+abstract: This study examined a spontaneous information gathering behavior -- social referencing -- and its relation to epistemic uncertainty during early childhood. Children ages 2-5 (*n*=160) identified the referents of familiar and novel labels. Referential ambiguity was manipulated through the number of objects present and their familiarity (Experiments 1 and 2), and the availability of referential gaze (Experiment 2). In both experiments, children visually referenced the experimenter more often while responding when the referent was ambiguous. In Experiment 2, children also referenced more when there was a novel referent and familiar distracter (and the referent could thus be inferred), but only when referential gaze was unavailable. These results suggest that children seek disambiguating social information on the basis of graded uncertainty.
   
 ---
 
