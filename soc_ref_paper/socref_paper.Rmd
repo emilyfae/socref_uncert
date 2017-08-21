@@ -308,6 +308,16 @@ lmer_data <- d %>%
          age_group = factor(age_group))
 ```
 
+```{r eval = FALSE}
+#histogram for number of looks by phase. 
+hist <- d %>%
+   select(phase, num_looks)
+ 
+ ggplot(hist, aes(num_looks, fill = num_looks)) +
+  geom_histogram(stat = "count") +
+   facet_grid(~phase)
+```
+
 ```{r lmer_e1, results="asis"}
 l_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
              (num_objs  | SID),
@@ -340,23 +350,23 @@ r_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
 response_lm <- summary(r_lm)
 ```
 
-```{r}
-e1.tab <- as.data.frame(label_lm$coef)
+```{r e1_table_l, echo = FALSE, results="asis"}
+e1_l.tab <- as.data.frame(label_lm$coef)
 
-e1.tab$Predictor <- c("Intercept",
-                      "Number of Objects(2)",
-                      "Familiarity(novel)",
+e1_l.tab$Predictor <- c("Intercept",
+                      "Num Objects(2)",
+                      "Familiar(N)",
                       "Age",
-                      "Number of Objects(2)*Familiarity(novel)",
-                      "Number of Objects(2)*Age",
-                      "Familiarity(novel)*Age",
-                      "Number of Objects(2)*Familiarity(novel)*Age")
+                      "Num Objects(2)*Familiar(N)",
+                      "Num Objects(2)*Age",
+                      "Familiar(N)*Age",
+                      "Numb Objects(2)*Familiar(N)*Age")
 
-rownames(e1.tab) <- NULL
-e1.tab <- e1.tab[,c(5,1:4)]
-names(e1.tab)[4:5] <- c("$z$ value","$p$ value")
+rownames(e1_l.tab) <- NULL
+e1_l.tab <- e1_l.tab[,c(6,1:5)]
+names(e1_l.tab)[5:6] <- c("$t$ value","$p$ value")
 
-e1.tab %<>% 
+e1_l.tab %<>% 
   mutate(
     stars = ifelse(`$p$ value` > .1, "", 
                    ifelse(`$p$ value` < .001, "***",
@@ -371,18 +381,152 @@ e1.tab %<>%
                                                      "Error")))))
   )
 
-names(e1.tab)[6] <- c("")
+names(e1_l.tab)[7] <- c("")
 
-print(xtable(e1.tab,
-             align = c("l","l","r","r","r","r","l"),
-             label = "tab:exp1_reg",
+print(xtable(e1_l.tab,
+             align = c("l","l","r","r","r","r","l","l"),
+             label = "tab:exp1_s_reg",
              caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
-      include.rownames=FALSE,hline.after=c(0,nrow(e1.tab)),
+      include.rownames=FALSE,hline.after=c(0,nrow(e1_l.tab)),
       sanitize.text.function=function(x){x},
       caption.placement = 'bottom', 
       table.placement = "tb",
       comment = F)
 ```
+
+```{r e1_table_s, echo = FALSE, results="asis"}
+e1_s.tab <- as.data.frame(slide_lm$coef)
+
+e1_s.tab$Predictor <- c("Intercept",
+                      "Num Objects(2)",
+                      "Familiar(N)",
+                      "Age",
+                      "Num Objects(2)*Familiar(N)",
+                      "Num Objects(2)*Age",
+                      "Familiar(N)*Age",
+                      "Numb Objects(2)*Familiar(N)*Age")
+
+rownames(e1_s.tab) <- NULL
+e1_s.tab <- e1_s.tab[,c(6,1:5)]
+names(e1_s.tab)[5:6] <- c("$t$ value","$p$ value")
+
+e1_s.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e1_s.tab)[7] <- c("")
+
+print(xtable(e1_s.tab,
+             align = c("l","l","r","r","r","r","l","l"),
+             label = "tab:exp1_s_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+      include.rownames=FALSE,hline.after=c(0,nrow(e1_s.tab)),
+      sanitize.text.function=function(x){x},
+      caption.placement = 'bottom', 
+      table.placement = "tb",
+      comment = F)
+```
+
+
+```{r e1_table_p, echo = FALSE, results="asis"}
+e1_p.tab <- as.data.frame(planning_lm$coef)
+
+e1_p.tab$Predictor <- c("Intercept",
+                      "Num Objects(2)",
+                      "Familiar(N)",
+                      "Age",
+                      "Num Objects(2)*Familiar(N)",
+                      "Num Objects(2)*Age",
+                      "Familiar(N)*Age",
+                      "Numb Objects(2)*Familiar(N)*Age")
+
+rownames(e1_p.tab) <- NULL
+e1_p.tab <- e1_p.tab[,c(6,1:5)]
+names(e1_p.tab)[5:6] <- c("$t$ value","$p$ value")
+
+e1_p.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e1_p.tab)[7] <- c("")
+
+print(xtable(e1_p.tab,
+             align = c("l","l","r","r","r","r","l","l"),
+             label = "tab:exp1_s_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+      include.rownames=FALSE,hline.after=c(0,nrow(e1_p.tab)),
+      sanitize.text.function=function(x){x},
+      caption.placement = 'bottom', 
+      table.placement = "tb",
+      comment = F)
+```
+
+```{r e1_table_r, echo = FALSE, results="asis"}
+e1_r.tab <- as.data.frame(response_lm$coef)
+
+e1_r.tab$Predictor <- c("Intercept",
+                      "Num Objects(2)",
+                      "Familiar(N)",
+                      "Age",
+                      "Num Objects(2)*Familiar(N)",
+                      "Num Objects(2)*Age",
+                      "Familiar(N)*Age",
+                      "Numb Objects(2)*Familiar(N)*Age")
+
+rownames(e1_r.tab) <- NULL
+e1_r.tab <- e1_r.tab[,c(6,1:5)]
+names(e1_r.tab)[5:6] <- c("$t$ value","$p$ value")
+
+e1_r.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e1_r.tab)[7] <- c("")
+
+print(xtable(e1_r.tab,
+             align = c("l","l","r","r","r","r","l","l"),
+             label = "tab:exp1_s_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+      include.rownames=FALSE,hline.after=c(0,nrow(e1_r.tab)),
+      sanitize.text.function=function(x){x},
+      caption.placement = 'bottom', 
+      table.placement = "tb",
+      comment = F)
+```
+
 
 
 
@@ -469,6 +613,16 @@ g_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
                          data = lmer_data))
 ```
 
+```{r eval = FALSE}
+#histogram for number of looks by phase. 
+hist <- d %>%
+   select(phase, num_looks)
+ 
+ ggplot(hist, aes(num_looks, fill = num_looks)) +
+  geom_histogram(stat = "count") +
+   facet_grid(~phase)
+```
+
 Children's social referencing based on trial type and gaze condition are presented in Figure \ref{fig:results_e2}. To quantify the main and interactive effects of familiarity, gaze informativity, phase, and age on social referencing, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ familiarity * age in months * gaze * phase + (familiarity | subject)`. In contrast to Experiment 1, a model with phase as a predictor converged.
 
 First, do children reference a speaker more often when the objects and label are novel? Phase interacted with familiarity such that the *response* phase of novel trials was associated with significantly more looks ($\beta$ = `r broman::myround(g_lm$coefficients[17], 1)`, *p* < .001). This result is consistent with results from Experiment 1. However, in contrast to Experiment 1, the number of looks was not significantly greater for novel trials in the *planning* phase.
@@ -535,6 +689,50 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   langcog::scale_colour_solarized() 
 ```
 
+```{r e2_table, echo = FALSE, results="asis"}
+e2.tab <- as.data.frame(g_lm$coef)
+
+e2.tab$Predictor <- c("Intercept",
+                      "Num Objects(2)",
+                      "Familiar(N)",
+                      "Age",
+                      "Num Objects(2)*Familiar(N)",
+                      "Num Objects(2)*Age",
+                      "Familiar(N)*Age",
+                      "Numb Objects(2)*Familiar(N)*Age")
+
+rownames(e2.tab) <- NULL
+e2.tab <- e2.tab[,c(6,1:5)]
+names(e2.tab)[5:6] <- c("$t$ value","$p$ value")
+
+e2.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e2.tab)[7] <- c("")
+
+print(xtable(e2.tab,
+             align = c("l","l","r","r","r","r","l","l"),
+             label = "tab:exp1_s_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+      include.rownames=FALSE,hline.after=c(0,nrow(e2.tab)),
+      sanitize.text.function=function(x){x},
+      caption.placement = 'bottom', 
+      table.placement = "tb",
+      comment = F)
+```
+
 ###Social referencing and accuracy
 
 ```{r}
@@ -543,6 +741,50 @@ lmer_data$acc <- relevel(lmer_data$acc, ref = "0")
 acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
                            (1 | SID), 
                          data = lmer_data))
+```
+
+```{r e2_acc_table, echo = FALSE, results="asis"}
+e2acc.tab <- as.data.frame(acclooks_mod$coef)
+
+e2acc.tab$Predictor <- c("Intercept",
+                      "Num Objects(2)",
+                      "Familiar(N)",
+                      "Age",
+                      "Num Objects(2)*Familiar(N)",
+                      "Num Objects(2)*Age",
+                      "Familiar(N)*Age",
+                      "Numb Objects(2)*Familiar(N)*Age")
+
+rownames(e2acc.tab) <- NULL
+e2acc.tab <- e2acc.tab[,c(6,1:5)]
+names(e2acc.tab)[5:6] <- c("$t$ value","$p$ value")
+
+e2acc.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e2acc.tab)[7] <- c("")
+
+print(xtable(e2acc.tab,
+             align = c("l","l","r","r","r","r","l","l"),
+             label = "tab:exp1_s_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+      include.rownames=FALSE,hline.after=c(0,nrow(e2acc.tab)),
+      sanitize.text.function=function(x){x},
+      caption.placement = 'bottom', 
+      table.placement = "tb",
+      comment = F)
 ```
 
 In the metacognitive framework, confidence judgments are generally compared for correct and incorrect responses, with lower confidence for incorrect responses taken as evidence for metacognitive accuracy (refs). Here, a parallel approach would be to examine the amount of social referencing children demonstrate for correct and incorrect responses.   
