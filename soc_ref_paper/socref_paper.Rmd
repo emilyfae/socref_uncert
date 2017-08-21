@@ -41,6 +41,7 @@ library(ggthemes)
 library(psych)
 library(broman)
 library(kmr)
+library(magrittr)
 ```
 
 Preschoolers quickly learn new concepts, rules, and language. They also actively explore [@Schulz2007] and ask questions [@Chouinard2007] in ways that seem targeted to maximize learning. These behaviors appear to require children to monitor epistemic states of ignorance and uncertainty, but young children have generally been credited with limited ability to monitor mental states [@Sodian2012]. This presents a puzzle -- how do children acquire disambiguating information if they are not able to monitor uncertainty? To better understand how young children actively construct meaning from their environment, more evidence is needed about the relation between epistemic uncertainty and information seeking in early childhood. Do young children monitor uncertainty and engage in active learning behaviors based on this monitoring, or is early learning better characterized as a process of integrating information that is generated externally, for example, by social partners who act as teachers [@Csibra2006]?
@@ -339,6 +340,52 @@ r_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
 response_lm <- summary(r_lm)
 ```
 
+```{r}
+e1.tab <- as.data.frame(label_lm$coef)
+
+e1.tab$Predictor <- c("Intercept",
+                      "Number of Objects(2)",
+                      "Familiarity(novel)",
+                      "Age",
+                      "Number of Objects(2)*Familiarity(novel)",
+                      "Number of Objects(2)*Age",
+                      "Familiarity(novel)*Age",
+                      "Number of Objects(2)*Familiarity(novel)*Age")
+
+rownames(e1.tab) <- NULL
+e1.tab <- e1.tab[,c(5,1:4)]
+names(e1.tab)[4:5] <- c("$z$ value","$p$ value")
+
+e1.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e1.tab)[6] <- c("")
+
+print(xtable(e1.tab,
+             align = c("l","l","r","r","r","r","l"),
+             label = "tab:exp1_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+      include.rownames=FALSE,hline.after=c(0,nrow(e1.tab)),
+      sanitize.text.function=function(x){x},
+      caption.placement = 'bottom', 
+      table.placement = "tb",
+      comment = F)
+```
+
+
+
 ###Social referencing
 
 Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge.
@@ -505,8 +552,6 @@ To this end, we fit a mixed-effects linear regression model with the following s
 These findings confirm that children reference the experimenter more while responding incorrectly.  Importantly, this analysis was restricted to trials in which there was a correct response available (i.e., because the target was familiar or could be inferred by excluding the familiar distracter or observing the speaker's gaze). Thus, children's looking is sensitive not only to complete ignorance, but other factors that affect accuracy, which might include graded evidence or relative familiarity with the stimuli). 
 
 Additionally, children were more likely to answer correctly if they referenced the speaker during the labeling phase. This pattern could be due to children obtaining referential evidence from the experimenter's gaze in the gaze condition, or it could represent trials in which children were more engaged in the task. 
-
-
 ```{r }
 #get means for accuracy plot
 d$age_years <- as.factor(d$age_years)
@@ -555,7 +600,9 @@ We found that referential ambiguity strongly predicted children's social referen
 
 Most intriguingly, we found that children's looking was driven by graded referential evidence. This is important given that being able to monitor the likelihood of accuracy based on graded evidence is assumed important for decision-making and behavioral regulation later in development (refs). In the case of mutual exclusivity trials, children could solve the problem of reference by excluding the familiar item [@Markman1988]. Thus, unlike novel trials, they likely had some signal about the correct object-label mapping. If children simply monitored the presence or absence of such signals, they would have consistently treated mutual exclusivity trials as familiar trials. Instead, their social referencing depended on a combination of cues from mutual exclusivity and gaze informativity, suggesting that they are sensitive to graded evidence and seek disambiguating information only when uncertainty is relatively high. Children's greater social referencing on trials with only one cue to reference (i.e., mutual exclusivity trials with no referential gaze and novel trials with referential gaze) additionally suggests that children may remain uncertain about a new label-object mapping if they have not received confirmation of its accuracy, for example, through explicit feedback or gaze direction.
 
-On the other hand, we found no evidence for selective social referencing as the object was being labeled. One possibility is that young children do not recognize the need for disambiguating information until they need to make a decision. Another possibility is that preschool-aged children spontaneously look at a speaker regardless of ambiguity, and additional looking was not needed or possible. Notably, Vaish et al. observed selective referencing during labeling among infants. Since infants in that study were holding one of the objects during labeling, referencing the speaker would have required them to disengage from that object, and may therefore have been more costly, promoting selectivity. Future research with preschoolers that includes a greater trade-off between attentional options would help to distinguish among these possibilities. Overall, these results provide evidence that preschool-aged children monitor graded uncertainty in their mental representations and act on that uncertainty through spontaneous information-seeking. 
+On the other hand, we found no evidence for selective social referencing as the object was being labeled. One possibility is that young children do not recognize the need for disambiguating information until they need to make a decision. Another possibility is that preschool-aged children spontaneously look at a speaker regardless of ambiguity, and additional looking was not needed or possible. Notably, Vaish et al. observed selective referencing during labeling among infants. Since infants in that study were holding one of the objects during labeling, referencing the speaker would have required them to disengage from that object, and may therefore have been more costly, promoting selectivity. Future research with preschoolers that includes a greater trade-off between attentional options would help to distinguish among these possibilities. 
+
+Overall, these results provide evidence that preschool-aged children monitor graded uncertainty in their mental representations and act on that uncertainty through spontaneous information-seeking. 
 
 # Acknowledgements
 
