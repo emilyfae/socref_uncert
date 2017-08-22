@@ -305,7 +305,8 @@ lmer_data <- d %>%
          familiarity = factor(familiarity), 
          age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
          phase_name = factor(phase_name),
-         age_group = factor(age_group))
+         age_group = factor(age_group),
+         soc_ref = social_ref)
 ```
 
 ```{r eval = FALSE}
@@ -350,21 +351,77 @@ r_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
 response_lm <- summary(r_lm)
 ```
 
+```{r eval = FALSE}
+#logistic model
+
+glm_e1 <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = lmer_data, 
+              family = "binomial"))
+```
+
+```{r}
+#plot binary social referencing
+mssref <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
+  summarise(social_ref = mean(social_ref))
+
+msref <- filter(d, exclude == 0) %>%
+  group_by(phase_name, familiarity, num_objs, age_years) %>%
+  multi_boot_standard(col = "social_ref") 
+
+mssref$phase_name <- factor(mssref$phase_name, levels = c("label","slide", "planning", "response"))
+msref$phase_name <- factor(msref$phase_name, levels = c("label","slide", "planning", "response"))
+
+mssref$num_objs <- factor(mssref$num_objs,
+levels = c(1,2),
+labels = c("One object", "Two objects"))
+
+msref$num_objs <- factor(msref$num_objs,
+levels = c(1,2),
+labels = c("One object", "Two objects"))
+
+mssref_years <- factor(mssref$age_years,
+levels = c(2, 3, 4, 5),
+labels = c("2 years", "3 years", "4 years", "5 years"))
+
+msref$age_years <- factor(msref$age_years,
+levels = c(2, 3, 4, 5),
+labels = c("2 years", "3 years", "4 years", "5 years"))
+```
+
+```
+ggplot(msslooks, aes(x = phase_name, y = num_looks, 
+               col = familiarity, group = familiarity)) + 
+  geom_line(data = mslooks, aes(y = mean)) + 
+  geom_pointrange(data = mslooks, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ num_objs) +
+  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
+  labs(x = "Phase", y = "Number of Looks") +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized() 
+```
+
+
+
 ```{r e1_table_l, echo = FALSE, results="asis"}
 e1_l.tab <- as.data.frame(label_lm$coef)
 
 e1_l.tab$Predictor <- c("Intercept",
-                      "Num Objects(2)",
-                      "Familiar(N)",
+                      "Num objects (2)",
+                      "Familiarity (N)",
                       "Age",
-                      "Num Objects(2)*Familiar(N)",
-                      "Num Objects(2)*Age",
-                      "Familiar(N)*Age",
-                      "Numb Objects(2)*Familiar(N)*Age")
+                      "Num objects (2) * Familiarity (N)",
+                      "Num objects (2) * Age",
+                      "Familiarity (N) * Age",
+                      "Num objects (2) * Familiarity (N) * Age")
 
 rownames(e1_l.tab) <- NULL
-e1_l.tab <- e1_l.tab[,c(6,1:5)]
-names(e1_l.tab)[5:6] <- c("$t$ value","$p$ value")
+e1_l.tab <- e1_l.tab[,c(6,1:2,4:5)]
+names(e1_l.tab)[4:5] <- c("$t$ value","$p$ value")
 
 e1_l.tab %<>% 
   mutate(
@@ -381,12 +438,12 @@ e1_l.tab %<>%
                                                      "Error")))))
   )
 
-names(e1_l.tab)[7] <- c("")
+names(e1_l.tab)[6] <- c("")
 
 print(xtable(e1_l.tab,
-             align = c("l","l","r","r","r","r","l","l"),
-             label = "tab:exp1_s_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+             align = c("l","l","r","r","r","r", "l"),
+             label = "tab:exp1_l_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the label phase in Experiment 1."),
       include.rownames=FALSE,hline.after=c(0,nrow(e1_l.tab)),
       sanitize.text.function=function(x){x},
       caption.placement = 'bottom', 
@@ -398,17 +455,17 @@ print(xtable(e1_l.tab,
 e1_s.tab <- as.data.frame(slide_lm$coef)
 
 e1_s.tab$Predictor <- c("Intercept",
-                      "Num Objects(2)",
-                      "Familiar(N)",
+                      "Num objects (2)",
+                      "Familiarity (N)",
                       "Age",
-                      "Num Objects(2)*Familiar(N)",
-                      "Num Objects(2)*Age",
-                      "Familiar(N)*Age",
-                      "Numb Objects(2)*Familiar(N)*Age")
+                      "Num objects (2) * Familiarity (N)",
+                      "Num objects (2) * Age",
+                      "Familiarity (N) * Age",
+                      "Num objects (2) * Familiarity (N) * Age")
 
 rownames(e1_s.tab) <- NULL
-e1_s.tab <- e1_s.tab[,c(6,1:5)]
-names(e1_s.tab)[5:6] <- c("$t$ value","$p$ value")
+e1_p.tab <- e1_s.tab[,c(6,1:2,4:5)]
+names(e1_s.tab)[4:5] <- c("$t$ value","$p$ value")
 
 e1_s.tab %<>% 
   mutate(
@@ -425,12 +482,12 @@ e1_s.tab %<>%
                                                      "Error")))))
   )
 
-names(e1_s.tab)[7] <- c("")
+names(e1_s.tab)[6] <- c("")
 
 print(xtable(e1_s.tab,
-             align = c("l","l","r","r","r","r","l","l"),
+             align = c("l","l","r","r","r","r", "l"),
              label = "tab:exp1_s_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the slide phase in Experiment 1."),
       include.rownames=FALSE,hline.after=c(0,nrow(e1_s.tab)),
       sanitize.text.function=function(x){x},
       caption.placement = 'bottom', 
@@ -443,17 +500,17 @@ print(xtable(e1_s.tab,
 e1_p.tab <- as.data.frame(planning_lm$coef)
 
 e1_p.tab$Predictor <- c("Intercept",
-                      "Num Objects(2)",
-                      "Familiar(N)",
+                      "Num objects (2)",
+                      "Familiarity (N)",
                       "Age",
-                      "Num Objects(2)*Familiar(N)",
-                      "Num Objects(2)*Age",
-                      "Familiar(N)*Age",
-                      "Numb Objects(2)*Familiar(N)*Age")
+                      "Num objects (2) * Familiarity (N)",
+                      "Num objects (2) * Age",
+                      "Familiarity (N) * Age",
+                      "Num objects (2) * Familiarity (N) * Age")
 
 rownames(e1_p.tab) <- NULL
-e1_p.tab <- e1_p.tab[,c(6,1:5)]
-names(e1_p.tab)[5:6] <- c("$t$ value","$p$ value")
+e1_p.tab <- e1_p.tab[,c(6,1:2,4:5)]
+names(e1_p.tab)[4:5] <- c("$t$ value","$p$ value")
 
 e1_p.tab %<>% 
   mutate(
@@ -470,12 +527,12 @@ e1_p.tab %<>%
                                                      "Error")))))
   )
 
-names(e1_p.tab)[7] <- c("")
+names(e1_p.tab)[6] <- c("")
 
 print(xtable(e1_p.tab,
-             align = c("l","l","r","r","r","r","l","l"),
-             label = "tab:exp1_s_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+             align = c("l","l","r","r","r","r", "l"),
+             label = "tab:exp1_p_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the planning phase in Experiment 1."),
       include.rownames=FALSE,hline.after=c(0,nrow(e1_p.tab)),
       sanitize.text.function=function(x){x},
       caption.placement = 'bottom', 
@@ -487,17 +544,17 @@ print(xtable(e1_p.tab,
 e1_r.tab <- as.data.frame(response_lm$coef)
 
 e1_r.tab$Predictor <- c("Intercept",
-                      "Num Objects(2)",
-                      "Familiar(N)",
+                      "Num objects (2)",
+                      "Familiarity (N)",
                       "Age",
-                      "Num Objects(2)*Familiar(N)",
-                      "Num Objects(2)*Age",
-                      "Familiar(N)*Age",
-                      "Numb Objects(2)*Familiar(N)*Age")
+                      "Num objects (2) * Familiarity (N)",
+                      "Num objects (2) * Age",
+                      "Familiarity (N) * Age",
+                      "Num objects (2) * Familiarity (N) * Age")
 
 rownames(e1_r.tab) <- NULL
-e1_r.tab <- e1_r.tab[,c(6,1:5)]
-names(e1_r.tab)[5:6] <- c("$t$ value","$p$ value")
+e1_r.tab <- e1_r.tab[,c(6,1:2,4:5)]
+names(e1_r.tab)[4:5] <- c("$t$ value","$p$ value")
 
 e1_r.tab %<>% 
   mutate(
@@ -514,21 +571,18 @@ e1_r.tab %<>%
                                                      "Error")))))
   )
 
-names(e1_r.tab)[7] <- c("")
+names(e1_r.tab)[6] <- c("")
 
 print(xtable(e1_r.tab,
-             align = c("l","l","r","r","r","r","l","l"),
-             label = "tab:exp1_s_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+             align = c("l","l","r","r","r","r", "l"),
+             label = "tab:exp1_r_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the response phase in Experiment 1."),
       include.rownames=FALSE,hline.after=c(0,nrow(e1_r.tab)),
       sanitize.text.function=function(x){x},
       caption.placement = 'bottom', 
       table.placement = "tb",
       comment = F)
 ```
-
-
-
 
 ###Social referencing
 
