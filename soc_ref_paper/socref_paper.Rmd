@@ -354,11 +354,37 @@ response_lm <- summary(r_lm)
 ```{r eval = FALSE}
 #logistic model
 
-glm_e1 <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+glm_e1 <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c * phase_name +
                 (1|SID), 
               data = lmer_data, 
               family = "binomial"))
+#single model does not converge. try separate models for each phase.
 ```
+
+```{r}
+glm_e1_l <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "label"), 
+              family = "binomial"))
+
+glm_e1_s <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "slide"), 
+              family = "binomial"))
+
+glm_e1_p <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "planning"), 
+              family = "binomial"))
+
+glm_e1_r <- summary(glmer(soc_ref ~ num_objs * familiarity + age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "response"), 
+              family = "binomial"))
+#this last one does not converge with age interaction.
+```
+
+
 
 ```{r}
 #plot binary social referencing
@@ -381,7 +407,7 @@ msref$num_objs <- factor(msref$num_objs,
 levels = c(1,2),
 labels = c("One object", "Two objects"))
 
-mssref_years <- factor(mssref$age_years,
+mssref$age_years <- factor(mssref$age_years,
 levels = c(2, 3, 4, 5),
 labels = c("2 years", "3 years", "4 years", "5 years"))
 
@@ -390,22 +416,20 @@ levels = c(2, 3, 4, 5),
 labels = c("2 years", "3 years", "4 years", "5 years"))
 ```
 
-```
-ggplot(msslooks, aes(x = phase_name, y = num_looks, 
+```{r eval = FALSE}
+ggplot(mssref, aes(x = phase_name, y = social_ref, 
                col = familiarity, group = familiarity)) + 
-  geom_line(data = mslooks, aes(y = mean)) + 
-  geom_pointrange(data = mslooks, 
+  geom_line(data = msref, aes(y = mean)) + 
+  geom_pointrange(data = msref, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
                   position = position_dodge(width =.1)) + 
   facet_grid(age_years ~ num_objs) +
-  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  scale_y_continuous(limits=c(0,1), breaks=c(0,1)) +
   theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
   labs(x = "Phase", y = "Number of Looks") +
   ggthemes::theme_few() +
   langcog::scale_colour_solarized() 
 ```
-
-
 
 ```{r e1_table_l, echo = FALSE, results="asis"}
 e1_l.tab <- as.data.frame(label_lm$coef)
@@ -464,7 +488,7 @@ e1_s.tab$Predictor <- c("Intercept",
                       "Num objects (2) * Familiarity (N) * Age")
 
 rownames(e1_s.tab) <- NULL
-e1_p.tab <- e1_s.tab[,c(6,1:2,4:5)]
+e1_s.tab <- e1_s.tab[,c(6,1:2,4:5)]
 names(e1_s.tab)[4:5] <- c("$t$ value","$p$ value")
 
 e1_s.tab %<>% 
@@ -586,7 +610,7 @@ print(xtable(e1_r.tab,
 
 ###Social referencing
 
-Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge.
+Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. ^[Standard laboratory analytic procedures available at https://osf.io/zqzsu/wiki/home/]
 
 We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the *label* or *slide* phases. Thus, mere novelty or the presence of multiple objects was not enough to increase social referencing. However, we found an interaction effect of number of objects and familiarity during the *planning* ($\beta$ = `r broman::myround(planning_lm$coefficients[5], 1)`, *p* < .001) and *response* phases ($\beta$ = `r broman::myround(response_lm$coefficients[5], 1)`, *p* < .001), such that NN trials were associated with more looking. 
 
@@ -644,7 +668,8 @@ lmer_data <- d %>%
          age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
          phase_name = factor(phase_name), 
          gaze = factor(Gaze),
-         acc = factor(acc))
+         acc = factor(acc),
+         soc_ref = social_ref)
 
 lmer_data$trial_type <- relevel(lmer_data$trial_type, ref = "familiar")
 lmer_data$gaze <- relevel(lmer_data$gaze, ref = "no_gaze")
@@ -743,21 +768,99 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   langcog::scale_colour_solarized() 
 ```
 
+```{r eval = FALSE}
+#logistic model
+glm_e2 <- summary(glmer(soc_ref ~ trial_type * gaze * age_c + 
+                (1|SID), 
+              data = lmer_data, 
+              family = "binomial"))
+#full model does not converge
+```
+
+```{r eval = FALSE}
+#logistic model
+glm_e2_l <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "label"), 
+              family = "binomial"))
+#does not converge with age interaction
+
+glm_e2_s <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "slide"), 
+              family = "binomial"))
+#does not converge with age interaction
+
+glm_e2_p <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "planning"), 
+              family = "binomial"))
+#does not converge with age interaction
+
+glm_e2_p <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "response"), 
+              family = "binomial"))
+#does not converge with age interaction
+```
+
+
+
 ```{r e2_table, echo = FALSE, results="asis"}
 e2.tab <- as.data.frame(g_lm$coef)
 
 e2.tab$Predictor <- c("Intercept",
-                      "Num Objects(2)",
-                      "Familiar(N)",
+                      "Trial type(FN)",
+                      "Trial type(NN)",
                       "Age",
-                      "Num Objects(2)*Familiar(N)",
-                      "Num Objects(2)*Age",
-                      "Familiar(N)*Age",
-                      "Numb Objects(2)*Familiar(N)*Age")
+                      "Gaze(Y)",
+                      "Phase(Label)",
+                      "Phase(Planning)",
+                      "Phase(Response)",
+                      "Trial type(FN) * Age",
+                      "Trial type(NN) * Age",
+                      "Trial type(FN) * Gaze",
+                      "Trial type(NN) * Gaze",
+                      "Age * Gaze",
+                      "Trial type(FN) * Phase(Label)",
+                      "Trial type(NN) * Phase(Label)",
+                      "Trial type(FN) * Phase(Planning)",
+                      "Trial type(NN) * Phase(Planning)",
+                      "Trial type(FN) * Phase(Response)",
+                      "Trial type(NN) * Phase(Response)",
+                      "Age * Phase(Label)",
+                      "Age * Phase(Planning)",
+                      "Age * Phase(Response)",
+                      "Gaze * Phase(Label)",
+                      "Gaze * Phase(Planning)",
+                      "Gaze * Phase(Response)",
+                      "Trial type(FN) * Age * Gaze",
+                      "Trial type(NN) * Age * Gaze",
+                      "Trial type(FN) * Age * Phase(Label)",
+                      "Trial type(NN) * Age * Phase(Label)",
+                      "Trial type(FN) * Age * Phase(Planning)",
+                      "Trial type(NN) * Age * Phase(Planning)",
+                      "Trial type(FN) * Age * Phase(Response)",
+                      "Trial type(NN) * Age * Phase(Response)",
+                      "Trial type(FN) * Gaze * Phase(Label)",
+                      "Trial type(NN) * Gaze * Phase(Label)",
+                      "Trial type(FN) * Gaze * Phase(Planning)",
+                      "Trial type(NN) * Gaze * Phase(Planning)",
+                      "Trial type(FN) * Gaze * Phase(Response)",
+                      "Trial type(NN) * Gaze * Phase(Response)",
+                      "Age * Gaze * Phase(Label)",
+                      "Age * Gaze * Phase(Planning)",
+                      "Age * Gaze * Phase(Response)",
+                      "Trial type(FN) * Age * Gaze * Phase(Label)",
+                      "Trial type(NN) * Age * Gaze * Phase(Label)",
+                      "Trial type(FN) * Age * Gaze * Phase(Planning)",
+                      "Trial type(NN) * Age * Gaze * Phase(Planning)",
+                      "Trial type(FN) * Age * Gaze * Phase(Response)",
+                      "Trial type(NN) * Age * Gaze * Phase(Response)")
 
 rownames(e2.tab) <- NULL
-e2.tab <- e2.tab[,c(6,1:5)]
-names(e2.tab)[5:6] <- c("$t$ value","$p$ value")
+e2.tab <- e2.tab[,c(6,1:2,4:5)]
+names(e2.tab)[4:5] <- c("$t$ value","$p$ value")
 
 e2.tab %<>% 
   mutate(
@@ -774,11 +877,11 @@ e2.tab %<>%
                                                      "Error")))))
   )
 
-names(e2.tab)[7] <- c("")
+names(e2.tab)[6] <- c("")
 
 print(xtable(e2.tab,
-             align = c("l","l","r","r","r","r","l","l"),
-             label = "tab:exp1_s_reg",
+             align = c("l","l","r","r","r","r","l"),
+             label = "tab:exp2_reg",
              caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
       include.rownames=FALSE,hline.after=c(0,nrow(e2.tab)),
       sanitize.text.function=function(x){x},
@@ -801,17 +904,25 @@ acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
 e2acc.tab <- as.data.frame(acclooks_mod$coef)
 
 e2acc.tab$Predictor <- c("Intercept",
-                      "Num Objects(2)",
-                      "Familiar(N)",
+                      "Acc(Y)",
                       "Age",
-                      "Num Objects(2)*Familiar(N)",
-                      "Num Objects(2)*Age",
-                      "Familiar(N)*Age",
-                      "Numb Objects(2)*Familiar(N)*Age")
+                      "Phase(Label)",
+                      "Phase(Planning)",
+                      "Phase(Response)",
+                      "Acc(Y) * Age",
+                      "Acc(Y) * Phase(Label)",
+                      "Acc(Y) * Phase(Planning)",
+                      "Acc(Y) * Phase(Response)",
+                      "Age * Phase(Label)",
+                      "Age * Phase(Planning)",
+                      "Age * Phase(Response)",
+                      "Acc(Y) * Age * Phase(Label)",
+                      "Acc(Y) * Age * Phase(Planning)",
+                      "Acc(Y) * Age * Phase(Response)")
 
 rownames(e2acc.tab) <- NULL
-e2acc.tab <- e2acc.tab[,c(6,1:5)]
-names(e2acc.tab)[5:6] <- c("$t$ value","$p$ value")
+e2acc.tab <- e2acc.tab[,c(6,1:2,4:5)]
+names(e2acc.tab)[4:5] <- c("$t$ value","$p$ value")
 
 e2acc.tab %<>% 
   mutate(
@@ -828,12 +939,12 @@ e2acc.tab %<>%
                                                      "Error")))))
   )
 
-names(e2acc.tab)[7] <- c("")
+names(e2acc.tab)[6] <- c("")
 
 print(xtable(e2acc.tab,
-             align = c("l","l","r","r","r","r","l","l"),
-             label = "tab:exp1_s_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+             align = c("l","l","r","r","r","r", "l"),
+             label = "tab:exp2acc_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2."),
       include.rownames=FALSE,hline.after=c(0,nrow(e2acc.tab)),
       sanitize.text.function=function(x){x},
       caption.placement = 'bottom', 
