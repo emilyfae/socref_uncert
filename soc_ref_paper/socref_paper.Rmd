@@ -627,18 +627,6 @@ g_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
                          data = lmer_data))
 ```
 
-```{r eval = FALSE}
-#histogram for number of looks by phase. 
-hist <- d %>%
-   select(phase, num_looks)
- 
- ggplot(hist, aes(num_looks, fill = num_looks)) +
-  geom_histogram(stat = "count") +
-   facet_grid(~phase) +
-  ggthemes::theme_few() +
-  langcog::scale_colour_solarized() 
-```
-
 Children's social referencing based on trial type and gaze condition are presented in Figure \ref{fig:results_e2}. To quantify the main and interactive effects of familiarity, gaze informativity, phase, and age on social referencing, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ familiarity * age in months * gaze * phase + (familiarity | subject)`. In contrast to Experiment 1, a model with phase as a predictor converged.
 
 First, do children reference a speaker more often when the objects and label are novel? Phase interacted with familiarity such that the *response* phase of novel trials was associated with significantly more looks ($\beta$ = `r broman::myround(g_lm$coefficients[17], 1)`, *p* < .001). This result is consistent with results from Experiment 1. However, in contrast to Experiment 1, the number of looks was not significantly greater for novel trials in the *planning* phase.
