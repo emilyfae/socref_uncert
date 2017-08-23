@@ -1,0 +1,207 @@
+---
+title: "socref_paper_logistic"
+author: "Emily"
+date: "8/23/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(png)
+library(grid)
+library(ggplot2)
+library(xtable)
+library(langcog)
+library(dplyr)
+library(ggplot2)
+library(rjson)
+library(stringr)
+library(tidyr)
+library(lme4)
+library(knitr)
+library(markdown)
+library(lmerTest)
+library(ggthemes)
+library(psych)
+library(broman)
+library(kmr)
+library(magrittr)
+```
+
+# Additional analyses for social referencing paper.
+
+Exploratory logistic regressions.
+
+##Experiment 1
+```{r}
+load("soc_ref_e1.RData")
+
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(num_objs = factor(num_objs), 
+         familiarity = factor(familiarity), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name),
+         soc_ref = social_ref)
+```
+
+```{r eval = FALSE}
+#histogram for number of looks by phase. 
+hist <- d %>%
+   select(phase, num_looks)
+ 
+ ggplot(hist, aes(num_looks, fill = num_looks)) +
+  geom_histogram(stat = "count") +
+   facet_grid(~phase) +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized() 
+```
+
+```{r}
+glm_e1 <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c * phase_name +
+                (1|SID), 
+              data = lmer_data, 
+              family = "binomial"))
+#single model does not converge. try separate models for each phase.
+```
+
+```{r}
+glm_e1_l <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "label"), 
+              family = "binomial"))
+
+glm_e1_s <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "slide"), 
+              family = "binomial"))
+
+glm_e1_p <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "planning"), 
+              family = "binomial"))
+
+glm_e1_r <- summary(glmer(soc_ref ~ num_objs * familiarity + age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "response"), 
+              family = "binomial"))
+#this last one does not converge with age interaction.
+```
+
+```{r}
+#for binary social referencing plot
+mssref <- filter(d, exclude == 0) %>%
+  group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
+  summarise(social_ref = mean(social_ref))
+
+msref <- filter(d, exclude == 0) %>%
+  group_by(phase_name, familiarity, num_objs, age_years) %>%
+  multi_boot_standard(col = "social_ref") 
+
+mssref$phase_name <- factor(mssref$phase_name, levels = c("label","slide", "planning", "response"))
+msref$phase_name <- factor(msref$phase_name, levels = c("label","slide", "planning", "response"))
+
+mssref$num_objs <- factor(mssref$num_objs,
+levels = c(1,2),
+labels = c("One object", "Two objects"))
+
+msref$num_objs <- factor(msref$num_objs,
+levels = c(1,2),
+labels = c("One object", "Two objects"))
+
+mssref$age_years <- factor(mssref$age_years,
+levels = c(2, 3, 4, 5),
+labels = c("2 years", "3 years", "4 years", "5 years"))
+
+msref$age_years <- factor(msref$age_years,
+levels = c(2, 3, 4, 5),
+labels = c("2 years", "3 years", "4 years", "5 years"))
+```
+
+```{r}
+ggplot(mssref, aes(x = phase_name, y = social_ref, 
+               col = familiarity, group = familiarity)) + 
+  geom_line(data = msref, aes(y = mean)) + 
+  geom_pointrange(data = msref, 
+                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
+                  position = position_dodge(width =.1)) + 
+  facet_grid(age_years ~ num_objs) +
+  scale_y_continuous(limits=c(0,1), breaks=c(0,1)) +
+  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
+  labs(x = "Phase", y = "Number of Looks") +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized() 
+```
+
+##Experiment 2
+
+```{r}
+load("soc_ref_e2.RData")
+
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(trial_type = factor(trial_type), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name), 
+         gaze = factor(Gaze),
+         acc = factor(acc),
+         soc_ref = social_ref)
+
+lmer_data$trial_type <- relevel(lmer_data$trial_type, ref = "familiar")
+lmer_data$gaze <- relevel(lmer_data$gaze, ref = "no_gaze")
+```
+
+
+```{r eval = FALSE}
+#histogram for number of looks by phase. 
+hist <- d %>%
+   select(phase, num_looks)
+ 
+ ggplot(hist, aes(num_looks, fill = num_looks)) +
+  geom_histogram(stat = "count") +
+   facet_grid(~phase) +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized() 
+```
+
+
+```{r eval = FALSE}
+#logistic model
+glm_e2 <- summary(glmer(soc_ref ~ trial_type * gaze * age_c + 
+                (1|SID), 
+              data = lmer_data, 
+              family = "binomial"))
+#full model does not converge
+```
+
+```{r eval = FALSE}
+#logistic model
+glm_e2_l <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "label"), 
+              family = "binomial"))
+#does not converge with age interaction
+
+glm_e2_s <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "slide"), 
+              family = "binomial"))
+#does not converge with age interaction
+
+glm_e2_p <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "planning"), 
+              family = "binomial"))
+#does not converge with age interaction
+
+glm_e2_p <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "response"), 
+              family = "binomial"))
+#does not converge with age interaction
+```
+

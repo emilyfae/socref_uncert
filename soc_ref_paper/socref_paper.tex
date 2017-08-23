@@ -488,31 +488,16 @@ across ambiguity conditions and not across phases directly.
 
 \subsubsection{Accuracy}\label{accuracy}
 
-\begin{table}[b]
-\centering
-\begin{tabular}{rlllrlll}
-  \hline
- & Experiment & Familiarity & Gaze & Age & Accuracy & CI lower & CI upper \\ 
-  \hline
-1 & 1 & FF & no gaze & 2.00 & 0.8 & 0.7 & 0.8 \\ 
-  2 & 1 & FF & no gaze & 3.00 & 1.0 & 1.0 & 1.0 \\ 
-  3 & 1 & FF & no gaze & 4.00 & 0.9 & 0.9 & 1.0 \\ 
-  4 & 1 & FF & no gaze & 5.00 & 1.0 & 1.0 & 1.0 \\ 
-  5 & 2 & FF & gaze & 3.00 & 1.0 & 1.0 & 1.0 \\ 
-  6 & 2 & FF & gaze & 4.00 & 0.9 & 0.9 & 1.0 \\ 
-  7 & 2 & FF & no gaze & 3.00 & 0.9 & 0.9 & 1.0 \\ 
-  8 & 2 & FF & no gaze & 4.00 & 1.0 & 1.0 & 1.0 \\ 
-  9 & 2 & FN & gaze & 3.00 & 1.0 & 1.0 & 1.0 \\ 
-  10 & 2 & FN & gaze & 4.00 & 1.0 & 1.0 & 1.0 \\ 
-  11 & 2 & FN & no gaze & 3.00 & 0.8 & 0.8 & 0.8 \\ 
-  12 & 2 & FN & no gaze & 4.00 & 1.0 & 0.9 & 1.0 \\ 
-  13 & 2 & NN & gaze & 3.00 & 0.8 & 0.8 & 0.9 \\ 
-  14 & 2 & NN & gaze & 4.00 & 0.8 & 0.8 & 0.9 \\ 
-   \hline
-\end{tabular}
-\caption{Accuracy Rates} 
-\label{tab:acc_table}
-\end{table}
+\begin{CodeChunk}
+\begin{figure*}[b]
+
+{\centering \includegraphics{figs/acc_e1-1} 
+
+}
+
+\caption[Accuracy for FF trials in Experiment 1]{Accuracy for FF trials in Experiment 1. Error bars are 95 percent confidence intervals.}\label{fig:acc_e1}
+\end{figure*}
+\end{CodeChunk}
 
 \begin{table}[b]
 \centering
@@ -557,7 +542,7 @@ performed close to ceiling (92\% - 99\%), 2-year-olds were less accurate
 
 }
 
-\caption[Results of Experiment 1]{Results of Experiment 1. Number of looks to the experimenter across phases and conditions. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.}\label{fig:results_e1}
+\caption[Results of Experiment 1]{Results of Experiment 1. Number of looks to the experimenter based on phase, the number and familiarity of objects present, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.}\label{fig:results_e1}
 \end{figure*}
 \end{CodeChunk}
 
@@ -582,17 +567,17 @@ Intercept & 1.38 & 0.06 & 22.58 & $<$ .001 & *** \\
 
 \begin{table}[tb]
 \centering
-\begin{tabular}{lrrrrll}
- Estimate & Std. Error & df & $t$ value & $p$ value &  & stars \\ 
+\begin{tabular}{lrrrrl}
+ Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
   \hline
-0.12 & 0.02 & 184.03 & 5.06 & $<$ .001 & Intercept & *** \\ 
-  0.02 & 0.03 & 233.02 & 0.55 & 0.58 & Num objects (2) &  \\ 
-  0.04 & 0.03 & 813.18 & 1.38 & 0.17 & Familiarity (N) &  \\ 
-  -0.00 & 0.00 & 177.59 & -0.44 & 0.66 & Age &  \\ 
-  -0.07 & 0.04 & 813.98 & -1.69 & 0.09 & Num objects (2) * Familiarity (N) & . \\ 
-  0.00 & 0.00 & 222.68 & 0.20 & 0.84 & Num objects (2) * Age &  \\ 
-  -0.00 & 0.00 & 812.48 & -0.18 & 0.86 & Familiarity (N) * Age &  \\ 
-  -0.00 & 0.00 & 814.63 & -0.84 & 0.4 & Num objects (2) * Familiarity (N) * Age &  \\ 
+Intercept & 0.12 & 0.02 & 5.06 & $<$ .001 & *** \\ 
+  Num objects (2) & 0.02 & 0.03 & 0.55 & 0.58 &  \\ 
+  Familiarity (N) & 0.04 & 0.03 & 1.38 & 0.17 &  \\ 
+  Age & -0.00 & 0.00 & -0.44 & 0.66 &  \\ 
+  Num objects (2) * Familiarity (N) & -0.07 & 0.04 & -1.69 & 0.09 & . \\ 
+  Num objects (2) * Age & 0.00 & 0.00 & 0.20 & 0.84 &  \\ 
+  Familiarity (N) * Age & -0.00 & 0.00 & -0.18 & 0.86 &  \\ 
+  Num objects (2) * Familiarity (N) * Age & -0.00 & 0.00 & -0.84 & 0.4 &  \\ 
    \hline
 \end{tabular}
 \caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the slide phase in Experiment 1.} 
@@ -777,8 +762,18 @@ with gaze) was calculated using the same criteria as in Experiment 1
 
 \subsection{Results and Discussion}\label{results-and-discussion-1}
 
-\subsubsection{Phase durations and
-accuracy}\label{phase-durations-and-accuracy}
+\subsubsection{Accuracy}\label{accuracy-1}
+
+\begin{CodeChunk}
+\begin{figure*}[b]
+
+{\centering \includegraphics{figs/acc_e2-1} 
+
+}
+
+\caption[Accuracy for trials with a correct answer (FF and FN, and all gaze trials) in Experiment 2]{Accuracy for trials with a correct answer (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.}\label{fig:acc_e2}
+\end{figure*}
+\end{CodeChunk}
 
 To quantify the effects of familiarity, gaze, and age on accuracy, we
 fit the following mixed-effects logistic regression model:
@@ -851,7 +846,7 @@ they learned that gaze direction was not informative.
 
 }
 
-\caption[Results of Experiment 2]{Results of Experiment 2. Number of looks to the experimenter across phases and trial types. Error bars are 95 percent confidence intervals.}\label{fig:results_e2}
+\caption[Results of Experiment 2]{Results of Experiment 2. Number of looks to the experimenter based on phase, trial type, gaze condition, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.}\label{fig:results_e2}
 \end{figure*}
 \end{CodeChunk}
 
@@ -940,7 +935,7 @@ Intercept & 0.11 & 0.09 & 1.21 & 0.23 &  \\
   Acc(Y) * Age * Phase(Response) & -0.03 & 0.02 & -1.25 & 0.21 &  \\ 
    \hline
 \end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1.} 
+\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2.} 
 \label{tab:exp2acc_reg}
 \end{table}
 
@@ -953,11 +948,14 @@ referencing children demonstrate for correct and incorrect responses.
 To this end, we fit a mixed-effects linear regression model with the
 following structure:
 \texttt{number\ of\ looks\ \textasciitilde{}\ accuracy\ *\ age\ in\ months\ *\ phase\ +\ (1\ \textbar{}\ subject)}.
-Results showed that accuracy and phase interacted such that children
-looked at the experimenter significantly more during the labeling phase
-of accurate trials (\(\beta\) = 0.4, \emph{p} \textless{} .001), and
-significantly less in the \emph{response} phase of accurate trials
-(\(\beta\) = -1.0, \emph{p} \textless{} .001).
+The number of looks was collapsed across trial types and gaze
+conditions, since there were relatively few incorrect trials overall and
+none at all for some of the conditions. Results showed that accuracy and
+phase interacted such that children looked at the experimenter
+significantly more during the labeling phase of accurate trials
+(\(\beta\) = 0.4, \emph{p} \textless{} .001), and significantly less in
+the \emph{response} phase of accurate trials (\(\beta\) = -1.0, \emph{p}
+\textless{} .001).
 
 These findings confirm that children reference the experimenter more
 while responding incorrectly. Importantly, this analysis was restricted
@@ -981,7 +979,7 @@ children were more engaged in the task.
 
 }
 
-\caption[Results of Experiment 2]{Results of Experiment 2. Number of looks to the experimenter based on accuracy. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.}\label{fig:acc_results_e2}
+\caption[Results of Experiment 2]{Results of Experiment 2. Number of looks to the experimenter based on accuracy, phase, and age, collapsed across trial types and gaze conditions. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals. }\label{fig:acc_results_e2}
 \end{figure*}
 \end{CodeChunk}
 

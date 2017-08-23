@@ -138,7 +138,7 @@ save(phases, file = "phases.RData")
 ## Methods
 
 ### Participants
-We recruited a planned sample of 80 children ages 2-5 years from the Children’s Discovery Museum in San Jose, California.^[Planned sample size, exclusion criteria, and analysis plan preregistered at https://osf.io/y7mvt.] The sample included 20 2-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="two"], 1)` months), 20 3-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="three"], 1)` months), 20 4-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="four"], 1)` months), and 20 5-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="five"], 1)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 10), because they were unable to complete at least half of the trials in the task (*n* = 4), because of parental interference (*n* = 1), or due to experimenter or technical errors (*n* = 5). 
+We recruited a planned sample of 80 children ages 2-5 years from the Children’s Discovery Museum in San Jose, California.^[Planned sample size, exclusion criteria, and analysis plan (including model specification) preregistered at https://osf.io/y7mvt.] The sample included 20 2-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="two"], 1)` months), 20 3-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="three"], 1)` months), 20 4-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="four"], 1)` months), and 20 5-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="five"], 1)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 10), because they were unable to complete at least half of the trials in the task (*n* = 4), because of parental interference (*n* = 1), or due to experimenter or technical errors (*n* = 5). 
 
 ### Stimuli and Design
 Children were presented with one or two objects, heard a label, and were asked to put the labeled object in a bucket. Half of the objects were selected to be familiar to children (e.g., a cow) and half were selected to be novel (e.g., a nozzle). There were four possible trial types based on the number and familiarity of the objects present: one familiar object (F), one novel object (N), two familiar objects (FF), and two novel objects (NN). There were three trials of each type, for a total of twelve trials. Trial types were presented sequentially in an order that was counterbalanced across participants. The assignment of individual objects to trial types was counterbalanced. On F/FF trials, the familiar label for the target object was used (e.g., “cow”). On N/NN trials, a novel label was used (e.g., “dawnoo”). 
@@ -187,39 +187,24 @@ acc_mss_e1 <- d%>%
   multi_boot_standard(col = "acc")%>%
   mutate(Exp = "1")
 
-load("soc_ref_e2.RData")
+acctab_e1 <- d%>%
+  filter(!is.na(acc),familiarity == "familiar", exclude == 0, num_objs == 2)%>%
+  group_by(age_years)%>%
+  multi_boot_standard(col = "acc")
 
-d$acc <- as.numeric(as.character(d$acc))
-
-acc_mss_e2 <- d%>%
-  filter(!is.na(acc), exclude == 0)%>%
-  group_by(trial_type, Gaze, age_years)%>%
-  multi_boot_standard(col = "acc", na.rm = TRUE)%>%
-  mutate(Exp = "2")
-
-acc_mss_e2$Gaze <- factor(acc_mss_e2$Gaze,
-levels = c("gaze","no_gaze"),
-labels = c("gaze", "no gaze"))
-
-acc_mss_e2$trial_type <- factor(acc_mss_e2$trial_type,
-levels = c("familiar","mutual", "novel"),
-labels = c("FF", "FN", "NN"))
-
-acc_table <- acc_mss_e1 %>%
-  bind_rows(acc_mss_e2)%>%
-  select(Exp, trial_type, Gaze, age_years, mean, ci_lower, ci_upper)
+acctab_e1$age_years <- as.factor(acctab_e1$age_years)
 ```  
 
-```{r acc_table, echo = FALSE, results="asis"}
-acc_table$mean <- broman::myround(acc_table$mean, 1)
-acc_table$ci_lower <- broman::myround(acc_table$ci_lower, 1)
-acc_table$ci_upper <- broman::myround(acc_table$ci_upper, 1)
 
-acc_table <- xtable(acc_table, caption = "Accuracy Rates", label = "tab:acc_table")
-names(acc_table) <- c('Experiment','Familiarity','Gaze', 'Age','Accuracy', 'CI lower', 'CI upper')
+```{r acc_e1, fig.env='figure*',fig.width=4, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Accuracy for FF trials in Experiment 1. Error bars are 95 percent confidence intervals.'}
 
-print(acc_table, type="latex", comment = F, table.placement = "b",
-      floating.environment = "table", include.rownames=TRUE)
+ggplot(acctab_e1, aes(age_years, mean)) +
+  geom_bar(stat="identity", position = "dodge") + 
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
+             position = position_dodge(width = .9))  +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized()  + 
+  labs(x = "Age in Years", y = "Accuracy")
 ```
 
 ```{r phasetable, echo = FALSE, results="asis"}
@@ -266,6 +251,14 @@ mslooks$num_objs <- factor(mslooks$num_objs,
 levels = c(1,2),
 labels = c("One object", "Two objects"))
 
+msslooks$familiarity <- factor(msslooks$familiarity,
+levels = c("familiar", "novel"),
+labels = c("familiar (F)", "novel (N)"))
+
+mslooks$familiarity <- factor(mslooks$familiarity,
+levels = c("familiar", "novel"),
+labels = c("familiar (F)", "novel (N)"))
+
 msslooks$age_years <- factor(msslooks$age_years,
 levels = c(2, 3, 4, 5),
 labels = c("2 years", "3 years", "4 years", "5 years"))
@@ -276,7 +269,7 @@ labels = c("2 years", "3 years", "4 years", "5 years"))
 ```
 
 
-```{r results_e1,fig.width=8, fig.height=6,out.width="5.75in", out.height="4.35in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 1. Number of looks to the experimenter across phases and conditions. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.'}
+```{r results_e1,fig.width=8, fig.height=6,out.width="5.75in", out.height="4.35in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 1. Number of looks to the experimenter based on phase, the number and familiarity of objects present, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.'}
 
 ggplot(msslooks, aes(x = phase_name, y = num_looks, 
                col = familiarity, group = familiarity)) + 
@@ -309,16 +302,6 @@ lmer_data <- d %>%
          soc_ref = social_ref)
 ```
 
-```{r eval = FALSE}
-#histogram for number of looks by phase. 
-hist <- d %>%
-   select(phase, num_looks)
- 
- ggplot(hist, aes(num_looks, fill = num_looks)) +
-  geom_histogram(stat = "count") +
-   facet_grid(~phase)
-```
-
 ```{r lmer_e1, results="asis"}
 l_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
              (num_objs  | SID),
@@ -349,86 +332,6 @@ r_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
            data = filter(lmer_data, phase_name == "response"))
 
 response_lm <- summary(r_lm)
-```
-
-```{r eval = FALSE}
-#logistic model
-
-glm_e1 <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c * phase_name +
-                (1|SID), 
-              data = lmer_data, 
-              family = "binomial"))
-#single model does not converge. try separate models for each phase.
-```
-
-```{r}
-glm_e1_l <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "label"), 
-              family = "binomial"))
-
-glm_e1_s <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "slide"), 
-              family = "binomial"))
-
-glm_e1_p <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "planning"), 
-              family = "binomial"))
-
-glm_e1_r <- summary(glmer(soc_ref ~ num_objs * familiarity + age_c +
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "response"), 
-              family = "binomial"))
-#this last one does not converge with age interaction.
-```
-
-
-
-```{r}
-#plot binary social referencing
-mssref <- filter(d, exclude == 0) %>%
-  group_by(SID, phase_name, num_objs, familiarity, age_years) %>%
-  summarise(social_ref = mean(social_ref))
-
-msref <- filter(d, exclude == 0) %>%
-  group_by(phase_name, familiarity, num_objs, age_years) %>%
-  multi_boot_standard(col = "social_ref") 
-
-mssref$phase_name <- factor(mssref$phase_name, levels = c("label","slide", "planning", "response"))
-msref$phase_name <- factor(msref$phase_name, levels = c("label","slide", "planning", "response"))
-
-mssref$num_objs <- factor(mssref$num_objs,
-levels = c(1,2),
-labels = c("One object", "Two objects"))
-
-msref$num_objs <- factor(msref$num_objs,
-levels = c(1,2),
-labels = c("One object", "Two objects"))
-
-mssref$age_years <- factor(mssref$age_years,
-levels = c(2, 3, 4, 5),
-labels = c("2 years", "3 years", "4 years", "5 years"))
-
-msref$age_years <- factor(msref$age_years,
-levels = c(2, 3, 4, 5),
-labels = c("2 years", "3 years", "4 years", "5 years"))
-```
-
-```{r eval = FALSE}
-ggplot(mssref, aes(x = phase_name, y = social_ref, 
-               col = familiarity, group = familiarity)) + 
-  geom_line(data = msref, aes(y = mean)) + 
-  geom_pointrange(data = msref, 
-                  aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
-                  position = position_dodge(width =.1)) + 
-  facet_grid(age_years ~ num_objs) +
-  scale_y_continuous(limits=c(0,1), breaks=c(0,1)) +
-  theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
-  labs(x = "Phase", y = "Number of Looks") +
-  ggthemes::theme_few() +
-  langcog::scale_colour_solarized() 
 ```
 
 ```{r e1_table_l, echo = FALSE, results="asis"}
@@ -645,7 +548,7 @@ labels = c("three", "four"))
 
 ### Participants
 
-We recruited a planned sample of 80 children ages 3-4 years from the Children’s Discovery Museum in San Jose, California.^[Planned sample size, exclusion criteria, and analysis plan preregistered at https://osf.io/y7mvt/.] The sample included 40 3-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="three"], 1)` months) and 40 4-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="four"], 1)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 9), because they were unable to complete at least half of the trials in the task (*n* = 7), or due to experimenter or technical errors (*n* = 4).
+We recruited a planned sample of 80 children ages 3-4 years from the Children’s Discovery Museum in San Jose, California.^[Planned sample size, exclusion criteria, and analysis plan (including model specification) preregistered at https://osf.io/y7mvt/.] The sample included 40 3-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="three"], 1)` months) and 40 4-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="four"], 1)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 9), because they were unable to complete at least half of the trials in the task (*n* = 7), or due to experimenter or technical errors (*n* = 4).
 
 ### Stimuli and Design
 
@@ -659,7 +562,39 @@ The mean durations of the phases for Experiment 2 are presented in Table \ref{ta
 
 ## Results and Discussion
 
-###Phase durations and accuracy
+###Accuracy
+
+```{r}
+d$acc <- as.numeric(as.character(d$acc))
+
+acc_mss_e2 <- d%>%
+  filter(!is.na(acc), exclude == 0)%>%
+  group_by(trial_type, Gaze, age_years)%>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)%>%
+  mutate(Exp = "2")
+
+acc_mss_e2$Gaze <- factor(acc_mss_e2$Gaze,
+levels = c("gaze","no_gaze"),
+labels = c("Gaze", "No gaze"))
+
+acc_mss_e2$trial_type <- factor(acc_mss_e2$trial_type,
+levels = c("familiar","mutual", "novel"),
+labels = c("FF", "FN", "NN"))
+
+acc_mss_e2$age_years <- as.factor(acc_mss_e2$age_years)
+```
+
+```{r acc_e2, fig.env='figure*',fig.width=6, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Accuracy for trials with a correct answer (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.'}
+ggplot(acc_mss_e2, aes(age_years, mean, fill=trial_type)) +
+  geom_bar(stat="identity", position = "dodge") + 
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
+             position = position_dodge(width = .9)) + 
+  facet_wrap(~ Gaze)  +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized()  + 
+  labs(x = "Age in Years", y = "Accuracy") +
+  scale_fill_discrete(name="Trial type")
+```
 
 ```{r}
 lmer_data <- d %>%
@@ -699,7 +634,9 @@ hist <- d %>%
  
  ggplot(hist, aes(num_looks, fill = num_looks)) +
   geom_histogram(stat = "count") +
-   facet_grid(~phase)
+   facet_grid(~phase) +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized() 
 ```
 
 Children's social referencing based on trial type and gaze condition are presented in Figure \ref{fig:results_e2}. To quantify the main and interactive effects of familiarity, gaze informativity, phase, and age on social referencing, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ familiarity * age in months * gaze * phase + (familiarity | subject)`. In contrast to Experiment 1, a model with phase as a predictor converged.
@@ -752,7 +689,7 @@ mslooks <- mslooks %>%
 ```
 
 
-```{r results_e2, fig.width=8, fig.height=5,out.width="5.75in", out.height="3.5in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 2. Number of looks to the experimenter across phases and trial types. Error bars are 95 percent confidence intervals.'}
+```{r results_e2, fig.width=8, fig.height=5,out.width="5.75in", out.height="3.5in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on phase, trial type, gaze condition, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.'}
 
 ggplot(msslooks, aes(x = phase_name, y = num_looks, 
                col = familiarity, group = familiarity)) + 
@@ -767,44 +704,6 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   ggthemes::theme_few() +
   langcog::scale_colour_solarized() 
 ```
-
-```{r eval = FALSE}
-#logistic model
-glm_e2 <- summary(glmer(soc_ref ~ trial_type * gaze * age_c + 
-                (1|SID), 
-              data = lmer_data, 
-              family = "binomial"))
-#full model does not converge
-```
-
-```{r eval = FALSE}
-#logistic model
-glm_e2_l <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "label"), 
-              family = "binomial"))
-#does not converge with age interaction
-
-glm_e2_s <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "slide"), 
-              family = "binomial"))
-#does not converge with age interaction
-
-glm_e2_p <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "planning"), 
-              family = "binomial"))
-#does not converge with age interaction
-
-glm_e2_p <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "response"), 
-              family = "binomial"))
-#does not converge with age interaction
-```
-
-
 
 ```{r e2_table, echo = FALSE, results="asis"}
 e2.tab <- as.data.frame(g_lm$coef)
@@ -954,7 +853,7 @@ print(xtable(e2acc.tab,
 
 In the metacognitive framework, confidence judgments are generally compared for correct and incorrect responses, with lower confidence for incorrect responses taken as evidence for metacognitive accuracy (refs). Here, a parallel approach would be to examine the amount of social referencing children demonstrate for correct and incorrect responses.   
 
-To this end, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ accuracy * age in months * phase + (1 | subject)`. Results showed that accuracy and phase interacted such that children looked at the experimenter significantly more during the labeling phase of accurate trials ($\beta$ = `r broman::myround(acclooks_mod$coefficients[8], 1)`, *p* < .001), and significantly less in the *response* phase of accurate trials ($\beta$ = `r broman::myround(acclooks_mod$coefficients[10], 1)`, *p* < .001).
+To this end, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ accuracy * age in months * phase + (1 | subject)`. The number of looks was collapsed across trial types and gaze conditions, since there were relatively few incorrect trials overall and none at all for some of the conditions. Results showed that accuracy and phase interacted such that children looked at the experimenter significantly more during the labeling phase of accurate trials ($\beta$ = `r broman::myround(acclooks_mod$coefficients[8], 1)`, *p* < .001), and significantly less in the *response* phase of accurate trials ($\beta$ = `r broman::myround(acclooks_mod$coefficients[10], 1)`, *p* < .001).
 
 These findings confirm that children reference the experimenter more while responding incorrectly.  Importantly, this analysis was restricted to trials in which there was a correct response available (i.e., because the target was familiar or could be inferred by excluding the familiar distracter or observing the speaker's gaze). Thus, children's looking is sensitive not only to complete ignorance, but other factors that affect accuracy, which might include graded evidence or relative familiarity with the stimuli). 
 
@@ -981,9 +880,15 @@ labels = c("3 years", "4 years"))
 mslooks_acc$age_years <- factor(mslooks_acc$age_years,
 levels = c(3, 4),
 labels = c("3 years", "4 years"))
+
+
+msslooks_acc$acc <- as.factor(as.character(msslooks_acc$acc))
+msslooks_acc$age_years <- as.factor(as.character(msslooks_acc$age_years))
+mslooks_acc$acc <- as.factor(as.character(mslooks_acc$acc))
+mslooks_acc$age_years <- as.factor(as.character(mslooks_acc$age_years))
 ```
 
-```{r acc_results_e2, fig.width=8, fig.height=4,out.width="6in", out.height="3in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy. Error bars are 95 percent confidence intervals. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity.'}
+```{r acc_results_e2, fig.width=8, fig.height=4,out.width="6in", out.height="3in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy, phase, and age, collapsed across trial types and gaze conditions. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals. '}
 
 ggplot(msslooks_acc, aes(x = phase_name, y = num_looks, 
                col = acc, group = acc)) + 
@@ -994,7 +899,7 @@ ggplot(msslooks_acc, aes(x = phase_name, y = num_looks,
   facet_grid(~age_years) + 
   scale_y_continuous(limits=c(0,2.5), breaks=c(0,1,2)) +
   theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5))+ 
-  labs(x = "Phase", y = "Number of Looks")  +
+  labs(x = "Phase", y = "Number of Looks") +
   ggthemes::theme_few() +
   langcog::scale_colour_solarized() 
 ```
