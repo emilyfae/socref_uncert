@@ -459,30 +459,47 @@ trials: a F trial and a FF trial, to acquaint the child with the
 procedure. A camera placed to the side of the experimenter captured the
 participant's face, so that looking behavior could be coded from video.
 
-\subsubsection{Coding procedure}\label{coding-procedure}
+\subsubsection{Coding procedure and analytic
+plan}\label{coding-procedure-and-analytic-plan}
 
 Videos were coded using DataVyu software (\url{http://datavyu.org}). For
-each participant, we coded the number of times they referenced the
-experimenter across the trial. Because we were interested in the precise
-circumstances in which children feel uncertain enough to reference a
-speaker, we coded the number of looks that occurred during four phases
-of the trial: a \emph{label} phase, which began at the utterance of the
-label and ended when the experimenter began to slide the objects, a
-\emph{slide} phase, in which the experimenter slid the object(s) into
-the child's reach, a \emph{planning} phase, which began at the end of
-the slide and ended when the child touched an object, and a
-\emph{response} phase, which began when the child touched an object and
-ended when the child released the object into the bucket. A second coder
-independently scored the number of looks for one third of the trials for
-each participant to establish reliability. Inter-rater reliability for
-the number of looks in each phase was high, intraclass correlation
-\emph{r} = .97, \emph{p}\textless{}.001.
+each participant, we coded the \emph{number of times} they referenced
+the experimenter throughout each trial. An alternative analytic option
+would be to simply code \emph{whether or not} children looked at the
+experimenter. However, during piloting, we found that most children
+looked up to the experimenter at least once while they were labeling the
+object, suggesting that a binary measure of looking would not be
+meaningful.
+
+Because we were interested in the precise circumstances in which
+children feel uncertain enough to reference a speaker, we coded the
+number of looks that occurred during four distinct phases of the trial:
+a \emph{label} phase, which began at the utterance of the label and
+ended when the experimenter began to slide the objects, a \emph{slide}
+phase, in which the experimenter slid the object(s) into the child's
+reach, a \emph{planning} phase, which began at the end of the slide and
+ended when the child touched an object, and a \emph{response} phase,
+which began when the child touched an object and ended when the child
+released the object into the bucket. A second coder independently scored
+the number of looks for one third of the trials for each participant to
+establish reliability. Inter-rater reliability for the number of looks
+in each phase was high, intraclass correlation \emph{r} = .97,
+\emph{p}\textless{}.001.
 
 Table \ref{tab:phases} displays the average durations of each of the
 four phases. The \emph{label} and \emph{response} phases are longer on
 average than the \emph{planning} and \emph{slide} phases. However, note
 that we are interested in comparing the amount of social referencing
 across ambiguity conditions and not across phases directly.
+
+To quantify the effects of the number and familiarity of objects on
+children's looking, along with any developmental trends, we planned to
+fit a linear mixed-effects regression, beginning with the following
+structure and trimming according to standard laboratory
+procedures\footnote{Standard laboratory analytic procedures available at
+  \url{https://osf.io/zqzsu/wiki/home/}}:
+\texttt{number\ of\ looks\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ phase\ *\ age\ in\ months\ +\ (number\ of\ objects\ *\ familiarity\ \textbar{}\ subject)}.
+This model specification was preregistered, as noted above.
 
 \subsection{Results and Discussion}\label{results-and-discussion}
 
@@ -520,12 +537,12 @@ across ambiguity conditions and not across phases directly.
 \label{tab:phases}
 \end{table}
 
-We examined children's accuracy for those trials in which there was a
-correct response (i.e., FF trials). Children sometimes put two items in
-the bucket (20.0\% of trials), despite instructions to choose only one.
-If they put the correct item in the bucket first followed by the
-incorrect object, we counted their response as correct. If they put the
-incorrect object in first, we counted their response as incorrect.
+We examined children's accuracy for those trials in which a correct
+response was possible (i.e., FF trials). Children sometimes put two
+items in the bucket (20.0\% of trials), despite instructions to choose
+only one. If they put the correct item in the bucket first followed by
+the incorrect object, we counted their response as correct. If they put
+the incorrect object in first, we counted their response as incorrect.
 Children also occasionally declined to choose an item (0.8\% of trials);
 these trials are excluded from accuracy analyses. Children's accuracy is
 displayed in Table \ref{tab:acc_table}. Overall children generally chose
@@ -632,8 +649,7 @@ structure:
 \texttt{number\ of\ looks\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ age\ in\ months\ +\ (number\ of\ objects\ +\ familiarity\ \textbar{}\ subject)}.
 A single model with phase as a factor did not converge, and the model
 was subsequently trimmed according to our standard laboratory analytic
-procedures.\footnote{Standard laboratory analytic procedures available
-  at \url{https://osf.io/zqzsu/wiki/home/}}
+procedures.
 
 We did not find any main or interaction effects of number of objects,
 familiarity, or age on number of looks during the \emph{label} or
@@ -661,11 +677,40 @@ to uncertainty as they grow older. This could mean that they detect
 uncertainty more quickly, or that they are more proactive in seeking
 disambiguating information prior to initiating a response.
 
+\begin{CodeChunk}
+\begin{figure*}[b]
+
+{\centering \includegraphics{figs/hist_e1-1} 
+
+}
+
+\caption[Distribution of the number of looks to the experimenter in each phase]{Distribution of the number of looks to the experimenter in each phase.}\label{fig:hist_e1}
+\end{figure*}
+\end{CodeChunk}
+
+As discussed previously, an alternative analytic approach would be to
+fit a logistic mixed-effects regression predicting \emph{whether or not}
+children look to the experimenter in each phase, rather than the number
+of times they do so. In support of this approach, the distribution of
+looks is not normal for the slide, planning, and response phases, with
+the majority of trials containing no looks to the experimenter (Figure
+\textbackslash{}ref\{fig:hist\_e1). To address this issue, we
+additionally fit separate logistic mixed-effects regressions with the
+following structure:
+\texttt{look\ (yes\ or\ no)\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ age\ group\ +\ (number\ of\ objects\ +\ familiarity\ \textbar{}\ subject)}.
+A single model with phase as a factor did not converge.
+
+The results of these analyses were similar to those of the linear
+models; number of objects and familiarity interacted in the
+\emph{planning} and \emph{response} phases such that there was more
+likely to be a look when there were two novel objects, (\(\beta\)s =
+1.4202815, 1.9757203, \emph{p}s \textless{}.05 \& \textless{}.001.
+
 In summary, children looked to the experimenter more often when planning
 and executing a response under uncertainty. These results suggest that
 children were aware that they did not have sufficient knowledge to
 answer independently, and referenced the speaker to resolve this
-uncertainty.
+uncertainty.{]}xz
 
 Notably, and in contrast to Vaish et al., we did not find the expected
 effect of referential ambiguity in the \emph{label} phase. It is
@@ -725,14 +770,14 @@ selective referencing earlier in the trial than older children.
 
 We recruited a planned sample of 80 children ages 3-4 years from the
 Children's Discovery Museum in San Jose, California.\footnote{Planned
-  sample size, exclusion criteria, and analysis plan preregistered at
-  \url{https://osf.io/y7mvt/}.} The sample included 40 3-year-olds (mean
-age 42.9 months) and 40 4-year-olds (mean age 53.5 months). An
-additional 20 children participated but were removed from analyses
-because they heard English less than 75\% of the time at home (\emph{n}
-= 9), because they were unable to complete at least half of the trials
-in the task (\emph{n} = 7), or due to experimenter or technical errors
-(\emph{n} = 4).
+  sample size, exclusion criteria, and analysis plan (including model
+  specification) preregistered at \url{https://osf.io/y7mvt/}.} The
+sample included 40 3-year-olds (mean age 42.9 months) and 40 4-year-olds
+(mean age 53.5 months). An additional 20 children participated but were
+removed from analyses because they heard English less than 75\% of the
+time at home (\emph{n} = 9), because they were unable to complete at
+least half of the trials in the task (\emph{n} = 7), or due to
+experimenter or technical errors (\emph{n} = 4).
 
 \subsubsection{Stimuli and Design}\label{stimuli-and-design-1}
 
@@ -771,7 +816,7 @@ with gaze) was calculated using the same criteria as in Experiment 1
 
 }
 
-\caption[Accuracy for trials with a correct answer (FF and FN, and all gaze trials) in Experiment 2]{Accuracy for trials with a correct answer (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.}\label{fig:acc_e2}
+\caption[Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2]{Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.}\label{fig:acc_e2}
 \end{figure*}
 \end{CodeChunk}
 

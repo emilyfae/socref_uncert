@@ -138,7 +138,7 @@ save(phases, file = "phases.RData")
 ## Methods
 
 ### Participants
-We recruited a planned sample of 80 children ages 2-5 years from the Children’s Discovery Museum in San Jose, California.^[Planned sample size, exclusion criteria, and analysis plan (including model specification) preregistered at https://osf.io/y7mvt.] The sample included 20 2-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="two"], 1)` months), 20 3-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="three"], 1)` months), 20 4-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="four"], 1)` months), and 20 5-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="five"], 1)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 10), because they were unable to complete at least half of the trials in the task (*n* = 4), because of parental interference (*n* = 1), or due to experimenter or technical errors (*n* = 5). 
+We recruited a planned sample of 80 children ages 2-5 years from the Children’s Discovery Museum in San Jose, California.^[Planned sample size, exclusion criteria, and analysis plan preregistered at https://osf.io/y7mvt.] The sample included 20 2-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="two"], 1)` months), 20 3-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="three"], 1)` months), 20 4-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="four"], 1)` months), and 20 5-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="five"], 1)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 10), because they were unable to complete at least half of the trials in the task (*n* = 4), because of parental interference (*n* = 1), or due to experimenter or technical errors (*n* = 5). 
 
 ### Stimuli and Design
 Children were presented with one or two objects, heard a label, and were asked to put the labeled object in a bucket. Half of the objects were selected to be familiar to children (e.g., a cow) and half were selected to be novel (e.g., a nozzle). There were four possible trial types based on the number and familiarity of the objects present: one familiar object (F), one novel object (N), two familiar objects (FF), and two novel objects (NN). There were three trials of each type, for a total of twelve trials. Trial types were presented sequentially in an order that was counterbalanced across participants. The assignment of individual objects to trial types was counterbalanced. On F/FF trials, the familiar label for the target object was used (e.g., “cow”). On N/NN trials, a novel label was used (e.g., “dawnoo”). 
@@ -153,11 +153,15 @@ Throughout the study, the child sat at one end of a large circular table, and th
 
 After placing the objects, the experimenter said “Hey look, there’s a (target) here.” The experimenter gazed at the center of the table rather than the object they labeled. The experimenter waited approximately two seconds based on a visual metronome placed within view before saying, “Can you put the (target) in the bucket?” They then pushed the object(s) forward within reach of the child, and placed a plastic bucket in the center of the table, also within reach of the child. Prior to the twelve experimental trials, there were two training trials: a F trial and a FF trial, to acquaint the child with the procedure. A camera placed to the side of the experimenter captured the participant’s face, so that looking behavior could be coded from video.
 
-### Coding procedure
+### Coding procedure and analytic plan
 
-Videos were coded using DataVyu software (http://datavyu.org). For each participant, we coded the number of times they referenced the experimenter across the trial. Because we were interested in the precise circumstances in which children feel uncertain enough to reference a speaker, we coded the number of looks that occurred during four phases of the trial: a *label* phase, which began at the utterance of the label and ended when the experimenter began to slide the objects, a *slide* phase, in which the experimenter slid the object(s) into the child’s reach, a *planning* phase, which began at the end of the slide and ended when the child touched an object, and a *response* phase, which began when the child touched an object and ended when the child released the object into the bucket. A second coder independently scored the number of looks for one third of the trials for each participant to establish reliability. Inter-rater reliability for the number of looks in each phase was high, intraclass correlation *r* = .97, *p*<.001.
+Videos were coded using DataVyu software (http://datavyu.org). For each participant, we coded the *number of times* they referenced the experimenter throughout each trial. An alternative analytic option would be to simply code *whether or not* children looked at the experimenter. However, during piloting, we found that most children looked up to the experimenter at least once while they were labeling the object, suggesting that a binary measure of looking would not be meaningful. 
+
+Because we were interested in the precise circumstances in which children feel uncertain enough to reference a speaker, we coded the number of looks that occurred during four distinct phases of the trial: a *label* phase, which began at the utterance of the label and ended when the experimenter began to slide the objects, a *slide* phase, in which the experimenter slid the object(s) into the child’s reach, a *planning* phase, which began at the end of the slide and ended when the child touched an object, and a *response* phase, which began when the child touched an object and ended when the child released the object into the bucket. A second coder independently scored the number of looks for one third of the trials for each participant to establish reliability. Inter-rater reliability for the number of looks in each phase was high, intraclass correlation *r* = .97, *p*<.001.
 
 Table \ref{tab:phases} displays the average durations of each of the four phases. The *label* and *response* phases are longer on average than the *planning* and *slide* phases. However, note that we are interested in comparing the amount of social referencing across ambiguity conditions and not across phases directly.
+
+To quantify the effects of the number and familiarity of objects on children's looking, along with any developmental trends, we planned to fit a linear mixed-effects regression, beginning with the following structure and trimming according to standard laboratory procedures^[Standard laboratory analytic procedures available at https://osf.io/zqzsu/wiki/home/]: `number of looks ~ number of objects * familiarity * phase * age in months + (number of objects * familiarity | subject)`. This model specification was preregistered, as noted above.
 
 ## Results and Discussion
 
@@ -226,7 +230,7 @@ acc_t <- d%>%
 acctest <- t.test(acc_t$acc[acc_t$age_years == 2], mu=.5)
 ```
 
-We examined children's accuracy for those trials in which there was a correct response (i.e., FF trials). Children sometimes put two items in the bucket (`r broman::myround(tot, 1)`% of trials), despite instructions to choose only one. If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Table \ref{tab:acc_table}. Overall children generally chose the correct item for FFiliar trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* <.001).
+We examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (`r broman::myround(tot, 1)`% of trials), despite instructions to choose only one. If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Table \ref{tab:acc_table}. Overall children generally chose the correct item for FFiliar trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* <.001).
 
 ```{r}
 rm(list=ls())
@@ -513,13 +517,68 @@ print(xtable(e1_r.tab,
 
 ###Social referencing
 
-Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. ^[Standard laboratory analytic procedures available at https://osf.io/zqzsu/wiki/home/]
+Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. 
 
 We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the *label* or *slide* phases. Thus, mere novelty or the presence of multiple objects was not enough to increase social referencing. However, we found an interaction effect of number of objects and familiarity during the *planning* ($\beta$ = `r broman::myround(planning_lm$coefficients[5], 1)`, *p* < .001) and *response* phases ($\beta$ = `r broman::myround(response_lm$coefficients[5], 1)`, *p* < .001), such that NN trials were associated with more looking. 
 
 There was no interaction with age in any phase.^[https://github.com/emilyfae/socref_uncert] Since an age trend in the *planning* phase was apparent in the plot (Figure \ref{fig:results_e1}), we conducted a post-hoc mixed-effects linear regression with age group (2- and 3-year-olds vs. 4- and 5-year-olds) predicting the number of looks in the *planning* phase: `number of looks ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. We found a significant interaction of number of objects and familiarity ($\beta$ = `r broman::myround(planning_lm_age_group$coefficients[5], 1)`, *p* < .001), and a significant 3-way interaction between number of objects, familiarity, and age group, such that younger children looked at the experimenter less than older children for NN trials. Although this was a post-hoc analysis, it suggests that there may be a trend for children to respond more quickly to uncertainty as they grow older. This could mean that they detect uncertainty more quickly, or that they are more proactive in seeking disambiguating information prior to initiating a response.
 
-In summary, children looked to the experimenter more often when planning and executing a response under uncertainty. These results suggest that children were aware that they did not have sufficient knowledge to answer independently, and referenced the speaker to resolve this uncertainty.
+```{r echo = FALSE}
+#histogram for number of looks by phase. 
+hist <- d %>%
+   select(phase_name, num_looks)
+
+hist$phase_name <- factor(hist$phase_name,
+levels = c("label", "slide", "planning", "response"),
+labels = c("Label", "Slide", "Planning", "Response"))
+```
+
+```{r hist_e1, fig.env='figure*',fig.width=6, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Distribution of the number of looks to the experimenter in each phase.'}
+ ggplot(hist, aes(num_looks, fill = num_looks)) +
+  geom_histogram(stat = "count") +
+   facet_grid(~phase_name) +
+  ggthemes::theme_few() +
+  langcog::scale_colour_solarized()  +
+  labs(x = "Number of looks", y = "Count") +
+  scale_fill_discrete(name="Trial type")
+```
+
+```{r}
+glm_e1_l <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "label"), 
+              family = "binomial"))
+
+glm_e1_l_tab <- as.data.frame(glm_e1_l$coef)
+
+glm_e1_s <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "slide"), 
+              family = "binomial"))
+
+glm_e1_s_tab <- as.data.frame(glm_e1_s$coef)
+
+glm_e1_p <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "planning"), 
+              family = "binomial"))
+
+glm_e1_p_tab <- as.data.frame(glm_e1_p$coef)
+
+glm_e1_r <- summary(glmer(soc_ref ~ num_objs * familiarity + age_c +
+                (1|SID), 
+              data = filter(lmer_data, phase_name == "response"), 
+              family = "binomial"))
+
+glm_e1_r_tab <- as.data.frame(glm_e1_r$coef)
+#this last one does not converge with age interaction.
+```
+
+As discussed previously, an alternative analytic approach would be to fit a logistic mixed-effects regression predicting *whether or not* children look to the experimenter in each phase, rather than the number of times they do so. In support of this approach, the distribution of looks is not normal for the slide, planning, and response phases, with the majority of trials containing no looks to the experimenter (Figure \ref{fig:hist_e1). To address this issue, we additionally fit separate logistic mixed-effects regressions with the following structure: `look (yes or no) ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge. 
+
+The results of these analyses were similar to those of the linear models; number of objects and familiarity interacted in the *planning* and *response* phases such that there was more likely to be a look when there were two novel objects, ($\beta$s = `r glm_e1_p_tab$Estimate[5]`, `r glm_e1_r_tab$Estimate[5]`, *p*s <.05 & <.001. 
+
+In summary, children looked to the experimenter more often when planning and executing a response under uncertainty. These results suggest that children were aware that they did not have sufficient knowledge to answer independently, and referenced the speaker to resolve this uncertainty.]xz
 
 Notably, and in contrast to Vaish et al., we did not find the expected effect of referential ambiguity in the *label* phase. It is possible that children failed to predict that they would need more information until later in the trial, when they were actually faced with making a decision. Another possibility is that children's looking was at ceiling during the labeling phase, perhaps because children tend to look at someone who is speaking regardless of the need for referential disambiguation. A third possibility is that this finding is an artifact of our design, in which the experimenter gazed at the center of the table rather than the referent of the label. Children may have realized that the experimenter's gaze direction during labeling was not informative. Alternatively, children may have found it strange to interact with an experimenter who did not gaze at the object they were labeling, which may have produced unnatural patterns of social referencing. Experiment 2 tests these possibilities and examines whether children's social referencing is sensitive to graded uncertainty.
 
@@ -584,7 +643,7 @@ labels = c("FF", "FN", "NN"))
 acc_mss_e2$age_years <- as.factor(acc_mss_e2$age_years)
 ```
 
-```{r acc_e2, fig.env='figure*',fig.width=6, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Accuracy for trials with a correct answer (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.'}
+```{r acc_e2, fig.env='figure*',fig.width=6, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.'}
 ggplot(acc_mss_e2, aes(age_years, mean, fill=trial_type)) +
   geom_bar(stat="identity", position = "dodge") + 
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
@@ -869,17 +928,24 @@ mslooks_acc$age_years <- factor(mslooks_acc$age_years,
 levels = c(3, 4),
 labels = c("3 years", "4 years"))
 
-
-msslooks_acc$acc <- as.factor(as.character(msslooks_acc$acc))
+msslooks_acc$Accuracy <- as.factor(as.character(msslooks_acc$acc))
 msslooks_acc$age_years <- as.factor(as.character(msslooks_acc$age_years))
-mslooks_acc$acc <- as.factor(as.character(mslooks_acc$acc))
+mslooks_acc$Accuracy <- as.factor(as.character(mslooks_acc$acc))
 mslooks_acc$age_years <- as.factor(as.character(mslooks_acc$age_years))
+
+msslooks_acc$Accuracy <- factor(msslooks_acc$Accuracy,
+levels = c(0, 1),
+labels = c("incorrect", "correct"))
+
+mslooks_acc$Accuracy <- factor(mslooks_acc$Accuracy,
+levels = c(0, 1),
+labels = c("incorrect", "correct"))
 ```
 
 ```{r acc_results_e2, fig.width=8, fig.height=4,out.width="6in", out.height="3in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy, phase, and age, collapsed across trial types and gaze conditions. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals. '}
 
 ggplot(msslooks_acc, aes(x = phase_name, y = num_looks, 
-               col = acc, group = acc)) + 
+               col = Accuracy, group = Accuracy)) + 
   geom_line(data = mslooks_acc, aes(y = mean)) + 
   geom_pointrange(data = mslooks_acc, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 

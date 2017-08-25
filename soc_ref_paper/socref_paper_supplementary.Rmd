@@ -49,7 +49,7 @@ lmer_data <- d %>%
          soc_ref = social_ref)
 ```
 
-```{r eval = FALSE}
+```{r}
 #histogram for number of looks by phase. 
 hist <- d %>%
    select(phase, num_looks)
@@ -156,7 +156,7 @@ lmer_data$gaze <- relevel(lmer_data$gaze, ref = "no_gaze")
 ```
 
 
-```{r eval = FALSE}
+```{r}
 #histogram for number of looks by phase. 
 hist <- d %>%
    select(phase, num_looks)
@@ -169,7 +169,7 @@ hist <- d %>%
 ```
 
 
-```{r eval = FALSE}
+```{r}
 #logistic model
 glm_e2 <- summary(glmer(soc_ref ~ trial_type * gaze * age_c + 
                 (1|SID), 
@@ -178,7 +178,7 @@ glm_e2 <- summary(glmer(soc_ref ~ trial_type * gaze * age_c +
 #full model does not converge
 ```
 
-```{r eval = FALSE}
+```{r}
 #logistic model
 glm_e2_l <- summary(glmer(soc_ref ~ trial_type * gaze + age_c + 
                 (1|SID), 
