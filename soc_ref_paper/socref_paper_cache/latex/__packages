@@ -17,3 +17,7 @@ psych
 broman
 kmr
 magrittr
+tidyverse
+tibble
+readr
+purrr

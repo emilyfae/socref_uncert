@@ -24,16 +24,15 @@ knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = FALSE,
 ```
 
 ```{r, libraries}
+library(tidyverse)
 library(png)
 library(grid)
 library(ggplot2)
 library(xtable)
 library(langcog)
-library(dplyr)
 library(ggplot2)
 library(rjson)
 library(stringr)
-library(tidyr)
 library(lme4)
 library(knitr)
 library(markdown)
@@ -205,15 +204,37 @@ To quantify the effects of the number and familiarity of objects on children's l
 #how often did children select two objects or no objects?
 ids <- d %>%
  distinct(SID)
+
 trials <- d %>%
  distinct(trial)
+
 n <- length(ids$SID)*length(trials$trial)
 
 nc <- length(d$acc[d$response_orig == "NC"])/n
 b <- length(d$acc[d$response_orig == "B"])/n
 lr <- length(d$acc[d$response_orig == "LR"])/n
 rl <- length(d$acc[d$response_orig == "RL"])/n
-tot <- 100*(lr + rl) #percent of trials with two objects placed in bucket
+tot <- 100*(lr + rl + b) #percent of trials with two objects placed in bucket
+
+b2 <- length(d$acc[d$response_orig == "B" & d$age_years == 2])/240
+b3 <- length(d$acc[d$response_orig == "B" & d$age_years == 3])/240
+b4 <- length(d$acc[d$response_orig == "B" & d$age_years == 4])/240
+b5 <- length(d$acc[d$response_orig == "B" & d$age_years == 5])/240
+
+lr2 <- length(d$acc[d$response_orig == "LR" & d$age_years == 2])/240
+lr3 <- length(d$acc[d$response_orig == "LR" & d$age_years == 3])/240
+lr4 <- length(d$acc[d$response_orig == "LR" & d$age_years == 4])/240
+lr5 <- length(d$acc[d$response_orig == "LR" & d$age_years == 5])/240
+
+rl2 <- length(d$acc[d$response_orig == "RL" & d$age_years == 2])/240
+rl3 <- length(d$acc[d$response_orig == "RL" & d$age_years == 3])/240
+rl4 <- length(d$acc[d$response_orig == "RL" & d$age_years == 4])/240
+rl5 <- length(d$acc[d$response_orig == "RL" & d$age_years == 5])/240
+
+tot2 <- 100*(lr2 + rl2 + b2) #percent of trials with two objects placed in bucket
+tot3 <- 100*(lr3 + rl3 + b3) #percent of trials with two objects placed in bucket
+tot4 <- 100*(lr4 + rl4 + b4) #percent of trials with two objects placed in bucket
+tot5 <- 100*(lr5 + rl5 + b5) #percent of trials with two objects placed in bucket
 
 #Get accuracy for BOTH experiments for table
 acc_mss_e1 <- d%>%
@@ -262,7 +283,7 @@ acc_t <- d%>%
 acctest <- t.test(acc_t$acc[acc_t$age_years == 2], mu=.5)
 ```
 
-We examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (`r broman::myround(tot, 1)`% of trials), despite instructions to choose only one. If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Table \ref{tab:acc_e1}. Overall children generally chose the correct item for FF trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* <.001).
+We examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (2-year-olds: `r broman::myround(tot2, 1)`% of trials; 3-year-olds: `r broman::myround(tot3, 1)`%; 4-year-olds: `r broman::myround(tot4, 1)`%; 5-year-olds: `r broman::myround(tot5, 1)`%), despite instructions to choose only one. If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Figure \ref{fig:acc_e1}. Overall children generally chose the correct item for FF trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* <.001).
 
 ```{r}
 rm(list=ls())
@@ -606,7 +627,7 @@ glm_e1_r_tab <- as.data.frame(glm_e1_r$coef)
 #this last one does not converge with age interaction.
 ```
 
-As discussed previously, an alternative analytic approach would be to fit a logistic mixed-effects regression predicting *whether or not* children look to the speaker in each phase, rather than the number of times they do so. In support of this approach, the distribution of looks is not normal for the slide, planning, and response phases, with the majority of trials containing no looks to the speaker (Figure \ref{fig:hist_e1]} To address this issue, we additionally fit separate logistic mixed-effects regressions with the following structure: `look (yes or no) ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge. 
+As discussed previously, an alternative analytic approach would be to fit a logistic mixed-effects regression predicting *whether or not* children look to the speaker in each phase, rather than the number of times they do so. In support of this approach, the distribution of looks is not normal for the slide, planning, and response phases, with the majority of trials containing no looks to the speaker (Figure \ref{fig:hist_e1}). To address this issue, we additionally fit separate logistic mixed-effects regressions with the following structure: `look (yes or no) ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge. 
 
 The results of these analyses were similar to those of the linear models; number of objects and familiarity interacted in the *planning* and *response* phases such that there was more likely to be a look when there were two novel objects, ($\beta$s = `r broman::myround(glm_e1_p_tab$Estimate[5], 1)`, `r broman::myround(glm_e1_r_tab$Estimate[5], 1)`, *p*s <.05 & <.001). In addition, there was a significant interaction of number and familiarity of objects in the *slide* phase, such that NN trials were less likely to be associated with a look ($\beta$ = `r broman::myround(glm_e1_s_tab$Estimate[5], 1)`, *p* <.05). This latter finding was not predicted, but could reflect children's tendency to look more at novel stimuli, which would trade off with looking at the speaker, particularly when there is no utility to looking at the speaker, as when the objects are being slid across the table.
 
@@ -770,7 +791,37 @@ print(xtable(e2acc.tab,
       table.placement = "b",
       comment = F)
 ```
-Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Table \ref{tab:acc_e2}). To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
+
+```{r}
+#how often did children select two objects or no objects?
+ids <- d %>%
+ distinct(SID)
+
+trials <- d %>%
+ distinct(trial)
+
+n <- length(ids$SID)*length(trials$trial)
+
+nc <- length(d$acc[d$response_orig == "NC"])/n
+b <- length(d$acc[d$response_orig == "B"])/n
+lr <- length(d$acc[d$response_orig == "LR"])/n
+rl <- length(d$acc[d$response_orig == "RL"])/n
+tot <- 100*(lr + rl + b) #percent of trials with two objects placed in bucket
+
+b3 <- length(d$acc[d$response_orig == "B" & d$age_years == 3])/240
+b4 <- length(d$acc[d$response_orig == "B" & d$age_years == 4])/240
+
+lr3 <- length(d$acc[d$response_orig == "LR" & d$age_years == 3])/240
+lr4 <- length(d$acc[d$response_orig == "LR" & d$age_years == 4])/240
+
+rl3 <- length(d$acc[d$response_orig == "RL" & d$age_years == 3])/240
+rl4 <- length(d$acc[d$response_orig == "RL" & d$age_years == 4])/240
+
+tot3 <- 100*(lr3 + rl3 + b3) #percent of trials with two objects placed in bucket
+tot4 <- 100*(lr4 + rl4 + b4) #percent of trials with two objects placed in bucket
+```
+
+Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acc_e2}). As in Experiment 1, children sometimes put two items in the bucket (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). If they put the correct object in first, the trial was counted as accurate. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
 
 ###Social referencing and referential ambiguity
 

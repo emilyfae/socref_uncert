@@ -609,18 +609,19 @@ This model specification was preregistered, as noted above.
 
 We examined children's accuracy for those trials in which a correct
 response was possible (i.e., FF trials). Children sometimes put two
-items in the bucket (20.0\% of trials), despite instructions to choose
-only one. If they put the correct item in the bucket first followed by
-the incorrect object, we counted their response as correct. If they put
-the incorrect object in first, we counted their response as incorrect.
-Children also occasionally declined to choose an item (0.8\% of trials);
-these trials are excluded from accuracy analyses. Children's accuracy is
-displayed in Table \ref{tab:acc_e1}. Overall children generally chose
-the correct item for FF trials, indicating that they understood the task
-and were motivated to answer correctly. While 3- to 5-year-olds
-performed close to ceiling (92\% - 99\%), 2-year-olds were less accurate
-(76\%), but still performed significantly above chance (\emph{t}(19) =
-23.0 , \emph{p} \textless{}.001).
+items in the bucket (2-year-olds: 62.5\% of trials; 3-year-olds: 27.9\%;
+4-year-olds: 15.0\%; 5-year-olds: 17.5\%), despite instructions to
+choose only one. If they put the correct item in the bucket first
+followed by the incorrect object, we counted their response as correct.
+If they put the incorrect object in first, we counted their response as
+incorrect. Children also occasionally declined to choose an item (0.8\%
+of trials); these trials are excluded from accuracy analyses. Children's
+accuracy is displayed in Figure \ref{fig:acc_e1}. Overall children
+generally chose the correct item for FF trials, indicating that they
+understood the task and were motivated to answer correctly. While 3- to
+5-year-olds performed close to ceiling (92\% - 99\%), 2-year-olds were
+less accurate (76\%), but still performed significantly above chance
+(\emph{t}(19) = 23.0 , \emph{p} \textless{}.001).
 
 \begin{CodeChunk}
 \begin{figure*}[b]
@@ -764,7 +765,7 @@ children look to the speaker in each phase, rather than the number of
 times they do so. In support of this approach, the distribution of looks
 is not normal for the slide, planning, and response phases, with the
 majority of trials containing no looks to the speaker (Figure
-\ref{fig:hist_e1]} To address this issue, we additionally fit separate
+\ref{fig:hist_e1}). To address this issue, we additionally fit separate
 logistic mixed-effects regressions with the following structure:
 \texttt{look\ (yes\ or\ no)\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ age\ group\ +\ (number\ of\ objects\ +\ familiarity\ \textbar{}\ subject)}.
 A single model with phase as a factor did not converge.
@@ -929,9 +930,12 @@ Intercept & 0.11 & 0.09 & 1.21 & 0.23 &  \\
 
 Children's accuracy for trials with a correct answer (i.e., FF, FN, and
 all trials with gaze) was calculated using the same criteria as in
-Experiment 1 (Table \ref{tab:acc_e2}). To quantify the effects of
-familiarity, gaze, and age on accuracy, we fit the following
-mixed-effects logistic regression model:
+Experiment 1 (Figure \ref{fig:acc_e2}). As in Experiment 1, children
+sometimes put two items in the bucket (3-year-olds: 0.0\% of trials;
+4-year-olds: 0.0\%). If they put the correct object in first, the trial
+was counted as accurate. To quantify the effects of familiarity, gaze,
+and age on accuracy, we fit the following mixed-effects logistic
+regression model:
 \texttt{correct\ \textasciitilde{}\ trial\ type\ *\ gaze\ +\ age\ in\ months\ +\ (1\textbar{}\ subject)}.
 Accuracy was significantly lower for novel (\(\beta\) = -2.3, \emph{p}
 \textless{} .001) and mutual trials (\(\beta\) = -2.2, \emph{p}
