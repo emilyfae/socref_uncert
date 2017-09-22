@@ -22,6 +22,7 @@ library(lme4)
 library(markdown)
 library(lmerTest)
 library(ggthemes)
+library(stringr)
 ```
 
 ```{r include=FALSE}

@@ -172,9 +172,26 @@ After placing the objects, the experimenter said “Hey look, there’s a (targe
 
 ### Coding procedure and analytic plan
 
+```{r}
+load("soc_ref_e1.RData")
+#how many trials are missing because of child off-task?
+missing <- d %>%
+  group_by(age_years)%>%
+  summarise(excluded = mean(exclude))
+
+missingtwo <- missing$excluded[missing$age_years == 2]
+missingthree <- missing$excluded[missing$age_years == 3]
+missingfour <- missing$excluded[missing$age_years == 4]
+missingfive <- missing$excluded[missing$age_years == 5]
+```
+
 Videos were coded using DataVyu software (http://datavyu.org). For each participant, we coded the *number of times* they referenced the experimenter throughout each trial. An alternative analytic option would be to simply code *whether or not* children looked at the experimenter. However, during piloting, we found that most children looked up to the experimenter at least once while they were labeling the object, suggesting that a binary measure of looking would not be meaningful. 
 
-Because we were interested in the precise circumstances in which children feel uncertain enough to reference a speaker, we coded the number of looks that occurred during four distinct phases of the trial: a *label* phase, which began at the utterance of the label and ended when the experimenter began to slide the objects, a *slide* phase, in which the experimenter slid the object(s) into the child’s reach, a *planning* phase, which began at the end of the slide and ended when the child touched an object, and a *response* phase, which began when the child touched an object and ended when the child released the object into the bucket. A second coder independently scored the number of looks for one third of the trials for each participant to establish reliability. Inter-rater reliability for the number of looks in each phase was high, intraclass correlation *r* = .97, *p*<.001.
+Because we were interested in the precise circumstances in which children feel uncertain enough to reference a speaker, we coded the number of looks that occurred during four distinct phases of the trial: a *label* phase, which began at the utterance of the label and ended when the experimenter began to slide the objects, a *slide* phase, in which the experimenter slid the object(s) into the child’s reach, a *planning* phase, which began at the end of the slide and ended when the child touched an object, and a *response* phase, which began when the child touched an object and ended when the child released the object into the bucket. 
+
+We also noted any trials that should be excluded from analyses due to the child's interference with the timing of the trial (e.g., talking over the experimenter), experimenter error, or outside distractions that interfered with the timing of the trial (e.g., noise from a sibling). These trial-wise exclusion criteria were preregistered. In total, we excluded `r broman::myround(missingtwo*100, 1)`% of trials from 2-year-olds, `r broman::myround(missingthree*100, 1)`% of trials from 3-year-olds, `r broman::myround(missingfour*100, 1)`% of trials from 4-year-olds, and `r broman::myround(missingthree*100, 1)`% of trials from 5-year-olds on this basis. 
+
+A second coder independently scored the number of looks for one third of the trials for each participant to establish reliability. Inter-rater reliability for the number of looks in each phase was high, intraclass correlation *r* = .97, *p*<.001.
 
 Table \ref{tab:phases} displays the average durations of each of the four phases. The *label* and *response* phases are longer on average than the *planning* and *slide* phases. However, note that we are interested in comparing the amount of social referencing across ambiguity conditions and not across phases directly.
 
@@ -185,8 +202,6 @@ To quantify the effects of the number and familiarity of objects on children's l
 ###Accuracy
 
 ```{r}
-load("soc_ref_e1.RData")
-
 #how often did children select two objects or no objects?
 ids <- d %>%
  distinct(SID)
@@ -617,6 +632,13 @@ Since we did not observe any difference between F and N trials in Experiment 1, 
 rm(list=ls())
 load("soc_ref_e2.RData")
 
+missing <- d %>%
+  group_by(age_years)%>%
+  summarise(excluded = mean(exclude))
+
+missingthree <- missing$excluded[missing$age_years == 3]
+missingfour <- missing$excluded[missing$age_years == 4]
+
 age_months <- d %>%
   group_by(age_years) %>%
   multi_boot_standard(col = "age_months")
@@ -636,9 +658,11 @@ The stimuli and design were similar to Experiment 1 but included three trial typ
 
 ### Procedure
 
-The experimental and coding procedures were identical to Experiment 1, except that there were three practice trials (two familiar trials and one novel trial). We chose this approach so that children could experience both familiar and novel stimuli during practice, but would not be discouraged by an overly difficult practice session. Inter-rater reliability for the number of looks in each phase was again high, intraclass correlation *r* = .97, *p*<.001. 
+The experimental and coding procedures were identical to Experiment 1, except that there were three practice trials (two familiar trials and one novel trial). We chose this approach so that children could experience both familiar and novel stimuli during practice, but would not be discouraged by an overly difficult practice session. 
 
-The mean durations of the phases for Experiment 2 are presented in Table \ref{tab:phases}. They varied in length as in Experiment 1. Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Table \ref{tab:acc_table}). 
+We again noted trials that should be excluded based on the same criteria as in Experiment 1. We excluded `r broman::myround(missingthree*100, 1)`% of trials from 3-year-olds and no trials from 4-year-olds. Inter-rater reliability for the number of looks in each phase was again high, intraclass correlation *r* = .97, *p*<.001. 
+
+The mean durations of the phases for Experiment 2 are presented in Table \ref{tab:phases}. They varied in length according to the same pattern as in Experiment 1. 
 
 ## Results and Discussion
 
@@ -695,7 +719,58 @@ acc_mod <- summary(glmer(acc ~ trial_type * gaze + age_c  +
                        family = "binomial"))
 ```
 
-To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
+```{r e2_acc_table, echo = FALSE, results="asis"}
+e2acc.tab <- as.data.frame(acclooks_mod$coef)
+
+e2acc.tab$Predictor <- c("Intercept",
+                      "Acc(Y)",
+                      "Age",
+                      "Phase(Label)",
+                      "Phase(Planning)",
+                      "Phase(Response)",
+                      "Acc(Y) * Age",
+                      "Acc(Y) * Phase(Label)",
+                      "Acc(Y) * Phase(Planning)",
+                      "Acc(Y) * Phase(Response)",
+                      "Age * Phase(Label)",
+                      "Age * Phase(Planning)",
+                      "Age * Phase(Response)",
+                      "Acc(Y) * Age * Phase(Label)",
+                      "Acc(Y) * Age * Phase(Planning)",
+                      "Acc(Y) * Age * Phase(Response)")
+
+rownames(e2acc.tab) <- NULL
+e2acc.tab <- e2acc.tab[,c(6,1:2,4:5)]
+names(e2acc.tab)[4:5] <- c("$t$ value","$p$ value")
+
+e2acc.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e2acc.tab)[6] <- c("")
+
+print(xtable(e2acc.tab,
+             align = c("l","l","r","r","r","r", "l"),
+             label = "tab:exp2acc_reg",
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2."),
+      include.rownames=FALSE,hline.after=c(0,nrow(e2acc.tab)),
+      sanitize.text.function=function(x){x},
+      caption.placement = 'bottom', 
+      table.placement = "b",
+      comment = F)
+```
+Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Table \ref{tab:acc_e2}). To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
 
 ###Social referencing and referential ambiguity
 
@@ -865,58 +940,6 @@ lmer_data$acc <- relevel(lmer_data$acc, ref = "0")
 acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
                            (1 | SID), 
                          data = lmer_data))
-```
-
-```{r e2_acc_table, echo = FALSE, results="asis"}
-e2acc.tab <- as.data.frame(acclooks_mod$coef)
-
-e2acc.tab$Predictor <- c("Intercept",
-                      "Acc(Y)",
-                      "Age",
-                      "Phase(Label)",
-                      "Phase(Planning)",
-                      "Phase(Response)",
-                      "Acc(Y) * Age",
-                      "Acc(Y) * Phase(Label)",
-                      "Acc(Y) * Phase(Planning)",
-                      "Acc(Y) * Phase(Response)",
-                      "Age * Phase(Label)",
-                      "Age * Phase(Planning)",
-                      "Age * Phase(Response)",
-                      "Acc(Y) * Age * Phase(Label)",
-                      "Acc(Y) * Age * Phase(Planning)",
-                      "Acc(Y) * Age * Phase(Response)")
-
-rownames(e2acc.tab) <- NULL
-e2acc.tab <- e2acc.tab[,c(6,1:2,4:5)]
-names(e2acc.tab)[4:5] <- c("$t$ value","$p$ value")
-
-e2acc.tab %<>% 
-  mutate(
-    stars = ifelse(`$p$ value` > .1, "", 
-                   ifelse(`$p$ value` < .001, "***",
-                          ifelse(`$p$ value` < .01, "**",
-                                 ifelse(`$p$ value` < .05, "*",
-                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
-    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
-                         ifelse(`$p$ value` < .001, "$<$ .001",
-                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
-                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
-                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
-                                                     "Error")))))
-  )
-
-names(e2acc.tab)[6] <- c("")
-
-print(xtable(e2acc.tab,
-             align = c("l","l","r","r","r","r", "l"),
-             label = "tab:exp2acc_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2."),
-      include.rownames=FALSE,hline.after=c(0,nrow(e2acc.tab)),
-      sanitize.text.function=function(x){x},
-      caption.placement = 'bottom', 
-      table.placement = "b",
-      comment = F)
 ```
 
 In the metacognitive framework, confidence judgments are generally compared for correct and incorrect responses, with lower confidence for incorrect responses taken as evidence for metacognitive accuracy [@Yeung2012. Here, a parallel approach would be to examine the amount of social referencing children demonstrate for correct and incorrect responses.   

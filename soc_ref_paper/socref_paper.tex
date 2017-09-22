@@ -540,11 +540,21 @@ phase, in which the experimenter slid the object(s) into the child's
 reach, a \emph{planning} phase, which began at the end of the slide and
 ended when the child touched an object, and a \emph{response} phase,
 which began when the child touched an object and ended when the child
-released the object into the bucket. A second coder independently scored
-the number of looks for one third of the trials for each participant to
-establish reliability. Inter-rater reliability for the number of looks
-in each phase was high, intraclass correlation \emph{r} = .97,
-\emph{p}\textless{}.001.
+released the object into the bucket.
+
+We also noted any trials that should be excluded from analyses due to
+the child's interference with the timing of the trial (e.g., talking
+over the experimenter), experimenter error, or outside distractions that
+interfered with the timing of the trial (e.g., noise from a sibling).
+These trial-wise exclusion criteria were preregistered. In total, we
+excluded 1.4\% of trials from 2-year-olds, 2.0\% of trials from
+3-year-olds, 1.9\% of trials from 4-year-olds, and 2.0\% of trials from
+5-year-olds on this basis.
+
+A second coder independently scored the number of looks for one third of
+the trials for each participant to establish reliability. Inter-rater
+reliability for the number of looks in each phase was high, intraclass
+correlation \emph{r} = .97, \emph{p}\textless{}.001.
 
 Table \ref{tab:phases} displays the average durations of each of the
 four phases. The \emph{label} and \emph{response} phases are longer on
@@ -863,15 +873,17 @@ The experimental and coding procedures were identical to Experiment 1,
 except that there were three practice trials (two familiar trials and
 one novel trial). We chose this approach so that children could
 experience both familiar and novel stimuli during practice, but would
-not be discouraged by an overly difficult practice session. Inter-rater
-reliability for the number of looks in each phase was again high,
-intraclass correlation \emph{r} = .97, \emph{p}\textless{}.001.
+not be discouraged by an overly difficult practice session.
+
+We again noted trials that should be excluded based on the same criteria
+as in Experiment 1. We excluded 1.9\% of trials from 3-year-olds and no
+trials from 4-year-olds. Inter-rater reliability for the number of looks
+in each phase was again high, intraclass correlation \emph{r} = .97,
+\emph{p}\textless{}.001.
 
 The mean durations of the phases for Experiment 2 are presented in Table
-\ref{tab:phases}. They varied in length as in Experiment 1. Children's
-accuracy for trials with a correct answer (i.e., FF, FN, and all trials
-with gaze) was calculated using the same criteria as in Experiment 1
-(Table \ref{tab:acc_table}).
+\ref{tab:phases}. They varied in length according to the same pattern as
+in Experiment 1.
 
 \subsection{Results and Discussion}\label{results-and-discussion-1}
 
@@ -888,8 +900,38 @@ with gaze) was calculated using the same criteria as in Experiment 1
 \end{figure*}
 \end{CodeChunk}
 
-To quantify the effects of familiarity, gaze, and age on accuracy, we
-fit the following mixed-effects logistic regression model:
+\begin{table}[b]
+\centering
+\begin{tabular}{lrrrrl}
+ Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
+  \hline
+Intercept & 0.11 & 0.09 & 1.21 & 0.23 &  \\ 
+  Acc(Y) & 0.01 & 0.09 & 0.06 & 0.95 &  \\ 
+  Age & -0.00 & 0.01 & -0.30 & 0.76 &  \\ 
+  Phase(Label) & 0.96 & 0.12 & 8.00 & $<$ .001 & *** \\ 
+  Phase(Planning) & 0.10 & 0.12 & 0.81 & 0.42 &  \\ 
+  Phase(Response) & 1.31 & 0.12 & 10.91 & $<$ .001 & *** \\ 
+  Acc(Y) * Age & 0.00 & 0.01 & 0.21 & 0.84 &  \\ 
+  Acc(Y) * Phase(Label) & 0.41 & 0.12 & 3.31 & $<$ .001 & *** \\ 
+  Acc(Y) * Phase(Planning) & -0.17 & 0.12 & -1.33 & 0.18 &  \\ 
+  Acc(Y) * Phase(Response) & -0.99 & 0.12 & -7.99 & $<$ .001 & *** \\ 
+  Age * Phase(Label) & 0.04 & 0.02 & 1.90 & 0.06 & . \\ 
+  Age * Phase(Planning) & 0.02 & 0.02 & 0.99 & 0.32 &  \\ 
+  Age * Phase(Response) & 0.02 & 0.02 & 0.98 & 0.33 &  \\ 
+  Acc(Y) * Age * Phase(Label) & -0.02 & 0.02 & -1.16 & 0.25 &  \\ 
+  Acc(Y) * Age * Phase(Planning) & -0.02 & 0.02 & -1.00 & 0.32 &  \\ 
+  Acc(Y) * Age * Phase(Response) & -0.03 & 0.02 & -1.25 & 0.21 &  \\ 
+   \hline
+\end{tabular}
+\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2.} 
+\label{tab:exp2acc_reg}
+\end{table}
+
+Children's accuracy for trials with a correct answer (i.e., FF, FN, and
+all trials with gaze) was calculated using the same criteria as in
+Experiment 1 (Table \ref{tab:acc_e2}). To quantify the effects of
+familiarity, gaze, and age on accuracy, we fit the following
+mixed-effects logistic regression model:
 \texttt{correct\ \textasciitilde{}\ trial\ type\ *\ gaze\ +\ age\ in\ months\ +\ (1\textbar{}\ subject)}.
 Accuracy was significantly lower for novel (\(\beta\) = -2.3, \emph{p}
 \textless{} .001) and mutual trials (\(\beta\) = -2.2, \emph{p}
@@ -1024,33 +1066,6 @@ Intercept & 0.14 & 0.06 & 2.62 & 0.01 & ** \\
 
 \subsubsection{Social referencing and
 accuracy}\label{social-referencing-and-accuracy}
-
-\begin{table}[b]
-\centering
-\begin{tabular}{lrrrrl}
- Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
-  \hline
-Intercept & 0.11 & 0.09 & 1.21 & 0.23 &  \\ 
-  Acc(Y) & 0.01 & 0.09 & 0.06 & 0.95 &  \\ 
-  Age & -0.00 & 0.01 & -0.30 & 0.76 &  \\ 
-  Phase(Label) & 0.96 & 0.12 & 8.00 & $<$ .001 & *** \\ 
-  Phase(Planning) & 0.10 & 0.12 & 0.81 & 0.42 &  \\ 
-  Phase(Response) & 1.31 & 0.12 & 10.91 & $<$ .001 & *** \\ 
-  Acc(Y) * Age & 0.00 & 0.01 & 0.21 & 0.84 &  \\ 
-  Acc(Y) * Phase(Label) & 0.41 & 0.12 & 3.31 & $<$ .001 & *** \\ 
-  Acc(Y) * Phase(Planning) & -0.17 & 0.12 & -1.33 & 0.18 &  \\ 
-  Acc(Y) * Phase(Response) & -0.99 & 0.12 & -7.99 & $<$ .001 & *** \\ 
-  Age * Phase(Label) & 0.04 & 0.02 & 1.90 & 0.06 & . \\ 
-  Age * Phase(Planning) & 0.02 & 0.02 & 0.99 & 0.32 &  \\ 
-  Age * Phase(Response) & 0.02 & 0.02 & 0.98 & 0.33 &  \\ 
-  Acc(Y) * Age * Phase(Label) & -0.02 & 0.02 & -1.16 & 0.25 &  \\ 
-  Acc(Y) * Age * Phase(Planning) & -0.02 & 0.02 & -1.00 & 0.32 &  \\ 
-  Acc(Y) * Age * Phase(Response) & -0.03 & 0.02 & -1.25 & 0.21 &  \\ 
-   \hline
-\end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2.} 
-\label{tab:exp2acc_reg}
-\end{table}
 
 In the metacognitive framework, confidence judgments are generally
 compared for correct and incorrect responses, with lower confidence for
