@@ -109,7 +109,6 @@ response$trial <- as.numeric(str_replace(response$trial, "X", ""))
 d<- d%>%
   left_join(acc)%>%
   left_join(response)
-
 ```
 
 Save.
@@ -205,6 +204,21 @@ d<- d%>%
 d$acc[d$trial_type == "novel" & d$Gaze == "gaze" & d$acc_gaze] <- 1
 d$acc[d$trial_type == "novel" & d$Gaze == "gaze" & !d$acc_gaze] <- 0
 d$acc[d$response == "NC" | d$response == "B"] <- NA
+
+
+#original responses
+responses <- read.csv("../data_e2/accuracy_e2.csv")
+
+response <- responses %>%
+  gather("trial", "response", X1:X12)%>%
+  mutate(response_orig = response)%>%
+  select(SID, trial, response_orig)
+
+response$trial <- as.numeric(str_replace(response$trial, "X", ""))
+
+d<- d%>%
+  left_join(acc)%>%
+  left_join(response)
 ```
 
 Save.

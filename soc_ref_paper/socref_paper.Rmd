@@ -198,7 +198,7 @@ To quantify the effects of the number and familiarity of objects on children's l
 
 ###Accuracy
 
-```{r}
+```{r echo = FALSE}
 #how often did children select two objects or no objects?
 ids <- d %>%
  distinct(SID)
@@ -207,33 +207,83 @@ trials <- d %>%
  distinct(trial)
 
 n <- length(ids$SID)*length(trials$trial)
+n_two <- n/2 #number of two-object trials
+n_two_group <- n_two/4 #number of two-object trials per age group
 
-nc <- length(d$acc[d$response_orig == "NC"])/n
-b <- length(d$acc[d$response_orig == "B"])/n
-lr <- length(d$acc[d$response_orig == "LR"])/n
-rl <- length(d$acc[d$response_orig == "RL"])/n
+res <- d %>%
+  filter(num_objs == 2)%>%
+  distinct(SID, trial, response_orig, familiarity, acc, age_years)
+
+#how often do kids pick 2 objects on 2-object trials?
+nc <- length(res$acc[res$response_orig == "NC"])/n_two
+b <- length(res$acc[res$response_orig == "B"])/n_two
+lr <- length(res$acc[res$response_orig == "LR"])/n_two
+rl <- length(res$acc[res$response_orig == "RL"])/n_two
 tot <- 100*(lr + rl + b) #percent of trials with two objects placed in bucket
 
-b2 <- length(d$acc[d$response_orig == "B" & d$age_years == 2])/240
-b3 <- length(d$acc[d$response_orig == "B" & d$age_years == 3])/240
-b4 <- length(d$acc[d$response_orig == "B" & d$age_years == 4])/240
-b5 <- length(d$acc[d$response_orig == "B" & d$age_years == 5])/240
+b2 <- length(res$acc[res$response_orig == "B" & res$age_years == 2])/n_two_group
+b3 <- length(res$acc[res$response_orig == "B" & res$age_years == 3])/n_two_group
+b4 <- length(res$acc[res$response_orig == "B" & res$age_years == 4])/n_two_group
+b5 <- length(res$acc[res$response_orig == "B" & res$age_years == 5])/n_two_group
 
-lr2 <- length(d$acc[d$response_orig == "LR" & d$age_years == 2])/240
-lr3 <- length(d$acc[d$response_orig == "LR" & d$age_years == 3])/240
-lr4 <- length(d$acc[d$response_orig == "LR" & d$age_years == 4])/240
-lr5 <- length(d$acc[d$response_orig == "LR" & d$age_years == 5])/240
+lr2 <- length(res$acc[res$response_orig == "LR" & res$age_years == 2])/n_two_group
+lr3 <- length(res$acc[res$response_orig == "LR" & res$age_years == 3])/n_two_group
+lr4 <- length(res$acc[res$response_orig == "LR" & res$age_years == 4])/n_two_group
+lr5 <- length(res$acc[res$response_orig == "LR" & res$age_years == 5])/n_two_group
 
-rl2 <- length(d$acc[d$response_orig == "RL" & d$age_years == 2])/240
-rl3 <- length(d$acc[d$response_orig == "RL" & d$age_years == 3])/240
-rl4 <- length(d$acc[d$response_orig == "RL" & d$age_years == 4])/240
-rl5 <- length(d$acc[d$response_orig == "RL" & d$age_years == 5])/240
+rl2 <- length(res$acc[res$response_orig == "RL" & res$age_years == 2])/n_two_group
+rl3 <- length(res$acc[res$response_orig == "RL" & res$age_years == 3])/n_two_group
+rl4 <- length(res$acc[res$response_orig == "RL" & res$age_years == 4])/n_two_group
+rl5 <- length(res$acc[res$response_orig == "RL" & res$age_years == 5])/n_two_group
 
-tot2 <- 100*(lr2 + rl2 + b2) #percent of trials with two objects placed in bucket
-tot3 <- 100*(lr3 + rl3 + b3) #percent of trials with two objects placed in bucket
-tot4 <- 100*(lr4 + rl4 + b4) #percent of trials with two objects placed in bucket
-tot5 <- 100*(lr5 + rl5 + b5) #percent of trials with two objects placed in bucket
+tot2 <- 100*(lr2 + rl2 + b2) #percent of 2obj trials with two objects placed in bucket
+tot3 <- 100*(lr3 + rl3 + b3) #percent of 2obj trials with two objects placed in bucket
+tot4 <- 100*(lr4 + rl4 + b4) #percent of 2obj trials with two objects placed in bucket
+tot5 <- 100*(lr5 + rl5 + b5) #percent of 2obj trials with two objects placed in bucket
 
+#are trials with 2 objects chosen more likely to be novel?
+
+nov_t <- d %>%
+  filter(num_objs == 2)%>%
+  distinct(SID, trial, response_orig, familiarity, acc, age_years)%>%
+  mutate(both = response_orig == "LR" | response_orig == "RL" | response_orig == "B")%>%
+  group_by(SID, age_years, familiarity)%>%
+  summarise(both = mean(both))
+
+nov <- d %>%
+  filter(num_objs == 2)%>%
+  distinct(SID, trial, response_orig, familiarity, acc, age_years)%>%
+  mutate(both = response_orig == "LR" | response_orig == "RL" | response_orig == "B")%>%
+  group_by(age_years, familiarity)%>%
+  summarise(both = mean(both))
+
+t_nov_2 <- t.test(nov_t$both[nov_t$familiarity == "familiar" & nov_t$age_years == 2], nov_t$both[nov_t$familiarity == "novel" & nov_t$age_years == 2], paired = TRUE)
+
+t_nov_3 <- t.test(nov_t$both[nov_t$familiarity == "familiar" & nov_t$age_years == 3], nov_t$both[nov_t$familiarity == "novel" & nov_t$age_years == 3], paired = TRUE)
+
+t_nov_4 <- t.test(nov_t$both[nov_t$familiarity == "familiar" & nov_t$age_years == 4], nov_t$both[nov_t$familiarity == "novel" & nov_t$age_years == 4], paired = TRUE)
+
+t_nov_5 <- t.test(nov_t$both[nov_t$familiarity == "familiar" & nov_t$age_years == 5], nov_t$both[nov_t$familiarity == "novel" & nov_t$age_years == 5], paired = TRUE)
+
+#when kids put two objects in bucket, do they put the correct one in first if there is a correct answer?
+
+cor <- d %>%
+  filter(num_objs == 2, !is.na(acc), response_orig != "B")%>%
+  distinct(SID, trial, response_orig, familiarity, acc, age_years)%>%
+  mutate(both = response_orig == "LR" | response_orig == "RL")
+
+acc_sum <- cor%>%
+  filter(acc == 1)%>%
+  group_by(age_years)%>%
+  summarize(both = sum(both))
+
+both_sum <- cor%>%
+  group_by(age_years)%>%
+  summarize(both = sum(both))
+```
+
+
+```{r}
 #Get accuracy for BOTH experiments for table
 acc_mss_e1 <- d%>%
   filter(!is.na(acc),familiarity == "familiar", exclude == 0, num_objs == 2)%>%
@@ -264,7 +314,7 @@ ggplot(acctab_e1, aes(age_years, mean)) +
 
 ```{r phasetable, echo = FALSE, results="asis"}
 load("phases.RData")
-phases <- xtable(phases, caption = "Phase Durations", label = "tab:phases")
+phases <- xtable(phases, caption = "Phase Durations (in ms)", label = "tab:phases")
 names(phases) <- c('Experiment','Phase','Mean Duration', 'SD')
 
 print(phases, type="latex", comment = F, table.placement = "b", hline.after = c(-1,0, 4,nrow(phases)))
@@ -281,7 +331,9 @@ acc_t <- d%>%
 acctest <- t.test(acc_t$acc[acc_t$age_years == 2], mu=.5)
 ```
 
-We examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (2-year-olds: `r broman::myround(tot2, 1)`% of trials; 3-year-olds: `r broman::myround(tot3, 1)`%; 4-year-olds: `r broman::myround(tot4, 1)`%; 5-year-olds: `r broman::myround(tot5, 1)`%), despite instructions to choose only one. If they put the correct item in the bucket first followed by the incorrect object, we counted their response as correct. If they put the incorrect object in first, we counted their response as incorrect. Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Figure \ref{fig:acc_e1}. Overall children generally chose the correct item for FF trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* <.001).
+We examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (2-year-olds: `r broman::myround(tot2, 1)`% of 2-object trials; 3-year-olds: `r broman::myround(tot3, 1)`%; 4-year-olds: `r broman::myround(tot4, 1)`%; 5-year-olds: `r broman::myround(tot5, 1)`%), despite instructions to choose only one. The first object children put in the bucket was coded as their response. Children in each age group were equally likely to put two objects in the bucket for familiar and unfamiliar trials (2-year-olds: *t*(`r t_nov_2$parameter`) = `r broman::myround(t_nov_2$statistic, 2)`, *p* =`r broman::myround( t_nov_2$p.value, 2)`; 3-year-olds: *t*(`r t_nov_3$parameter`) = `r broman::myround(t_nov_3$statistic, 2)`, *p* =`r broman::myround( t_nov_3$p.value, 2)`; 4-year-olds: *t*(`r t_nov_4$parameter`) = `r broman::myround(t_nov_4$statistic, 2)`, *p* =`r broman::myround(t_nov_4$p.value, 2)`; 5-year-olds: *t*(`r t_nov_5$parameter`) = `r broman::myround(t_nov_5$statistic, 2)`, *p* =`r broman::myround(t_nov_5$p.value, 2)`), suggesting that they put two objects in the bucket because it was a fun activity and difficult to inhibit, and not because they did not know the referent. Among FF trials in which children placed two items in the bucket, they put the correct item in first about half of the time (8/19 trials total for 2-year-olds; 5/6 for 3-year-olds; 0/2 for 4-year-olds; 2/4 for 5-year-olds). 
+
+Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Figure \ref{fig:acc_e1}. Overall children generally chose the correct item for FF trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* <.001).
 
 ```{r}
 rm(list=ls())
@@ -568,9 +620,9 @@ print(xtable(e1_r.tab,
 
 ###Social referencing
 
-Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. 
+Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. Our initial planned analysis, a single model with phase as a factor, did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. 
 
-We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the *label* or *slide* phases. Thus, mere novelty or the presence of multiple objects was not enough to increase social referencing. However, we found an interaction effect of number of objects and familiarity during the *planning* ($\beta$ = `r broman::myround(planning_lm$coefficients[5], 1)`, *p* < .001) and *response* phases ($\beta$ = `r broman::myround(response_lm$coefficients[5], 1)`, *p* < .001), such that NN trials were associated with more looking. 
+We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the *label* or *slide* phases. Thus, mere novelty or the presence of multiple objects was not enough to increase social referencing, perhaps because it was already at ceiling. However, we found an interaction effect of number of objects and familiarity during the *planning* ($\beta$ = `r broman::myround(planning_lm$coefficients[5], 1)`, *p* < .001) and *response* phases ($\beta$ = `r broman::myround(response_lm$coefficients[5], 1)`, *p* < .001), such that NN trials were associated with more looks. 
 
 There was no interaction with age in any phase.^[https://github.com/emilyfae/socref_uncert] Since an age trend in the *planning* phase was apparent in the plot (Figure \ref{fig:results_e1}), we conducted a post-hoc mixed-effects linear regression with age group (2- and 3-year-olds vs. 4- and 5-year-olds) predicting the number of looks in the *planning* phase: `number of looks ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. We found a significant interaction of number of objects and familiarity ($\beta$ = `r broman::myround(planning_lm_age_group$coefficients[5], 1)`, *p* < .001), and a significant 3-way interaction between number of objects, familiarity, and age group, such that younger children looked at the speaker less than older children for NN trials. Although this was a post-hoc analysis, it suggests that there may be a trend for children to respond more quickly to uncertainty as they grow older. This could mean that they detect uncertainty more quickly, or that they are more proactive in seeking disambiguating information prior to initiating a response.
 
@@ -631,9 +683,9 @@ The results of these analyses were similar to those of the linear models; number
 
 In summary, children looked to the speaker more often when planning and executing a response under uncertainty. These results suggest that children were aware that they did not have sufficient knowledge to answer independently, and referenced the speaker to resolve this uncertainty.
 
-Notably, and in contrast to Vaish et al., we did not find the expected effect of referential ambiguity in the *label* phase. It is possible that children failed to predict that they would need more information until later in the trial, when they were actually faced with making a decision. Another possibility is that children's looking was at ceiling during the labeling phase, perhaps because children tend to look at someone who is speaking regardless of the need for referential disambiguation. 
+Notably, and in contrast to Vaish et al., we did not find the expected effect of referential ambiguity in the *label* phase. It is possible that children failed to predict that they would need more information until later in the trial, when they were actually faced with making a decision. Another possibility is that children's looking was at ceiling during the labeling phase, perhaps because older children tend to look at someone who is speaking regardless of the need for referential disambiguation. 
 
-A third possibility is that this finding is an artifact of our design, in which the speaker gazed at the center of the table rather than the referent of the label. Children may have realized that the speaker's gaze direction during labeling was not informative. Alternatively, children may have found it strange to interact with a speaker who did not gaze at the object they were labeling, which may have produced unnatural patterns of social referencing. Experiment 2 tests these possibilities and examines whether children's social referencing is sensitive to graded uncertainty.
+A third possibility is that this finding is an artifact of our design, in which the speaker gazed at the center of the table rather than the referent of the label. Children may have realized that the speaker's gaze direction during labeling was not informative. Relatedly, children may have found it strange to interact with a speaker who did not gaze at the object they were labeling, which may have produced unnatural patterns of social referencing. Experiment 2 tests these possibilities and further examines whether children's social referencing is sensitive to graded uncertainty.
 
 # Experiment 2
 
@@ -790,7 +842,7 @@ print(xtable(e2acc.tab,
       comment = F)
 ```
 
-```{r}
+```{r echo = FALSE}
 #how often did children select two objects or no objects?
 ids <- d %>%
  distinct(SID)
@@ -799,27 +851,69 @@ trials <- d %>%
  distinct(trial)
 
 n <- length(ids$SID)*length(trials$trial)
+n_two <- n #number of two-object trials
+n_two_group <- n_two/2 #number of two-object trials per age group
 
-nc <- length(d$acc[d$response_orig == "NC"])/n
-b <- length(d$acc[d$response_orig == "B"])/n
-lr <- length(d$acc[d$response_orig == "LR"])/n
-rl <- length(d$acc[d$response_orig == "RL"])/n
+res <- d %>%
+  distinct(SID, trial, response_orig, trial_type, acc, age_years)
+
+#how often do kids pick 2 objects on 2-object trials?
+nc <- length(res$acc[res$response_orig == "NC"])/n_two
+b <- length(res$acc[res$response_orig == "B"])/n_two
+lr <- length(res$acc[res$response_orig == "LR"])/n_two
+rl <- length(res$acc[res$response_orig == "RL"])/n_two
 tot <- 100*(lr + rl + b) #percent of trials with two objects placed in bucket
 
-b3 <- length(d$acc[d$response_orig == "B" & d$age_years == 3])/240
-b4 <- length(d$acc[d$response_orig == "B" & d$age_years == 4])/240
+b3 <- length(res$acc[res$response_orig == "B" & res$age_years == 3])/n_two_group
+b4 <- length(res$acc[res$response_orig == "B" & res$age_years == 4])/n_two_group
 
-lr3 <- length(d$acc[d$response_orig == "LR" & d$age_years == 3])/240
-lr4 <- length(d$acc[d$response_orig == "LR" & d$age_years == 4])/240
+lr3 <- length(res$acc[res$response_orig == "LR" & res$age_years == 3])/n_two_group
+lr4 <- length(res$acc[res$response_orig == "LR" & res$age_years == 4])/n_two_group
 
-rl3 <- length(d$acc[d$response_orig == "RL" & d$age_years == 3])/240
-rl4 <- length(d$acc[d$response_orig == "RL" & d$age_years == 4])/240
+rl3 <- length(res$acc[res$response_orig == "RL" & res$age_years == 3])/n_two_group
+rl4 <- length(res$acc[res$response_orig == "RL" & res$age_years == 4])/n_two_group
 
-tot3 <- 100*(lr3 + rl3 + b3) #percent of trials with two objects placed in bucket
-tot4 <- 100*(lr4 + rl4 + b4) #percent of trials with two objects placed in bucket
+tot3 <- 100*(lr3 + rl3 + b3) #percent of 2obj trials with two objects placed in bucket
+tot4 <- 100*(lr4 + rl4 + b4) #percent of 2obj trials with two objects placed in bucket
+
+#are trials with 2 objects chosen more likely to be novel?
+
+nov_t <- d %>%
+  distinct(SID, trial, response_orig, trial_type, acc, age_years, Gaze)%>%
+  mutate(both = response_orig == "LR" | response_orig == "RL" | response_orig == "B",
+         unambiguous = trial_type == "mutual" | trial_type == "familiar" | Gaze == "gaze")%>%
+  group_by(SID, age_years, trial_type)%>%
+  summarise(both = mean(both))
+
+nov <- d %>%
+  distinct(SID, trial, response_orig, trial_type, acc, age_years, Gaze)%>%
+  mutate(both = response_orig == "LR" | response_orig == "RL" | response_orig == "B",
+         unambiguous = trial_type == "mutual" | trial_type == "familiar" | Gaze == "gaze")%>%
+  group_by(age_years, unambiguous)%>%
+  summarise(both = mean(both))
+
+#not enough observations for t-test
+
+#when kids put two objects in bucket, do they put the correct one in first if there is a correct answer?
+
+cor <- d %>%
+  filter(!is.na(acc), response_orig != "B")%>%
+  distinct(SID, trial, response_orig, trial_type, acc, age_years)%>%
+  mutate(both = response_orig == "LR" | response_orig == "RL")
+
+cor$acc <- as.numeric(cor$acc)
+
+acc_sum <- cor%>%
+  filter(acc == 1)%>%
+  group_by(age_years)%>%
+  summarize(both = sum(both))
+
+both_sum <- cor%>%
+  group_by(age_years)%>%
+  summarize(both = sum(both))
 ```
 
-Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acc_e2}). As in Experiment 1, children sometimes put two items in the bucket (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). If they put the correct object in first, the trial was counted as accurate. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
+Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acc_e2}). Children sometimes put two items in the bucket, although they did so less frequently than in Experiment 1, perhaps because there were two objects available on every trial so it was less of a novelty (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). As in Experiment 1, the first item they placed in the bucket was coded as their response. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
 
 ###Social referencing and referential ambiguity
 
@@ -835,11 +929,11 @@ Children's social referencing based on trial type and gaze condition are present
 
 First, do children reference a speaker more often when the objects and label are novel? Phase interacted with familiarity such that the *response* phase of NN trials was associated with significantly more looks ($\beta$ = `r broman::myround(g_lm$coefficients[17], 1)`, *p* < .001). This result is consistent with results from Experiment 1. However, in contrast to Experiment 1, the number of looks was not significantly greater for NN trials in the *planning* phase.
 
-We were also interested in whether FN trials would elicit an intermediate amount of looking. We observed a three-way interaction of familiarity, gaze, and phase, such that the response phase of FN trials in the no-referential-gaze condition was associated with significantly more looks ($\beta$ = `r broman::myround(g_lm$coefficients[36], 1)`, *p* < .01). Thus, FN trials were associated with greater looking only when the experimenter did not provide informative gaze. This finding is intriguing given that children should be able to solve FN trials without gaze information. Instead, these results suggest that children remain relatively uncertain while making a decision if excluding the familiar object is their only cue to reference, but this uncertainty is resolved if the speaker's gaze is informative. On the other hand, informative gaze during labeling did not lessen social referencing for novel trials, suggesting that gaze information alone was not sufficient to reduce uncertainty. Instead, children required both types of evidence to feel certain about their response. 
+We were also interested in whether FN trials would elicit an intermediate amount of looking. We observed an unpredicted three-way interaction of familiarity, gaze, and phase, such that the response phase of FN trials in the no-referential-gaze condition was associated with significantly more looks ($\beta$ = `r broman::myround(g_lm$coefficients[36], 1)`, *p* < .01). Thus, FN trials were associated with greater looking only when the experimenter did not provide informative gaze. This finding is intriguing given that children should be able to solve FN trials without gaze information. Instead, these results suggest that children remain relatively uncertain while making a decision if excluding the familiar object is their only cue to reference, but this uncertainty is resolved if the speaker's gaze is informative. On the other hand, informative gaze during labeling did not lessen social referencing for novel trials, suggesting that gaze information alone was not sufficient to reduce uncertainty. Instead, perhaps children required both types of evidence to feel certain about their response. 
 
-Finally, we observed a four-way interaction such that the *response* phase of novel trials in the gaze condition was associated with more looking with increasing age ($\beta$ = `r broman::myround(g_lm$coefficients[46], 1)`, *p* < .01), suggesting that preschoolers may become more selective in their social referencing as they get older. It may be that children improve in their ability to monitor the need for disambiguating information, or they may become more likely to recognize that social information can be a source of disambiguation. 
+Additionally, we observed a four-way interaction such that the *response* phase of novel trials in the gaze condition was associated with more looking with increasing age ($\beta$ = `r broman::myround(g_lm$coefficients[46], 1)`, *p* < .01), suggesting that older preschoolers were more selective in their social referencing. It may be that children improve in their ability to monitor the need for disambiguating information, or they may become more likely to recognize that social information can be a source of disambiguation. 
 
-We did not observe selective social referencing during the *label* phase, even when referential gaze was available. This result rules out the possibility that children are less selective during labeling because they learned that gaze direction was not informative. Instead, children may attend to someone who is speaking regardless of the need for disambiguation. 
+Finally, we did not observe selective social referencing during the *label* phase, even when referential gaze was available. This result rules out the possibility that children are less selective during labeling because they learned that gaze direction was not informative. Instead, children may attend to someone who is speaking regardless of the need for disambiguation. 
 
 ```{r}
 #get means for plot
@@ -991,7 +1085,7 @@ acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
                          data = lmer_data))
 ```
 
-In the metacognitive framework, confidence judgments are generally compared for correct and incorrect responses, with lower confidence for incorrect responses taken as evidence for metacognitive accuracy [@Yeung2012. Here, a parallel approach would be to examine the amount of social referencing children demonstrate for correct and incorrect responses.   
+In the metacognitive framework, confidence judgments are generally compared for correct and incorrect responses, with lower confidence for incorrect responses taken as evidence for metacognitive accuracy [@Yeung2012]. Here, a parallel approach would be to examine the amount of social referencing children demonstrate for correct and incorrect responses.   
 
 To this end, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ accuracy * age in months * phase + (1 | subject)`. The number of looks was collapsed across trial types and gaze conditions, since there were relatively few incorrect trials overall and none at all for some of the conditions. Results showed that accuracy and phase interacted such that children looked at the experimenter significantly more during the labeling phase of accurate trials ($\beta$ = `r broman::myround(acclooks_mod$coefficients[8], 1)`, *p* < .001), and significantly less in the *response* phase of accurate trials ($\beta$ = `r broman::myround(acclooks_mod$coefficients[10], 1)`, *p* < .001).
 
@@ -1059,7 +1153,7 @@ We found that referential ambiguity strongly predicted children's social referen
 
 Intriguingly, we also found that in the aggregate children's looking reflected graded referential evidence. In the case of FN trials, children could solve the problem of reference by excluding the familiar item [@Markman1988; @Merriman1989], and indeed, they chose the correct object most of the time for these trials. If children simply monitored the presence or absence of such cues, they would have consistently responded to FN trials with certainty. Instead, their social referencing depended on a combination of cues, suggesting that preschoolers are sensitive to graded referential evidence. Meanwhile, children demonstrated uncertainty on trials with only one cue to reference (i.e., FN trials with no referential gaze and NN trials with referential gaze), suggesting that they remain subjectively uncertain about new label-object mappings if they have not received confirmation of its accuracy. These findings are important given that being able to monitor the likelihood of accuracy based on graded evidence is assumed important for decision-making and behavioral regulation across development [@Yeung2012; @Krebs2010]. For example, being able to monitor graded epistemic uncertainty allows individuals to gate out information that does not meet a criterion level of certainty based on individual goals or task demands [@Koriat1996].
 
-These findings also bear on probabilistic models of learning and cognition, which predict that the proportion of individuals endorsing a belief will be proportional to the posterior probability of that belief based on Bayesian inference [e.g., @Bonawitz2014; @Denison2013; @Vul2014]. The current findings are consistent with the possibility that preschoolers might engage in this type of reasoning, given that their uncertainty tracked quantitatively with the amount of evidence available. 
+These findings also bear on probabilistic models of learning and cognition, which predict that the proportion of individuals endorsing a belief will be proportional to the posterior probability of that belief based on Bayesian inference, even if individual decisions are discrete [e.g., @Bonawitz2014; @Denison2013; @Vul2014]. The current findings are consistent with the possibility that preschoolers might engage in this type of reasoning, given that their uncertainty tracked quantitatively with the amount of evidence available. 
 
 On the other hand, we found no evidence for selective social referencing while the speaker was producing the label. One possibility is that young children do not recognize the need for disambiguating information until they need to make a decision [@Markman1977]. Another possibility is that preschool-aged children spontaneously look at a speaker regardless of ambiguity, and additional looking was not necessary or possible. This latter possibility seems more credible, given that children looked at the speaker at least once during labeling on most trials. Notably, Vaish et al. observed selective referencing during labeling among infants. Since infants in that study were holding one of the objects during labeling, referencing the speaker would have required them to disengage from that object, and may therefore have been more costly, promoting selectivity. Future research with preschoolers that includes a greater trade-off between attentional options would help to distinguish among these possibilities. 
 

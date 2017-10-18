@@ -1,12 +1,16 @@
 base
-png
+tidyverse
 ggplot2
+tibble
+tidyr
+readr
+purrr
+dplyr
+png
 xtable
 langcog
-dplyr
 rjson
 stringr
-tidyr
 Matrix
 lme4
 knitr
@@ -17,7 +21,3 @@ psych
 broman
 kmr
 magrittr
-tidyverse
-tibble
-readr
-purrr
