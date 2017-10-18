@@ -42,9 +42,8 @@ library(psych)
 library(broman)
 library(kmr)
 library(magrittr)
+library(stargazer)
 ```
-
-
 
 Preschoolers quickly learn new concepts, rules, and language. They also actively explore [@Schulz2007] and ask questions [@Chouinard2007] in ways that seem targeted to maximize learning. These behaviors appear to require children to monitor epistemic states of ignorance and uncertainty, but young children have generally been credited with limited ability to monitor mental states [@Sodian2012]. This conflict presents a puzzle -- how do children acquire disambiguating information if they are not able to monitor uncertainty? To better understand how young children actively construct meaning from their environment, more evidence is needed about the relation between epistemic uncertainty and information seeking in early childhood. 
 
@@ -302,7 +301,6 @@ acctab_e1$age_years <- as.factor(acctab_e1$age_years)
 
 
 ```{r acc_e1, fig.env='figure*',fig.width=4, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Accuracy for FF trials in Experiment 1. Error bars are 95 percent confidence intervals.'}
-
 ggplot(acctab_e1, aes(age_years, mean)) +
   geom_bar(stat="identity", position = "dodge") + 
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
@@ -314,10 +312,21 @@ ggplot(acctab_e1, aes(age_years, mean)) +
 
 ```{r phasetable, echo = FALSE, results="asis"}
 load("phases.RData")
-phases <- xtable(phases, caption = "Phase Durations (in ms)", label = "tab:phases")
+
 names(phases) <- c('Experiment','Phase','Mean Duration', 'SD')
 
-print(phases, type="latex", comment = F, table.placement = "b", hline.after = c(-1,0, 4,nrow(phases)))
+print(xtable(phases,
+             label = "tab:phases",
+             caption = "Phase Durations (in ms)",
+             digits=c(0,0,0,0,0)),
+      include.rownames=FALSE,
+      sanitize.text.function=function(x){x},
+      caption.placement = 'bottom',
+      table.placement = "b",
+      floating = TRUE,
+      type = "latex",
+      hline.after = c(-1,0, 4,nrow(phases)),
+      comment = F)
 ```
 
 ```{r}
@@ -624,7 +633,7 @@ Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test ou
 
 We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the *label* or *slide* phases. Thus, mere novelty or the presence of multiple objects was not enough to increase social referencing, perhaps because it was already at ceiling. However, we found an interaction effect of number of objects and familiarity during the *planning* ($\beta$ = `r broman::myround(planning_lm$coefficients[5], 1)`, *p* < .001) and *response* phases ($\beta$ = `r broman::myround(response_lm$coefficients[5], 1)`, *p* < .001), such that NN trials were associated with more looks. 
 
-There was no interaction with age in any phase.^[https://github.com/emilyfae/socref_uncert] Since an age trend in the *planning* phase was apparent in the plot (Figure \ref{fig:results_e1}), we conducted a post-hoc mixed-effects linear regression with age group (2- and 3-year-olds vs. 4- and 5-year-olds) predicting the number of looks in the *planning* phase: `number of looks ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. We found a significant interaction of number of objects and familiarity ($\beta$ = `r broman::myround(planning_lm_age_group$coefficients[5], 1)`, *p* < .001), and a significant 3-way interaction between number of objects, familiarity, and age group, such that younger children looked at the speaker less than older children for NN trials. Although this was a post-hoc analysis, it suggests that there may be a trend for children to respond more quickly to uncertainty as they grow older. This could mean that they detect uncertainty more quickly, or that they are more proactive in seeking disambiguating information prior to initiating a response.
+There was no interaction with age in any phase.^[https://github.com/emilyfae/socref_uncert] Since an age trend in the *planning* phase was apparent in the plot (Figure \ref{fig:results_e1}), we conducted a post-hoc mixed-effects linear regression with age group as a dichotomous rather than a continuous variable (i.e., 2- and 3-year-olds vs. 4- and 5-year-olds) predicting the number of looks in the *planning* phase: `number of looks ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. We found a significant interaction of number of objects and familiarity ($\beta$ = `r broman::myround(planning_lm_age_group$coefficients[5], 1)`, *p* < .001), and a significant 3-way interaction between number of objects, familiarity, and age group, such that younger children looked at the speaker less than older children for NN trials. Although this was a post-hoc analysis, it suggests that there may be a trend for children to respond more quickly to uncertainty as they grow older. This could mean that they detect uncertainty more quickly, or that they are more proactive in seeking disambiguating information prior to initiating a response.
 
 ```{r echo = FALSE}
 #histogram for number of looks by phase. 
@@ -790,6 +799,14 @@ acc_mod <- summary(glmer(acc ~ trial_type * gaze + age_c  +
                        family = "binomial"))
 ```
 
+```{r}
+lmer_data$acc <- relevel(lmer_data$acc, ref = "0")
+
+acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
+                           (1 | SID), 
+                         data = lmer_data))
+```
+
 ```{r e2_acc_table, echo = FALSE, results="asis"}
 e2acc.tab <- as.data.frame(acclooks_mod$coef)
 
@@ -913,7 +930,7 @@ both_sum <- cor%>%
   summarize(both = sum(both))
 ```
 
-Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acc_e2}). Children sometimes put two items in the bucket, although they did so less frequently than in Experiment 1, perhaps because there were two objects available on every trial so it was less of a novelty (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). As in Experiment 1, the first item they placed in the bucket was coded as their response. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
+Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acc_e2}). Children sometimes put two items in the bucket, although they did so less frequently than in Experiment 1, perhaps because there were two objects available on every trial and it was thus less of a novelty (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). As in Experiment 1, the first item they placed in the bucket was coded as their response. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
 
 ###Social referencing and referential ambiguity
 
@@ -1067,7 +1084,7 @@ names(e2.tab)[6] <- c("")
 print(xtable(e2.tab,
              align = c("l","l","r","r","r","r","l"),
              label = "tab:exp2_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1."),
+             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 2."),
       include.rownames=FALSE,hline.after=c(0,nrow(e2.tab)),
       sanitize.text.function=function(x){x},
       caption.placement = 'bottom', 
@@ -1076,14 +1093,6 @@ print(xtable(e2.tab,
 ```
 
 ###Social referencing and accuracy
-
-```{r}
-lmer_data$acc <- relevel(lmer_data$acc, ref = "0")
-
-acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
-                           (1 | SID), 
-                         data = lmer_data))
-```
 
 In the metacognitive framework, confidence judgments are generally compared for correct and incorrect responses, with lower confidence for incorrect responses taken as evidence for metacognitive accuracy [@Yeung2012]. Here, a parallel approach would be to examine the amount of social referencing children demonstrate for correct and incorrect responses.   
 

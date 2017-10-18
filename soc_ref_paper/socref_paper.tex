@@ -454,8 +454,8 @@ We recruited a planned sample of 80 children ages 2-5 years from the
 Children's Discovery Museum in San Jose, California.\footnote{Planned
   sample size, exclusion criteria, and analysis plan preregistered at
   \url{https://osf.io/y7mvt}.} The sample included 20 2-year-olds (mean
-age 32.0 months), 20 3-year-olds (mean age 42.7 months), 20 4-year-olds
-(mean age 55.8 months), and 20 5-year-olds (mean age 65.2 months). An
+age 31.7 months), 20 3-year-olds (mean age 42.7 months), 20 4-year-olds
+(mean age 55.8 months), and 20 5-year-olds (mean age 65.1 months). An
 additional 20 children participated but were removed from analyses
 because they heard English less than 75\% of the time at home (\emph{n}
 = 10), because they were unable to complete at least half of the trials
@@ -540,7 +540,7 @@ the child's interference with the timing of the trial (e.g., talking
 over the experimenter), experimenter error, or outside distractions that
 interfered with the timing of the trial (e.g., noise from a sibling).
 These trial-wise exclusion criteria were preregistered. In total, we
-excluded 1.4\% of trials from 2-year-olds, 2.0\% of trials from
+excluded 1.6\% of trials from 2-year-olds, 2.0\% of trials from
 3-year-olds, 1.9\% of trials from 4-year-olds, and 2.0\% of trials from
 5-year-olds on this basis.
 
@@ -581,22 +581,22 @@ This model specification was preregistered, as noted above.
 
 \begin{table}[b]
 \centering
-\begin{tabular}{rllrr}
+\begin{tabular}{llrr}
   \hline
- & Experiment & Phase & Mean Duration & SD \\ 
+Experiment & Phase & Mean Duration & SD \\ 
   \hline
-1 & 1 & label & 5072.84 & 899.16 \\ 
-  2 & 1 & slide & 872.43 & 196.83 \\ 
-  3 & 1 & planning & 1253.85 & 2215.56 \\ 
-  4 & 1 & response & 3646.40 & 4510.01 \\ 
+1 & label & 5065 & 907 \\ 
+  1 & slide & 870 & 194 \\ 
+  1 & planning & 1270 & 2246 \\ 
+  1 & response & 3632 & 4575 \\ 
    \hline
-5 & 2 & label & 5239.23 & 748.05 \\ 
-  6 & 2 & slide & 818.95 & 1307.27 \\ 
-  7 & 2 & planning & 790.88 & 10327.45 \\ 
-  8 & 2 & response & 4084.56 & 5032.37 \\ 
+2 & label & 5239 & 748 \\ 
+  2 & slide & 819 & 1307 \\ 
+  2 & planning & 791 & 10327 \\ 
+  2 & response & 4085 & 5032 \\ 
    \hline
 \end{tabular}
-\caption{Phase Durations} 
+\caption{Phase Durations (in ms)} 
 \label{tab:phases}
 \end{table}
 
@@ -604,13 +604,13 @@ We examined children's accuracy for those trials in which a correct
 response was possible (i.e., FF trials). Children sometimes put two
 items in the bucket (2-year-olds: 30.8\% of 2-object trials;
 3-year-olds: 15.0\%; 4-year-olds: 7.5\%; 5-year-olds: 9.2\%), despite
-instructions to choose only one. Children's responses were coded as the
-first object that they placed in the bucket. Children in each age group
-were equally likely to put two objects in the bucket for familiar and
-unfamiliar trials (2-year-olds: \emph{t}(19) = 0.66, \emph{p} =0.52;
+instructions to choose only one. The first object children put in the
+bucket was coded as their response. Children in each age group were
+equally likely to put two objects in the bucket for familiar and
+unfamiliar trials (2-year-olds: \emph{t}(19) = 0.53, \emph{p} =0.60;
 3-year-olds: \emph{t}(19) = 1.45, \emph{p} =0.16; 4-year-olds:
 \emph{t}(19) = -0.72, \emph{p} =0.48; 5-year-olds: \emph{t}(19) = 0.37,
-\emph{p} =0.72) suggesting that they put two objects in the bucket
+\emph{p} =0.72), suggesting that they put two objects in the bucket
 because it was a fun activity and difficult to inhibit, and not because
 they did not know the referent. Among FF trials in which children placed
 two items in the bucket, they put the correct item in first about half
@@ -642,14 +642,14 @@ performed close to ceiling (92\% - 99\%), 2-year-olds were less accurate
 \begin{tabular}{lrrrrl}
  Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
   \hline
-Intercept & 1.38 & 0.06 & 22.58 & $<$ .001 & *** \\ 
-  Num objects (2) & -0.06 & 0.06 & -1.02 & 0.31 &  \\ 
-  Familiarity (N) & 0.07 & 0.06 & 1.16 & 0.25 &  \\ 
-  Age & 0.01 & 0.00 & 1.85 & 0.07 & . \\ 
-  Num objects (2) * Familiarity (N) & -0.06 & 0.09 & -0.74 & 0.46 &  \\ 
-  Num objects (2) * Age & -0.01 & 0.00 & -1.18 & 0.24 &  \\ 
-  Familiarity (N) * Age & -0.01 & 0.00 & -1.17 & 0.24 &  \\ 
-  Num objects (2) * Familiarity (N) * Age & -0.00 & 0.01 & -0.57 & 0.57 &  \\ 
+Intercept & 1.40 & 0.06 & 22.70 & $<$ .001 & *** \\ 
+  Num objects (2) & -0.07 & 0.06 & -1.14 & 0.25 &  \\ 
+  Familiarity (N) & 0.06 & 0.06 & 0.90 & 0.37 &  \\ 
+  Age & 0.01 & 0.00 & 1.88 & 0.06 & . \\ 
+  Num objects (2) * Familiarity (N) & -0.07 & 0.09 & -0.78 & 0.43 &  \\ 
+  Num objects (2) * Age & -0.01 & 0.00 & -1.37 & 0.17 &  \\ 
+  Familiarity (N) * Age & -0.01 & 0.00 & -1.10 & 0.27 &  \\ 
+  Num objects (2) * Familiarity (N) * Age & -0.00 & 0.01 & -0.49 & 0.63 &  \\ 
    \hline
 \end{tabular}
 \caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the label phase in Experiment 1.} 
@@ -661,14 +661,14 @@ Intercept & 1.38 & 0.06 & 22.58 & $<$ .001 & *** \\
 \begin{tabular}{lrrrrl}
  Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
   \hline
-Intercept & 0.12 & 0.02 & 5.06 & $<$ .001 & *** \\ 
-  Num objects (2) & 0.02 & 0.03 & 0.55 & 0.58 &  \\ 
+Intercept & 0.12 & 0.02 & 5.00 & $<$ .001 & *** \\ 
+  Num objects (2) & 0.02 & 0.03 & 0.54 & 0.59 &  \\ 
   Familiarity (N) & 0.04 & 0.03 & 1.38 & 0.17 &  \\ 
   Age & -0.00 & 0.00 & -0.44 & 0.66 &  \\ 
   Num objects (2) * Familiarity (N) & -0.07 & 0.04 & -1.69 & 0.09 & . \\ 
-  Num objects (2) * Age & 0.00 & 0.00 & 0.20 & 0.84 &  \\ 
-  Familiarity (N) * Age & -0.00 & 0.00 & -0.18 & 0.86 &  \\ 
-  Num objects (2) * Familiarity (N) * Age & -0.00 & 0.00 & -0.84 & 0.4 &  \\ 
+  Num objects (2) * Age & 0.00 & 0.00 & 0.21 & 0.83 &  \\ 
+  Familiarity (N) * Age & -0.00 & 0.00 & -0.19 & 0.85 &  \\ 
+  Num objects (2) * Familiarity (N) * Age & -0.00 & 0.00 & -0.82 & 0.41 &  \\ 
    \hline
 \end{tabular}
 \caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the slide phase in Experiment 1.} 
@@ -680,14 +680,14 @@ Intercept & 0.12 & 0.02 & 5.06 & $<$ .001 & *** \\
 \begin{tabular}{lrrrrl}
  Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
   \hline
-Intercept & 0.03 & 0.02 & 1.48 & 0.14 &  \\ 
-  Num objects (2) & 0.01 & 0.04 & 0.26 & 0.8 &  \\ 
-  Familiarity (N) & 0.00 & 0.03 & 0.12 & 0.9 &  \\ 
-  Age & -0.00 & 0.00 & -0.92 & 0.36 &  \\ 
-  Num objects (2) * Familiarity (N) & 0.20 & 0.05 & 4.34 & $<$ .001 & *** \\ 
+Intercept & 0.04 & 0.02 & 1.48 & 0.14 &  \\ 
+  Num objects (2) & 0.01 & 0.04 & 0.16 & 0.87 &  \\ 
+  Familiarity (N) & 0.00 & 0.03 & 0.11 & 0.91 &  \\ 
+  Age & -0.00 & 0.00 & -0.95 & 0.34 &  \\ 
+  Num objects (2) * Familiarity (N) & 0.21 & 0.05 & 4.37 & $<$ .001 & *** \\ 
   Num objects (2) * Age & 0.00 & 0.00 & 0.54 & 0.59 &  \\ 
   Familiarity (N) * Age & 0.00 & 0.00 & 0.73 & 0.47 &  \\ 
-  Num objects (2) * Familiarity (N) * Age & 0.00 & 0.00 & 1.42 & 0.16 &  \\ 
+  Num objects (2) * Familiarity (N) * Age & 0.01 & 0.00 & 1.40 & 0.16 &  \\ 
    \hline
 \end{tabular}
 \caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the planning phase in Experiment 1.} 
@@ -699,14 +699,14 @@ Intercept & 0.03 & 0.02 & 1.48 & 0.14 &  \\
 \begin{tabular}{lrrrrl}
  Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
   \hline
-Intercept & 0.22 & 0.04 & 5.35 & $<$ .001 & *** \\ 
-  Num objects (2) & 0.05 & 0.06 & 0.96 & 0.34 &  \\ 
-  Familiarity (N) & 0.01 & 0.05 & 0.18 & 0.86 &  \\ 
-  Age & -0.00 & 0.00 & -0.20 & 0.84 &  \\ 
-  Num objects (2) * Familiarity (N) & 0.60 & 0.07 & 8.21 & $<$ .001 & *** \\ 
-  Num objects (2) * Age & 0.00 & 0.00 & 0.85 & 0.4 &  \\ 
-  Familiarity (N) * Age & 0.00 & 0.00 & 0.55 & 0.58 &  \\ 
-  Num objects (2) * Familiarity (N) * Age & 0.01 & 0.01 & 1.34 & 0.18 &  \\ 
+Intercept & 0.22 & 0.04 & 5.16 & $<$ .001 & *** \\ 
+  Num objects (2) & 0.06 & 0.06 & 0.96 & 0.34 &  \\ 
+  Familiarity (N) & 0.02 & 0.05 & 0.34 & 0.73 &  \\ 
+  Age & -0.00 & 0.00 & -0.22 & 0.83 &  \\ 
+  Num objects (2) * Familiarity (N) & 0.60 & 0.08 & 7.97 & $<$ .001 & *** \\ 
+  Num objects (2) * Age & 0.00 & 0.00 & 0.81 & 0.42 &  \\ 
+  Familiarity (N) * Age & 0.00 & 0.00 & 0.59 & 0.55 &  \\ 
+  Num objects (2) * Familiarity (N) * Age & 0.01 & 0.01 & 1.24 & 0.22 &  \\ 
    \hline
 \end{tabular}
 \caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the response phase in Experiment 1.} 
@@ -721,25 +721,26 @@ objects) would produce more social referencing, we fit mixed-effects
 linear regression models separately for each phase with the following
 structure:
 \texttt{number\ of\ looks\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ age\ in\ months\ +\ (number\ of\ objects\ +\ familiarity\ \textbar{}\ subject)}.
-A single model with phase as a factor did not converge, and the model
-was subsequently trimmed according to our standard laboratory analytic
-procedures.
+Our initial planned analysis, a single model with phase as a factor, did
+not converge, and the model was subsequently trimmed according to our
+standard laboratory analytic procedures.
 
 We did not find any main or interaction effects of number of objects,
 familiarity, or age on number of looks during the \emph{label} or
 \emph{slide} phases. Thus, mere novelty or the presence of multiple
-objects was not enough to increase social referencing. However, we found
-an interaction effect of number of objects and familiarity during the
-\emph{planning} (\(\beta\) = 0.2, \emph{p} \textless{} .001) and
-\emph{response} phases (\(\beta\) = 0.6, \emph{p} \textless{} .001),
-such that NN trials were associated with more looking.
+objects was not enough to increase social referencing, perhaps because
+it was already at ceiling. However, we found an interaction effect of
+number of objects and familiarity during the \emph{planning} (\(\beta\)
+= 0.2, \emph{p} \textless{} .001) and \emph{response} phases (\(\beta\)
+= 0.6, \emph{p} \textless{} .001), such that NN trials were associated
+with more looks.
 
 There was no interaction with age in any phase.\footnote{\url{https://github.com/emilyfae/socref_uncert}}
 Since an age trend in the \emph{planning} phase was apparent in the plot
 (Figure \ref{fig:results_e1}), we conducted a post-hoc mixed-effects
-linear regression with age group (2- and 3-year-olds vs.~4- and
-5-year-olds) predicting the number of looks in the \emph{planning}
-phase:
+linear regression with age group as a dichotomous rather than a
+continuous variable (i.e., 2- and 3-year-olds vs.~4- and 5-year-olds)
+predicting the number of looks in the \emph{planning} phase:
 \texttt{number\ of\ looks\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ age\ group\ +\ (number\ of\ objects\ +\ familiarity\ \textbar{}\ subject)}.
 We found a significant interaction of number of objects and familiarity
 (\(\beta\) = 0.3, \emph{p} \textless{} .001), and a significant 3-way
@@ -797,19 +798,19 @@ effect of referential ambiguity in the \emph{label} phase. It is
 possible that children failed to predict that they would need more
 information until later in the trial, when they were actually faced with
 making a decision. Another possibility is that children's looking was at
-ceiling during the labeling phase, perhaps because children tend to look
-at someone who is speaking regardless of the need for referential
-disambiguation.
+ceiling during the labeling phase, perhaps because older children tend
+to look at someone who is speaking regardless of the need for
+referential disambiguation.
 
 A third possibility is that this finding is an artifact of our design,
 in which the speaker gazed at the center of the table rather than the
 referent of the label. Children may have realized that the speaker's
-gaze direction during labeling was not informative. Alternatively,
-children may have found it strange to interact with a speaker who did
-not gaze at the object they were labeling, which may have produced
-unnatural patterns of social referencing. Experiment 2 tests these
-possibilities and examines whether children's social referencing is
-sensitive to graded uncertainty.
+gaze direction during labeling was not informative. Relatedly, children
+may have found it strange to interact with a speaker who did not gaze at
+the object they were labeling, which may have produced unnatural
+patterns of social referencing. Experiment 2 tests these possibilities
+and further examines whether children's social referencing is sensitive
+to graded uncertainty.
 
 \section{Experiment 2}\label{experiment-2}
 
@@ -909,22 +910,22 @@ in Experiment 1.
 \begin{tabular}{lrrrrl}
  Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
   \hline
-Intercept & 0.11 & 0.09 & 1.21 & 0.23 &  \\ 
-  Acc(Y) & 0.01 & 0.09 & 0.06 & 0.95 &  \\ 
-  Age & -0.00 & 0.01 & -0.30 & 0.76 &  \\ 
-  Phase(Label) & 0.96 & 0.12 & 8.00 & $<$ .001 & *** \\ 
-  Phase(Planning) & 0.10 & 0.12 & 0.81 & 0.42 &  \\ 
-  Phase(Response) & 1.31 & 0.12 & 10.91 & $<$ .001 & *** \\ 
-  Acc(Y) * Age & 0.00 & 0.01 & 0.21 & 0.84 &  \\ 
-  Acc(Y) * Phase(Label) & 0.41 & 0.12 & 3.31 & $<$ .001 & *** \\ 
-  Acc(Y) * Phase(Planning) & -0.17 & 0.12 & -1.33 & 0.18 &  \\ 
-  Acc(Y) * Phase(Response) & -0.99 & 0.12 & -7.99 & $<$ .001 & *** \\ 
-  Age * Phase(Label) & 0.04 & 0.02 & 1.90 & 0.06 & . \\ 
-  Age * Phase(Planning) & 0.02 & 0.02 & 0.99 & 0.32 &  \\ 
-  Age * Phase(Response) & 0.02 & 0.02 & 0.98 & 0.33 &  \\ 
-  Acc(Y) * Age * Phase(Label) & -0.02 & 0.02 & -1.16 & 0.25 &  \\ 
-  Acc(Y) * Age * Phase(Planning) & -0.02 & 0.02 & -1.00 & 0.32 &  \\ 
-  Acc(Y) * Age * Phase(Response) & -0.03 & 0.02 & -1.25 & 0.21 &  \\ 
+Intercept & 1.07 & 0.09 & 11.97 & $<$ .001 & *** \\ 
+  Acc(Y) & 0.42 & 0.09 & 4.61 & $<$ .001 & *** \\ 
+  Age & 0.03 & 0.01 & 2.26 & 0.02 & * \\ 
+  Phase(Label) & -0.86 & 0.12 & -7.19 & $<$ .001 & *** \\ 
+  Phase(Planning) & 0.35 & 0.12 & 2.88 & 0 & ** \\ 
+  Phase(Response) & -0.96 & 0.12 & -8.00 & $<$ .001 & *** \\ 
+  Acc(Y) * Age & -0.02 & 0.01 & -1.39 & 0.16 &  \\ 
+  Acc(Y) * Phase(Label) & -0.58 & 0.12 & -4.64 & $<$ .001 & *** \\ 
+  Acc(Y) * Phase(Planning) & -1.40 & 0.12 & -11.28 & $<$ .001 & *** \\ 
+  Acc(Y) * Phase(Response) & -0.41 & 0.12 & -3.31 & $<$ .001 & *** \\ 
+  Age * Phase(Label) & -0.02 & 0.02 & -0.91 & 0.36 &  \\ 
+  Age * Phase(Planning) & -0.02 & 0.02 & -0.93 & 0.35 &  \\ 
+  Age * Phase(Response) & -0.04 & 0.02 & -1.90 & 0.06 & . \\ 
+  Acc(Y) * Age * Phase(Label) & 0.00 & 0.02 & 0.16 & 0.87 &  \\ 
+  Acc(Y) * Age * Phase(Planning) & -0.00 & 0.02 & -0.09 & 0.93 &  \\ 
+  Acc(Y) * Age * Phase(Response) & 0.02 & 0.02 & 1.16 & 0.25 &  \\ 
    \hline
 \end{tabular}
 \caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2.} 
@@ -933,12 +934,14 @@ Intercept & 0.11 & 0.09 & 1.21 & 0.23 &  \\
 
 Children's accuracy for trials with a correct answer (i.e., FF, FN, and
 all trials with gaze) was calculated using the same criteria as in
-Experiment 1 (Figure \ref{fig:acc_e2}). As in Experiment 1, children
-sometimes put two items in the bucket (3-year-olds: 0.0\% of trials;
-4-year-olds: 0.0\%). If they put the correct object in first, the trial
-was counted as accurate. To quantify the effects of familiarity, gaze,
-and age on accuracy, we fit the following mixed-effects logistic
-regression model:
+Experiment 1 (Figure \ref{fig:acc_e2}). Children sometimes put two items
+in the bucket, although they did so less frequently than in Experiment
+1, perhaps because there were two objects available on every trial and
+it was thus less of a novelty (3-year-olds: 3.5\% of trials;
+4-year-olds: 1.0\%). As in Experiment 1, the first item they placed in
+the bucket was coded as their response. To quantify the effects of
+familiarity, gaze, and age on accuracy, we fit the following
+mixed-effects logistic regression model:
 \texttt{correct\ \textasciitilde{}\ trial\ type\ *\ gaze\ +\ age\ in\ months\ +\ (1\textbar{}\ subject)}.
 Accuracy was significantly lower for novel (\(\beta\) = -2.3, \emph{p}
 \textless{} .001) and mutual trials (\(\beta\) = -2.2, \emph{p}
@@ -969,37 +972,37 @@ Experiment 1, the number of looks was not significantly greater for NN
 trials in the \emph{planning} phase.
 
 We were also interested in whether FN trials would elicit an
-intermediate amount of looking. We observed a three-way interaction of
-familiarity, gaze, and phase, such that the response phase of FN trials
-in the no-referential-gaze condition was associated with significantly
-more looks (\(\beta\) = -0.2, \emph{p} \textless{} .01). Thus, FN trials
-were associated with greater looking only when the experimenter did not
-provide informative gaze. This finding is intriguing given that children
-should be able to solve FN trials without gaze information. Instead,
-these results suggest that children remain relatively uncertain while
-making a decision if excluding the familiar object is their only cue to
-reference, but this uncertainty is resolved if the speaker's gaze is
-informative. On the other hand, informative gaze during labeling did not
-lessen social referencing for novel trials, suggesting that gaze
-information alone was not sufficient to reduce uncertainty. Instead,
-children required both types of evidence to feel certain about their
-response.
+intermediate amount of looking. We observed an unpredicted three-way
+interaction of familiarity, gaze, and phase, such that the response
+phase of FN trials in the no-referential-gaze condition was associated
+with significantly more looks (\(\beta\) = -0.2, \emph{p} \textless{}
+.01). Thus, FN trials were associated with greater looking only when the
+experimenter did not provide informative gaze. This finding is
+intriguing given that children should be able to solve FN trials without
+gaze information. Instead, these results suggest that children remain
+relatively uncertain while making a decision if excluding the familiar
+object is their only cue to reference, but this uncertainty is resolved
+if the speaker's gaze is informative. On the other hand, informative
+gaze during labeling did not lessen social referencing for novel trials,
+suggesting that gaze information alone was not sufficient to reduce
+uncertainty. Instead, perhaps children required both types of evidence
+to feel certain about their response.
 
-Finally, we observed a four-way interaction such that the
+Additionally, we observed a four-way interaction such that the
 \emph{response} phase of novel trials in the gaze condition was
 associated with more looking with increasing age (\(\beta\) = 0.0,
-\emph{p} \textless{} .01), suggesting that preschoolers may become more
-selective in their social referencing as they get older. It may be that
-children improve in their ability to monitor the need for disambiguating
-information, or they may become more likely to recognize that social
-information can be a source of disambiguation.
+\emph{p} \textless{} .01), suggesting that older preschoolers were more
+selective in their social referencing. It may be that children improve
+in their ability to monitor the need for disambiguating information, or
+they may become more likely to recognize that social information can be
+a source of disambiguation.
 
-We did not observe selective social referencing during the \emph{label}
-phase, even when referential gaze was available. This result rules out
-the possibility that children are less selective during labeling because
-they learned that gaze direction was not informative. Instead, children
-may attend to someone who is speaking regardless of the need for
-disambiguation.
+Finally, we did not observe selective social referencing during the
+\emph{label} phase, even when referential gaze was available. This
+result rules out the possibility that children are less selective during
+labeling because they learned that gaze direction was not informative.
+Instead, children may attend to someone who is speaking regardless of
+the need for disambiguation.
 
 \begin{CodeChunk}
 \begin{figure*}[b]
@@ -1067,7 +1070,7 @@ Intercept & 0.14 & 0.06 & 2.62 & 0.01 & ** \\
   Trial type(NN) * Age * Gaze * Phase(Response) & -0.05 & 0.02 & -1.94 & 0.05 & . \\ 
    \hline
 \end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 1.} 
+\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 2.} 
 \label{tab:exp2_reg}
 \end{table}
 
@@ -1076,10 +1079,10 @@ accuracy}\label{social-referencing-and-accuracy}
 
 In the metacognitive framework, confidence judgments are generally
 compared for correct and incorrect responses, with lower confidence for
-incorrect responses taken as evidence for metacognitive accuracy
-{[}Yeung \& Summerfield (2012). Here, a parallel approach would be to
-examine the amount of social referencing children demonstrate for
-correct and incorrect responses.
+incorrect responses taken as evidence for metacognitive accuracy (Yeung
+\& Summerfield, 2012). Here, a parallel approach would be to examine the
+amount of social referencing children demonstrate for correct and
+incorrect responses.
 
 To this end, we fit a mixed-effects linear regression model with the
 following structure:
@@ -1089,8 +1092,8 @@ conditions, since there were relatively few incorrect trials overall and
 none at all for some of the conditions. Results showed that accuracy and
 phase interacted such that children looked at the experimenter
 significantly more during the labeling phase of accurate trials
-(\(\beta\) = 0.4, \emph{p} \textless{} .001), and significantly less in
-the \emph{response} phase of accurate trials (\(\beta\) = -1.0, \emph{p}
+(\(\beta\) = -0.6, \emph{p} \textless{} .001), and significantly less in
+the \emph{response} phase of accurate trials (\(\beta\) = -0.4, \emph{p}
 \textless{} .001).
 
 These findings confirm that children reference the experimenter more
@@ -1166,12 +1169,12 @@ or task demands (Koriat \& Goldsmith, 1996).
 These findings also bear on probabilistic models of learning and
 cognition, which predict that the proportion of individuals endorsing a
 belief will be proportional to the posterior probability of that belief
-based on Bayesian inference (e.g., E. Bonawitz et al., 2014; Denison,
-Bonawitz, Gopnik, \& Griffiths, 2013; E. Vul, Goodman, Griffiths, \&
-Tenenbaum, 2014). The current findings are consistent with the
-possibility that preschoolers might engage in this type of reasoning,
-given that their uncertainty tracked quantitatively with the amount of
-evidence available.
+based on Bayesian inference, even if individual decisions are discrete
+(e.g., E. Bonawitz et al., 2014; Denison, Bonawitz, Gopnik, \&
+Griffiths, 2013; E. Vul, Goodman, Griffiths, \& Tenenbaum, 2014). The
+current findings are consistent with the possibility that preschoolers
+might engage in this type of reasoning, given that their uncertainty
+tracked quantitatively with the amount of evidence available.
 
 On the other hand, we found no evidence for selective social referencing
 while the speaker was producing the label. One possibility is that young
