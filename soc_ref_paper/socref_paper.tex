@@ -1,83 +1,143 @@
-% Template for APA submission with R Markdown
+\documentclass[english,man]{apa6}
 
-% Stuff changed from PLOS Template
-\documentclass[a4paper,man,apacite,floatsintext]{apa6}
-\usepackage{apacite}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+    \usepackage{xltxtra,xunicode}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
 
-% amsmath package, useful for mathematical formulas
-\usepackage{amsmath}
-% amssymb package, useful for mathematical symbols
-\usepackage{amssymb}
+% Table formatting
+\usepackage{longtable, booktabs}
+\usepackage{lscape}
+% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
+\usepackage{multirow}		% Table styling
+\usepackage{tabularx}		% Control Column width
+\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
+\usepackage{threeparttablex}            % Lets threeparttable work with longtable
 
-% hyperref package, useful for hyperlinks
-\usepackage{hyperref}
+% Create new environments so endfloat can handle them
+% \newenvironment{ltable}
+%   {\begin{landscape}\begin{center}\begin{threeparttable}}
+%   {\end{threeparttable}\end{center}\end{landscape}}
 
-% graphicx package, useful for including eps and pdf graphics
-% include graphics with the command \includegraphics
-\usepackage{graphicx}
+\newenvironment{lltable}
+  {\begin{landscape}\begin{center}\begin{ThreePartTable}}
+  {\end{ThreePartTable}\end{center}\end{landscape}}
 
-% Sweave(-like)
-\usepackage{fancyvrb}
-\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontshape=sl}
-\DefineVerbatimEnvironment{Soutput}{Verbatim}{}
-\DefineVerbatimEnvironment{Scode}{Verbatim}{fontshape=sl}
-\newenvironment{Schunk}{}{}
-\DefineVerbatimEnvironment{Code}{Verbatim}{}
-\DefineVerbatimEnvironment{CodeInput}{Verbatim}{fontshape=sl}
-\DefineVerbatimEnvironment{CodeOutput}{Verbatim}{}
-\newenvironment{CodeChunk}{}{}
-
-% cite package, to clean up citations in the main text. Do not remove.
-\usepackage{cite}
-
-\usepackage{color}
-
-% Use doublespacing - comment out for single spacing
-%\usepackage{setspace}
-%\doublespacing
-
-
-% Text layout
-\topmargin 0.0cm
-\oddsidemargin 0.5cm
-\evensidemargin 0.5cm
-\textwidth 16cm
-\textheight 21cm
-
-% Bold the 'Figure #' in the caption and separate it with a period
-% Captions will be left justified
-\usepackage[labelfont=bf,labelsep=period,justification=raggedright]{caption}
+  \usepackage{ifthen} % Only add declarations when endfloat package is loaded
+  \ifthenelse{\equal{\string man}{\string man}}{%
+   \DeclareDelayedFloatFlavor{ThreePartTable}{table} % Make endfloat play with longtable
+   % \DeclareDelayedFloatFlavor{ltable}{table} % Make endfloat play with lscape
+   \DeclareDelayedFloatFlavor{lltable}{table} % Make endfloat play with lscape & longtable
+  }{}%
 
 
-% Remove brackets from numbering in List of References
+
+% The following enables adjusting longtable caption width to table width
+% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
 \makeatletter
-\renewcommand{\@biblabel}[1]{\quad#1.}
-\makeatother
+\newcommand\LastLTentrywidth{1em}
+\newlength\longtablewidth
+\setlength{\longtablewidth}{1in}
+\newcommand\getlongtablewidth{%
+ \begingroup
+  \ifcsname LT@\roman{LT@tables}\endcsname
+  \global\longtablewidth=0pt
+  \renewcommand\LT@entry[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}%
+  \@nameuse{LT@\roman{LT@tables}}%
+  \fi
+\endgroup}
 
 
-% Leave date blank
-\date{}
+  \usepackage{graphicx}
+  \makeatletter
+  \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+  \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+  \makeatother
+  % Scale images if necessary, so that they will not overflow the page
+  % margins by default, and it is still possible to overwrite the defaults
+  % using explicit options in \includegraphics[width, height, ...]{}
+  \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            pdfauthor={},
+            pdftitle={Children's social referencing reflects sensitivity to uncertainty},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=black,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
 
-%\pagestyle{myheadings}
-%% ** EDIT HERE **
+\setlength{\parindent}{0pt}
+%\setlength{\parskip}{0pt plus 0pt minus 0pt}
+
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+\ifxetex
+  \usepackage{polyglossia}
+  \setmainlanguage{}
+\else
+  \usepackage[english]{babel}
+\fi
+
+% Manuscript styling
+\captionsetup{font=singlespacing,justification=justified}
+\usepackage{csquotes}
+\usepackage{upgreek}
 
 
-%% ** EDIT HERE **
-%% PLEASE INCLUDE ALL MACROS BELOW
 
-%% END MACROS SECTION
+\usepackage{tikz} % Variable definition to generate author note
+
+% fix for \tightlist problem in pandoc 1.14
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% Essential manuscript parts
+  \title{Children's social referencing reflects sensitivity to uncertainty}
+
+  \shorttitle{Social referencing reflects uncertainty}
 
 
-% ALL OF THE TITLE PAGE INFORMATION IS SPECIFIED IN THE YAML
-\title{\textbf{Children's social referencing reflects sensitivity to uncertainty}}
-\shorttitle{Social referencing and uncertainty}
+  \author{Emily Hembacher\textsuperscript{1}, Benjamin deMayo\textsuperscript{1}, \& Michael C. Frank\textsuperscript{1}}
 
-\author{Emily Hembacher, Benjamin deMayo, Michael C. Frank}
+  \def\affdep{{"", "", ""}}%
+  \def\affcity{{"", "", ""}}%
 
-\affiliation{Department of Psychology, Stanford University}
+  \affiliation{
+    \vspace{0.5cm}
+          \textsuperscript{1} Stanford University  }
 
-\authornote{}
-\abstract{This study examined a spontaneous information gathering behavior --
+ % If no author_note is defined give only author information if available
+      \newcounter{author}
+                              \authornote{
+            Correspondence concerning this article should be addressed to Emily Hembacher, 450 Serra Mall, Stanford, CA, 94305. E-mail: \href{mailto:ehembach@stanford.edu}{\nolinkurl{ehembach@stanford.edu}}
+          }
+                                                
+
+  \abstract{This study examined a spontaneous information gathering behavior --
 social referencing -- and its relation to epistemic uncertainty during
 early childhood. Children ages 2-5 (\emph{n}=160) identified the
 referents of familiar and novel labels. Referential ambiguity was
@@ -90,10 +150,36 @@ more when there was a novel referent and familiar distractor (and the
 referent could thus be inferred), but only when referential gaze was
 unavailable. These results suggest that children are able to seek
 disambiguating social information on the basis of graded uncertainty.}
-\keywords{social referencing; help seeking; word learning; uncertainty.}
+  \keywords{social referencing; help seeking; word learning; uncertainty. \\
 
+    \indent Word count: X
+  }
+
+
+
+
+
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{example}{Example}
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{solution}{Solution}
 \begin{document}
+
 \maketitle
+
+\setcounter{secnumdepth}{0}
+
+
 
 Preschoolers quickly learn new concepts, rules, and language. They also
 actively explore (Schulz \& Bonawitz, 2007) and ask questions
@@ -156,8 +242,9 @@ reported in these studies may underestimate children's ability to track
 epistemic uncertainty and act on it. One possibility is that children's
 tracking of uncertainty is apparent in their spontaneous
 information-seeking behaviors before they can report on it explicitly.
-Such a possibility would mirror the pattern proposed in other domains,
-e.g., Theory of Mind ({\textbf{???}}).
+Such a possibility would mirror the developmental pattern proposed in
+other domains, for example, object representation (Keen, 2003) or theory
+of mind (Thoermer, Sodian, Vuori, Perst, \& Kristen, 2011).
 
 In the following sections, we first outline an emerging body of research
 that suggests that children actively gather data to support learning
@@ -188,10 +275,9 @@ were more likely to peek inside a tube before choosing when they had not
 seen the baiting of the tubes compared to when they had, suggesting they
 were aware of their knowledge or ignorance and selectively sought
 confirmatory evidence before committing to a response when they did not
-know a sticker's location. Others have found similar patterns of results
-({\textbf{???}}). In another study, Goupil, Romand-Monnier, and Kouider
-(2016) trained 20-month-olds to look at their parents if they needed
-help with a memory task in which they had to locate a hidden toy.
+know a sticker's location. In another study, Goupil, Romand-Monnier, and
+Kouider (2016) trained 20-month-olds to look at their parents if they
+needed help with a memory task in which they had to locate a hidden toy.
 Toddlers were more likely to seek help when they were completely
 ignorant of the toy's location, and when the task was more difficult
 because the delay between hiding and test was longer.
@@ -327,9 +413,9 @@ language development, highlighting the importance of this behavior for
 learning. Furthermore, word learning is more successful under joint
 attention, which involves mutual knowledge about a shared focus of
 attention (Baldwin, 1993; Tomasello \& Farrar, 1986).\footnote{We use
-  the term ``social referencing'' to indicate the generic behavior of
-  seeking social information whether it is specifically referential (as
-  in gaze following) or otherwise.}
+  the term \enquote{social referencing} to indicate the generic behavior
+  of seeking social information whether it is specifically referential
+  (as in gaze following) or otherwise.}
 
 However, there is still only limited evidence about whether infants and
 young children are \emph{selective} in seeking out these social cues to
@@ -386,7 +472,7 @@ There are several reasons that investigating children's sensitivity to
 graded evidence is important. First, probabilistic models of cognition
 and learning require that individuals be able to track the amount of
 evidence for alternative beliefs (and corresponding uncertainty),
-perhaps through heuristics such as ``win-stay lose-sample'' (E.
+perhaps through heuristics such as \enquote{win-stay lose-sample} (E.
 Bonawitz, Denison, Gopnik, \& Griffiths, 2014). If preschool-aged
 children do track accumulating evidence as assumed by these models,
 their information-gathering behaviors should be graded with respect to
@@ -408,16 +494,11 @@ individuals more willing to share that information with others, and
 having less information should motivate help-seeking (Ghetti, Hembacher,
 \& Coughlin, 2013).
 
-\begin{CodeChunk}
-\begin{figure*}[b]
-
-{\centering \includegraphics[width=5in,height=3in]{figs/design-1} 
-
-}
-
-\caption[Study design for experiments 1 and 2]{Study design for experiments 1 and 2.}\label{fig:design}
-\end{figure*}
-\end{CodeChunk}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figs/design-1.pdf}
+\caption{\label{fig:design}Study design for experiments 1 and 2.}
+\end{figure}
 
 \section{Experiment 1}\label{experiment-1}
 
@@ -474,8 +555,8 @@ novel objects (NN). There were three trials of each type, for a total of
 twelve trials. Trial types were presented sequentially in an order that
 was counterbalanced across participants. The assignment of individual
 objects to trial types was counterbalanced. On F/FF trials, the familiar
-label for the target object was used (e.g., ``cow''). On N/NN trials, a
-novel label was used (e.g., ``dawnoo'').
+label for the target object was used (e.g., \enquote{cow}). On N/NN
+trials, a novel label was used (e.g., \enquote{dawnoo}).
 
 The critical manipulation was of referential ambiguity; F and FF trials
 were referentially unambiguous, as children were expected to be certain
@@ -500,13 +581,13 @@ the child could not interact with the toys during the labeling event.
 For one-object trials, the location of the object (left or right)
 alternated between trials.
 
-After placing the objects, the experimenter said ``Hey look, there's a
-(target) here.'' The experimenter gazed at the center of the table
-rather than the object they labeled. The experimenter waited
+After placing the objects, the experimenter said \enquote{Hey look,
+there's a (target) here.} The experimenter gazed at the center of the
+table rather than the object they labeled. The experimenter waited
 approximately two seconds based on a visual metronome placed within view
-before saying, ``Can you put the (target) in the bucket?'' They then
-pushed the object(s) forward within reach of the child, and placed a
-plastic bucket in the center of the table, also within reach of the
+before saying, \enquote{Can you put the (target) in the bucket?} They
+then pushed the object(s) forward within reach of the child, and placed
+a plastic bucket in the center of the table, also within reach of the
 child. Prior to the twelve experimental trials, there were two training
 trials: a F trial and a FF trial, to acquaint the child with the
 procedure. A camera placed to the side of the experimenter captured the
@@ -568,16 +649,12 @@ This model specification was preregistered, as noted above.
 
 \subsubsection{Accuracy}\label{accuracy}
 
-\begin{CodeChunk}
-\begin{figure*}[b]
-
-{\centering \includegraphics{figs/acc_e1-1} 
-
-}
-
-\caption[Accuracy for FF trials in Experiment 1]{Accuracy for FF trials in Experiment 1. Error bars are 95 percent confidence intervals.}\label{fig:acc_e1}
-\end{figure*}
-\end{CodeChunk}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figs/acce1-1.pdf}
+\caption{\label{fig:acce1}Accuracy for FF trials in Experiment 1. Error bars
+are 95 percent confidence intervals.}
+\end{figure}
 
 \begin{table}[b]
 \centering
@@ -619,110 +696,34 @@ for 4-year-olds; 2/4 for 5-year-olds).
 
 Children also occasionally declined to choose an item (0.4\% of trials);
 these trials are excluded from accuracy analyses. Children's accuracy is
-displayed in Figure \ref{fig:acc_e1}. Overall children generally chose
+displayed in Figure \ref{fig:acce1}. Overall children generally chose
 the correct item for FF trials, indicating that they understood the task
 and were motivated to answer correctly. While 3- to 5-year-olds
 performed close to ceiling (92\% - 99\%), 2-year-olds were less accurate
 (76\%), but still performed significantly above chance (\emph{t}(19) =
 23.0 , \emph{p} \textless{}.001).
 
-\begin{CodeChunk}
-\begin{figure*}[b]
-
-{\centering \includegraphics[width=5.75in,height=4.35in]{figs/results_e1-1} 
-
-}
-
-\caption[Results of Experiment 1]{Results of Experiment 1. Number of looks to the experimenter based on phase, the number and familiarity of objects present, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.}\label{fig:results_e1}
-\end{figure*}
-\end{CodeChunk}
-
-\begin{table}[b]
+\begin{figure}[htbp]
 \centering
-\begin{tabular}{lrrrrl}
- Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
-  \hline
-Intercept & 1.40 & 0.06 & 22.70 & $<$ .001 & *** \\ 
-  Num objects (2) & -0.07 & 0.06 & -1.14 & 0.25 &  \\ 
-  Familiarity (N) & 0.06 & 0.06 & 0.90 & 0.37 &  \\ 
-  Age & 0.01 & 0.00 & 1.88 & 0.06 & . \\ 
-  Num objects (2) * Familiarity (N) & -0.07 & 0.09 & -0.78 & 0.43 &  \\ 
-  Num objects (2) * Age & -0.01 & 0.00 & -1.37 & 0.17 &  \\ 
-  Familiarity (N) * Age & -0.01 & 0.00 & -1.10 & 0.27 &  \\ 
-  Num objects (2) * Familiarity (N) * Age & -0.00 & 0.01 & -0.49 & 0.63 &  \\ 
-   \hline
-\end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the label phase in Experiment 1.} 
-\label{tab:exp1_l_reg}
-\end{table}
-
-\begin{table}[b]
-\centering
-\begin{tabular}{lrrrrl}
- Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
-  \hline
-Intercept & 0.12 & 0.02 & 5.00 & $<$ .001 & *** \\ 
-  Num objects (2) & 0.02 & 0.03 & 0.54 & 0.59 &  \\ 
-  Familiarity (N) & 0.04 & 0.03 & 1.38 & 0.17 &  \\ 
-  Age & -0.00 & 0.00 & -0.44 & 0.66 &  \\ 
-  Num objects (2) * Familiarity (N) & -0.07 & 0.04 & -1.69 & 0.09 & . \\ 
-  Num objects (2) * Age & 0.00 & 0.00 & 0.21 & 0.83 &  \\ 
-  Familiarity (N) * Age & -0.00 & 0.00 & -0.19 & 0.85 &  \\ 
-  Num objects (2) * Familiarity (N) * Age & -0.00 & 0.00 & -0.82 & 0.41 &  \\ 
-   \hline
-\end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the slide phase in Experiment 1.} 
-\label{tab:exp1_s_reg}
-\end{table}
-
-\begin{table}[b]
-\centering
-\begin{tabular}{lrrrrl}
- Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
-  \hline
-Intercept & 0.04 & 0.02 & 1.48 & 0.14 &  \\ 
-  Num objects (2) & 0.01 & 0.04 & 0.16 & 0.87 &  \\ 
-  Familiarity (N) & 0.00 & 0.03 & 0.11 & 0.91 &  \\ 
-  Age & -0.00 & 0.00 & -0.95 & 0.34 &  \\ 
-  Num objects (2) * Familiarity (N) & 0.21 & 0.05 & 4.37 & $<$ .001 & *** \\ 
-  Num objects (2) * Age & 0.00 & 0.00 & 0.54 & 0.59 &  \\ 
-  Familiarity (N) * Age & 0.00 & 0.00 & 0.73 & 0.47 &  \\ 
-  Num objects (2) * Familiarity (N) * Age & 0.01 & 0.00 & 1.40 & 0.16 &  \\ 
-   \hline
-\end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the planning phase in Experiment 1.} 
-\label{tab:exp1_p_reg}
-\end{table}
-
-\begin{table}[b]
-\centering
-\begin{tabular}{lrrrrl}
- Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
-  \hline
-Intercept & 0.22 & 0.04 & 5.16 & $<$ .001 & *** \\ 
-  Num objects (2) & 0.06 & 0.06 & 0.96 & 0.34 &  \\ 
-  Familiarity (N) & 0.02 & 0.05 & 0.34 & 0.73 &  \\ 
-  Age & -0.00 & 0.00 & -0.22 & 0.83 &  \\ 
-  Num objects (2) * Familiarity (N) & 0.60 & 0.08 & 7.97 & $<$ .001 & *** \\ 
-  Num objects (2) * Age & 0.00 & 0.00 & 0.81 & 0.42 &  \\ 
-  Familiarity (N) * Age & 0.00 & 0.00 & 0.59 & 0.55 &  \\ 
-  Num objects (2) * Familiarity (N) * Age & 0.01 & 0.01 & 1.24 & 0.22 &  \\ 
-   \hline
-\end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the response phase in Experiment 1.} 
-\label{tab:exp1_r_reg}
-\end{table}
+\includegraphics{figs/resultse1-1.pdf}
+\caption{\label{fig:resultse1}Results of Experiment 1. Number of looks to
+the experimenter based on phase, the number and familiarity of objects
+present, and age. Age in months was entered as a continuous variable in
+regression models but is presented here as a categorical variable for
+visual simplicity. Error bars are 95 percent confidence intervals.}
+\end{figure}
 
 \subsubsection{Social referencing}\label{social-referencing}
 
-Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To
+Results of Experiment 1 are presented in Figure \ref{fig:resultse1}. To
 test our prediction that referential ambiguity (i.e., having two novel
 objects) would produce more social referencing, we fit mixed-effects
 linear regression models separately for each phase with the following
 structure:
-\texttt{number\ of\ looks\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ age\ in\ months\ +\ (number\ of\ objects\ +\ familiarity\ \textbar{}\ subject)}.
-Our initial planned analysis, a single model with phase as a factor, did
-not converge, and the model was subsequently trimmed according to our
+\texttt{number\ of\ looks\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ age\ in\ months\ +\ (number\ of\ objects\ +\ familiarity\ \textbar{}\ subject)}.\footnote{All
+  regression tables can be found in Online Supplementary Materials.} Our
+initial planned analysis, a single model with phase as a factor, did not
+converge, and the model was subsequently trimmed according to our
 standard laboratory analytic procedures.
 
 We did not find any main or interaction effects of number of objects,
@@ -737,7 +738,7 @@ with more looks.
 
 There was no interaction with age in any phase.\footnote{\url{https://github.com/emilyfae/socref_uncert}}
 Since an age trend in the \emph{planning} phase was apparent in the plot
-(Figure \ref{fig:results_e1}), we conducted a post-hoc mixed-effects
+(Figure \ref{fig:resultse1}), we conducted a post-hoc mixed-effects
 linear regression with age group as a dichotomous rather than a
 continuous variable (i.e., 2- and 3-year-olds vs.~4- and 5-year-olds)
 predicting the number of looks in the \emph{planning} phase:
@@ -752,16 +753,12 @@ they grow older. This could mean that they detect uncertainty more
 quickly, or that they are more proactive in seeking disambiguating
 information prior to initiating a response.
 
-\begin{CodeChunk}
-\begin{figure*}[b]
-
-{\centering \includegraphics{figs/hist_e1-1} 
-
-}
-
-\caption[Distribution of the number of looks to the speaker in each phase]{Distribution of the number of looks to the speaker in each phase.}\label{fig:hist_e1}
-\end{figure*}
-\end{CodeChunk}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figs/histe1-1.pdf}
+\caption{\label{fig:histe1}Distribution of the number of looks to the
+speaker in each phase.}
+\end{figure}
 
 As discussed previously, an alternative analytic approach would be to
 fit a logistic mixed-effects regression predicting \emph{whether or not}
@@ -769,7 +766,7 @@ children look to the speaker in each phase, rather than the number of
 times they do so. In support of this approach, the distribution of looks
 is not normal for the slide, planning, and response phases, with the
 majority of trials containing no looks to the speaker (Figure
-\ref{fig:hist_e1}). To address this issue, we additionally fit separate
+\ref{fig:histe1}). To address this issue, we additionally fit separate
 logistic mixed-effects regressions with the following structure:
 \texttt{look\ (yes\ or\ no)\ \textasciitilde{}\ number\ of\ objects\ *\ familiarity\ *\ age\ group\ +\ (number\ of\ objects\ +\ familiarity\ \textbar{}\ subject)}.
 A single model with phase as a factor did not converge.
@@ -894,47 +891,17 @@ in Experiment 1.
 
 \subsubsection{Accuracy}\label{accuracy-1}
 
-\begin{CodeChunk}
-\begin{figure*}[b]
-
-{\centering \includegraphics{figs/acc_e2-1} 
-
-}
-
-\caption[Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2]{Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.}\label{fig:acc_e2}
-\end{figure*}
-\end{CodeChunk}
-
-\begin{table}[b]
+\begin{figure}[htbp]
 \centering
-\begin{tabular}{lrrrrl}
- Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
-  \hline
-Intercept & 1.07 & 0.09 & 11.97 & $<$ .001 & *** \\ 
-  Acc(Y) & 0.42 & 0.09 & 4.61 & $<$ .001 & *** \\ 
-  Age & 0.03 & 0.01 & 2.26 & 0.02 & * \\ 
-  Phase(Label) & -0.86 & 0.12 & -7.19 & $<$ .001 & *** \\ 
-  Phase(Planning) & 0.35 & 0.12 & 2.88 & 0 & ** \\ 
-  Phase(Response) & -0.96 & 0.12 & -8.00 & $<$ .001 & *** \\ 
-  Acc(Y) * Age & -0.02 & 0.01 & -1.39 & 0.16 &  \\ 
-  Acc(Y) * Phase(Label) & -0.58 & 0.12 & -4.64 & $<$ .001 & *** \\ 
-  Acc(Y) * Phase(Planning) & -1.40 & 0.12 & -11.28 & $<$ .001 & *** \\ 
-  Acc(Y) * Phase(Response) & -0.41 & 0.12 & -3.31 & $<$ .001 & *** \\ 
-  Age * Phase(Label) & -0.02 & 0.02 & -0.91 & 0.36 &  \\ 
-  Age * Phase(Planning) & -0.02 & 0.02 & -0.93 & 0.35 &  \\ 
-  Age * Phase(Response) & -0.04 & 0.02 & -1.90 & 0.06 & . \\ 
-  Acc(Y) * Age * Phase(Label) & 0.00 & 0.02 & 0.16 & 0.87 &  \\ 
-  Acc(Y) * Age * Phase(Planning) & -0.00 & 0.02 & -0.09 & 0.93 &  \\ 
-  Acc(Y) * Age * Phase(Response) & 0.02 & 0.02 & 1.16 & 0.25 &  \\ 
-   \hline
-\end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2.} 
-\label{tab:exp2acc_reg}
-\end{table}
+\includegraphics{figs/acce2-1.pdf}
+\caption{\label{fig:acce2}Accuracy for trials with a correct answer
+available (FF and FN, and all gaze trials) in Experiment 2. Error bars
+are 95 percent confidence intervals.}
+\end{figure}
 
 Children's accuracy for trials with a correct answer (i.e., FF, FN, and
 all trials with gaze) was calculated using the same criteria as in
-Experiment 1 (Figure \ref{fig:acc_e2}). Children sometimes put two items
+Experiment 1 (Figure \ref{fig:acce2}). Children sometimes put two items
 in the bucket, although they did so less frequently than in Experiment
 1, perhaps because there were two objects available on every trial and
 it was thus less of a novelty (3-year-olds: 3.5\% of trials;
@@ -955,7 +922,7 @@ not significantly predict accuracy (\(\beta\) = 0.2, \emph{p} = .12).
 ambiguity}\label{social-referencing-and-referential-ambiguity}
 
 Children's social referencing based on trial type and gaze condition are
-presented in Figure \ref{fig:results_e2}. To quantify the main and
+presented in Figure \ref{fig:resultse2}. To quantify the main and
 interactive effects of familiarity, gaze informativity, phase, and age
 on social referencing, we fit a mixed-effects linear regression model
 with the following structure:
@@ -1004,75 +971,15 @@ labeling because they learned that gaze direction was not informative.
 Instead, children may attend to someone who is speaking regardless of
 the need for disambiguation.
 
-\begin{CodeChunk}
-\begin{figure*}[b]
-
-{\centering \includegraphics[width=5.75in,height=3.5in]{figs/results_e2-1} 
-
-}
-
-\caption[Results of Experiment 2]{Results of Experiment 2. Number of looks to the experimenter based on phase, trial type, gaze condition, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.}\label{fig:results_e2}
-\end{figure*}
-\end{CodeChunk}
-
-\begin{table}[b]
+\begin{figure}[htbp]
 \centering
-\begin{tabular}{lrrrrl}
- Predictor & Estimate & Std. Error & $t$ value & $p$ value &  \\ 
-  \hline
-Intercept & 0.14 & 0.06 & 2.62 & 0.01 & ** \\ 
-  Trial type(FN) & -0.09 & 0.07 & -1.27 & 0.21 &  \\ 
-  Trial type(NN) & -0.02 & 0.08 & -0.29 & 0.77 &  \\ 
-  Age & 0.00 & 0.01 & 0.27 & 0.79 &  \\ 
-  Gaze(Y) & -0.01 & 0.08 & -0.09 & 0.93 &  \\ 
-  Phase(Label) & 1.36 & 0.07 & 18.71 & $<$ .001 & *** \\ 
-  Phase(Planning) & -0.11 & 0.07 & -1.54 & 0.12 &  \\ 
-  Phase(Response) & 0.10 & 0.07 & 1.38 & 0.17 &  \\ 
-  Trial type(FN) * Age & -0.01 & 0.01 & -0.80 & 0.43 &  \\ 
-  Trial type(NN) * Age & -0.01 & 0.01 & -0.66 & 0.51 &  \\ 
-  Trial type(FN) * Gaze & 0.08 & 0.10 & 0.77 & 0.44 &  \\ 
-  Trial type(NN) * Gaze & -0.01 & 0.11 & -0.10 & 0.92 &  \\ 
-  Age * Gaze & -0.00 & 0.01 & -0.35 & 0.72 &  \\ 
-  Trial type(FN) * Phase(Label) & 0.02 & 0.10 & 0.24 & 0.81 &  \\ 
-  Trial type(NN) * Phase(Label) & -0.02 & 0.10 & -0.23 & 0.82 &  \\ 
-  Trial type(FN) * Phase(Planning) & 0.21 & 0.10 & 2.01 & 0.04 & * \\ 
-  Trial type(NN) * Phase(Planning) & 0.28 & 0.10 & 2.77 & 0.01 & ** \\ 
-  Trial type(FN) * Phase(Response) & 0.53 & 0.10 & 5.09 & $<$ .001 & *** \\ 
-  Trial type(NN) * Phase(Response) & 0.68 & 0.10 & 6.52 & $<$ .001 & *** \\ 
-  Age * Phase(Label) & 0.02 & 0.01 & 2.07 & 0.04 & * \\ 
-  Age * Phase(Planning) & -0.00 & 0.01 & -0.31 & 0.76 &  \\ 
-  Age * Phase(Response) & -0.00 & 0.01 & -0.09 & 0.93 &  \\ 
-  Gaze * Phase(Label) & -0.06 & 0.10 & -0.59 & 0.56 &  \\ 
-  Gaze * Phase(Planning) & -0.00 & 0.10 & -0.00 & 1 &  \\ 
-  Gaze * Phase(Response) & 0.08 & 0.10 & 0.79 & 0.43 &  \\ 
-  Trial type(FN) * Age * Gaze & 0.01 & 0.02 & 0.46 & 0.65 &  \\ 
-  Trial type(NN) * Age * Gaze & 0.01 & 0.02 & 0.49 & 0.62 &  \\ 
-  Trial type(FN) * Age * Phase(Label) & 0.01 & 0.02 & 0.73 & 0.47 &  \\ 
-  Trial type(NN) * Age * Phase(Label) & -0.00 & 0.02 & -0.19 & 0.85 &  \\ 
-  Trial type(FN) * Age * Phase(Planning) & -0.00 & 0.02 & -0.04 & 0.96 &  \\ 
-  Trial type(NN) * Age * Phase(Planning) & 0.01 & 0.02 & 0.78 & 0.43 &  \\ 
-  Trial type(FN) * Age * Phase(Response) & 0.02 & 0.02 & 1.14 & 0.25 &  \\ 
-  Trial type(NN) * Age * Phase(Response) & 0.02 & 0.02 & 1.37 & 0.17 &  \\ 
-  Trial type(FN) * Gaze * Phase(Label) & -0.05 & 0.15 & -0.32 & 0.75 &  \\ 
-  Trial type(NN) * Gaze * Phase(Label) & 0.05 & 0.15 & 0.32 & 0.75 &  \\ 
-  Trial type(FN) * Gaze * Phase(Planning) & -0.20 & 0.15 & -1.35 & 0.18 &  \\ 
-  Trial type(NN) * Gaze * Phase(Planning) & -0.23 & 0.15 & -1.61 & 0.11 &  \\ 
-  Trial type(FN) * Gaze * Phase(Response) & -0.43 & 0.15 & -2.97 & 0 & ** \\ 
-  Trial type(NN) * Gaze * Phase(Response) & -0.14 & 0.15 & -0.96 & 0.34 &  \\ 
-  Age * Gaze * Phase(Label) & -0.02 & 0.02 & -1.14 & 0.26 &  \\ 
-  Age * Gaze * Phase(Planning) & 0.01 & 0.02 & 0.45 & 0.65 &  \\ 
-  Age * Gaze * Phase(Response) & -0.00 & 0.02 & -0.18 & 0.86 &  \\ 
-  Trial type(FN) * Age * Gaze * Phase(Label) & -0.01 & 0.02 & -0.41 & 0.68 &  \\ 
-  Trial type(NN) * Age * Gaze * Phase(Label) & 0.01 & 0.02 & 0.47 & 0.64 &  \\ 
-  Trial type(FN) * Age * Gaze * Phase(Planning) & -0.00 & 0.02 & -0.07 & 0.94 &  \\ 
-  Trial type(NN) * Age * Gaze * Phase(Planning) & -0.02 & 0.02 & -0.64 & 0.52 &  \\ 
-  Trial type(FN) * Age * Gaze * Phase(Response) & -0.04 & 0.02 & -1.64 & 0.1 &  \\ 
-  Trial type(NN) * Age * Gaze * Phase(Response) & -0.05 & 0.02 & -1.94 & 0.05 & . \\ 
-   \hline
-\end{tabular}
-\caption{Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 2.} 
-\label{tab:exp2_reg}
-\end{table}
+\includegraphics{figs/resultse2-1.pdf}
+\caption{\label{fig:resultse2}Results of Experiment 2. Number of looks to
+the experimenter based on phase, trial type, gaze condition, and age.
+Age in months was entered as a continuous variable in regression models
+but is presented here as a categorical variable for visual simplicity.
+Error bars are 95 percent confidence intervals.}
+\end{figure}
 
 \subsubsection{Social referencing and
 accuracy}\label{social-referencing-and-accuracy}
@@ -1111,16 +1018,16 @@ due to children obtaining referential evidence from the experimenter's
 gaze in the gaze condition, or it could represent trials in which
 children were more engaged in the task.
 
-\begin{CodeChunk}
-\begin{figure*}[b]
-
-{\centering \includegraphics[width=6in,height=3in]{figs/acc_results_e2-1} 
-
-}
-
-\caption[Results of Experiment 2]{Results of Experiment 2. Number of looks to the experimenter based on accuracy, phase, and age, collapsed across trial types and gaze conditions. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals. }\label{fig:acc_results_e2}
-\end{figure*}
-\end{CodeChunk}
+\begin{figure}[htbp]
+\centering
+\includegraphics{figs/accresultse2-1.pdf}
+\caption{\label{fig:accresultse2}Results of Experiment 2. Number of looks to
+the experimenter based on accuracy, phase, and age, collapsed across
+trial types and gaze conditions. Age in months was entered as a
+continuous variable in regression models but is presented here as a
+categorical variable for visual simplicity. Error bars are 95 percent
+confidence intervals.}
+\end{figure}
 
 \section{General Discussion}\label{general-discussion}
 
@@ -1292,6 +1199,11 @@ Jaswal, V. K., Croft, A. C., Setia, A. R., \& Cole, C. A. (2010). Young
 Children Have a Specific, Highly Robust Bias to Trust Testimony.
 \emph{Psychological Science}, \emph{21}(10), 1541--1547.
 
+\hypertarget{ref-Keen2003}{}
+Keen, R. (2003). Representation of objects and events: Why do infants
+look so smart and toddlers look so dumb? \emph{Current Directions in
+Psychological Science}, \emph{12}, 79--83.
+
 \hypertarget{ref-Kidd2012}{}
 Kidd, C., Piantadosi, S. T., \& Aslin, R. N. (2012). The Goldilocks
 Effect: Human Infants Allocate Attention to Visual Sequences That Are
@@ -1412,6 +1324,12 @@ Teglas, E., Vul, E., Girotto, V., Gonzalez, M., Tenenbaum, J. B., \&
 Bonatti, L. L. (2011). Pure Reasoning in 12-Month-Old Infants as
 Probabilistic Inference. \emph{Science}, \emph{332}(6033), 1054--1059.
 
+\hypertarget{ref-Thoermer2011}{}
+Thoermer, C., Sodian, B., Vuori, M., Perst, H., \& Kristen, S. (2011).
+Continuity from an implicit to an explicit understanding of false belief
+from infancy to preschool age. \emph{British Journal of Developmental
+Psychology}, \emph{30}(1), 172--187.
+
 \hypertarget{ref-Tomasello1986}{}
 Tomasello, M., \& Farrar, M. J. (1986). Joint attention and early
 language. \emph{Child Development}, \emph{57}, 1454--1463.
@@ -1446,6 +1364,9 @@ Zarbatany, L., \& Lamb, M. E. (1985). Social referencing as a function
 of information source: Mothers versus strangers. \emph{Infant Behavior
 and Development}, \emph{8}, 25--33.
 
-\bibliography{}
+
+
+
+
 
 \end{document}

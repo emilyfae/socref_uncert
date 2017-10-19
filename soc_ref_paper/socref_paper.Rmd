@@ -1,19 +1,41 @@
 ---
-title: "Children's social referencing reflects sensitivity to uncertainty"
-author-information:
-    - \author{Emily Hembacher, Benjamin deMayo, Michael C. Frank}
+title             : "Children's social referencing reflects sensitivity to uncertainty"
+shorttitle        : "Social referencing reflects uncertainty"
 
-affiliation-information:
-    - \affiliation{Department of Psychology, Stanford University}
+author: 
+  - name          : "Emily Hembacher"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "450 Serra Mall, Stanford, CA, 94305"
+    email         : "ehembach@stanford.edu"
+  - name          : "Benjamin deMayo"
+    affiliation   : "1"
+  - name          : "Michael C. Frank"
+    affiliation   : "1"
 
-short-title: "Social referencing and uncertainty"
-author-note: 
-bibliography: socref.bib
-output: kmr::apa_manuscript
-document-params: "a4paper,man,apacite,floatsintext"
-keywords: social referencing; help seeking; word learning; uncertainty.
-csl: apa6.csl
-abstract: This study examined a spontaneous information gathering behavior -- social referencing -- and its relation to epistemic uncertainty during early childhood. Children ages 2-5 (*n*=160) identified the referents of familiar and novel labels. Referential ambiguity was manipulated through the number of objects present and their familiarity (Experiments 1 and 2), and the availability of referential gaze (Experiment 2). In both experiments, children visually referenced the experimenter more often while responding when the referent was ambiguous. In Experiment 2, 3- to 4-year-old children also referenced more when there was a novel referent and familiar distractor (and the referent could thus be inferred), but only when referential gaze was unavailable. These results suggest that children are able to seek disambiguating social information on the basis of graded uncertainty.
+affiliation:
+  - id            : "1"
+    institution   : "Stanford University"
+  
+author_note: |
+
+abstract: |
+  This study examined a spontaneous information gathering behavior -- social referencing -- and its relation to epistemic uncertainty during early childhood. Children ages 2-5 (*n*=160) identified the referents of familiar and novel labels. Referential ambiguity was manipulated through the number of objects present and their familiarity (Experiments 1 and 2), and the availability of referential gaze (Experiment 2). In both experiments, children visually referenced the experimenter more often while responding when the referent was ambiguous. In Experiment 2, 3- to 4-year-old children also referenced more when there was a novel referent and familiar distractor (and the referent could thus be inferred), but only when referential gaze was unavailable. These results suggest that children are able to seek disambiguating social information on the basis of graded uncertainty.
+  
+keywords          : "social referencing; help seeking; word learning; uncertainty."
+wordcount         : "X"
+
+bibliography      : ["socref.bib"]
+
+figsintext        : no
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+lineno            : no
+
+lang              : "english"
+class             : "man"
+output            : papaja::apa6_pdf
 ---
 
 ```{r global_options, include=FALSE}
@@ -24,6 +46,7 @@ knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = FALSE,
 ```
 
 ```{r, libraries}
+library(papaja)
 library(tidyverse)
 library(png)
 library(grid)
@@ -53,7 +76,7 @@ More recently, researchers have investigated children’s uncertainty monitoring
 
 On the other hand, in a study with a similar structure that investigated children’s confidence in their memories for pictures, 3-year-olds were equally confident for correct and incorrect answers, while 4- and 5-year-olds were more confident for their correct answers [@Hembacher2014]. Furthermore, only 5-year-olds were most confident about their memories for images they had studied for longer.  These results suggest that there are limits to 3-year-olds’ abilities to monitor uncertainty, and that some cognitive states may be more easily reflected on by young children than others. The developmental trend also suggests that there is improvement in children’s uncertainty monitoring between ages 3 and 5. 
 
-In sum, preschool-aged children demonstrate an emerging but limited awareness of epistemic uncertainty in laboratory tasks that do not require a verbal or open-ended response. However, even the competencies reported in these studies may underestimate children’s ability to track epistemic uncertainty and act on it. One possibility is that children’s tracking of uncertainty is apparent in their spontaneous information-seeking behaviors before they can report on it explicitly. Such a possibility would mirror the pattern proposed in other domains, e.g., Theory of Mind [@refs].
+In sum, preschool-aged children demonstrate an emerging but limited awareness of epistemic uncertainty in laboratory tasks that do not require a verbal or open-ended response. However, even the competencies reported in these studies may underestimate children’s ability to track epistemic uncertainty and act on it. One possibility is that children’s tracking of uncertainty is apparent in their spontaneous information-seeking behaviors before they can report on it explicitly. Such a possibility would mirror the developmental pattern proposed in other domains, for example, object representation [@Keen2003] or theory of mind [@Thoermer2011].
 
 In the following sections, we first outline an emerging body of research that suggests that children actively gather data to support learning from a young age, in a way that reflects at least an implicit sensitivity to epistemic uncertainty. We then summarize previous work on children's ability to gather social information selectively from credible sources and under conditions of epistemic uncertainty. 
 
@@ -63,7 +86,7 @@ Active learning refers broadly to learning behaviors and materials that are init
 
 ###Spontaneous exploration in preschoolers and toddlers
 
-First, a collection of studies in the field have taken inspiration from comparative metacognition research and asked whether children's spontaneous information-seeking behaviors track uncertainty. For example, Call and Carpenter [-@Call2001] had 2-year-olds choose between several tubes to find a hidden sticker. They found that the toddlers were more likely to peek inside a tube before choosing when they had not seen the baiting of the tubes compared to when they had, suggesting they were aware of their knowledge or ignorance and selectively sought confirmatory evidence before committing to a response when they did not know a sticker’s location. Others have found similar patterns of results [@refs]. In another study, Goupil, Romand-Monnier, and Kouider [-@Goupil2016] trained 20-month-olds to look at their parents if they needed help with a memory task in which they had to locate a hidden toy. Toddlers were more likely to seek help when they were completely ignorant of the toy’s location, and when the task was more difficult because the delay between hiding and test was longer. 
+First, a collection of studies in the field have taken inspiration from comparative metacognition research and asked whether children's spontaneous information-seeking behaviors track uncertainty. For example, Call and Carpenter [-@Call2001] had 2-year-olds choose between several tubes to find a hidden sticker. They found that the toddlers were more likely to peek inside a tube before choosing when they had not seen the baiting of the tubes compared to when they had, suggesting they were aware of their knowledge or ignorance and selectively sought confirmatory evidence before committing to a response when they did not know a sticker’s location. In another study, Goupil, Romand-Monnier, and Kouider [-@Goupil2016] trained 20-month-olds to look at their parents if they needed help with a memory task in which they had to locate a hidden toy. Toddlers were more likely to seek help when they were completely ignorant of the toy’s location, and when the task was more difficult because the delay between hiding and test was longer. 
 
 There is also evidence that young children selectively explore when evidence is confounded (i.e., when existing evidence supports multiple causal hypotheses). For example, Schulz & Bonawitz [-@Schulz2007] found that preschoolers spent more time playing with a toy when they witnessed confounded evidence about its causal structure. Children who experienced a demonstration of a toy in which two levers were simultaneously depressed and caused two simultaneous events (a toy duck and puppet popping up) spent more time playing with that toy compared to children who saw a demonstration in which one lever was depressed at a time, revealing the unique function of each lever. This finding is consistent with the prediction that preschool-aged children track causal ambiguity and spontaneously explore more when they do not have sufficient evidence to isolate a cause for an effect. 
 
@@ -103,7 +126,7 @@ There are several reasons that investigating children’s sensitivity to graded 
 
 More generally, a complete theory of early metacognition and learning should encompass children’s ability to respond appropriately to graded evidence. Metacognitive theories assume that effective behavioral regulation and response selection rely on individuals' abilities to track the likelihood of being correct based not only on complete knowledge or ignorance, but on graded evidence [@Lyons2011]. For example, having more information in support of a belief should make individuals more willing to share that information with others, and having less information should motivate help-seeking [@Ghetti2013]. 
 
-```{r design,  out.width="5in", out.height="3in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap= "Study design for experiments 1 and 2."}
+```{r design,  fig.cap= "Study design for experiments 1 and 2."}
 img <- png::readPNG("figs/socref_design.png")
 grid::grid.raster(img)
 ```
@@ -300,7 +323,7 @@ acctab_e1$age_years <- as.factor(acctab_e1$age_years)
 ```  
 
 
-```{r acc_e1, fig.env='figure*',fig.width=4, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Accuracy for FF trials in Experiment 1. Error bars are 95 percent confidence intervals.'}
+```{r acce1, fig.cap='Accuracy for FF trials in Experiment 1. Error bars are 95 percent confidence intervals.'}
 ggplot(acctab_e1, aes(age_years, mean)) +
   geom_bar(stat="identity", position = "dodge") + 
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
@@ -342,7 +365,7 @@ acctest <- t.test(acc_t$acc[acc_t$age_years == 2], mu=.5)
 
 We examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (2-year-olds: `r broman::myround(tot2, 1)`% of 2-object trials; 3-year-olds: `r broman::myround(tot3, 1)`%; 4-year-olds: `r broman::myround(tot4, 1)`%; 5-year-olds: `r broman::myround(tot5, 1)`%), despite instructions to choose only one. The first object children put in the bucket was coded as their response. Children in each age group were equally likely to put two objects in the bucket for familiar and unfamiliar trials (2-year-olds: *t*(`r t_nov_2$parameter`) = `r broman::myround(t_nov_2$statistic, 2)`, *p* =`r broman::myround( t_nov_2$p.value, 2)`; 3-year-olds: *t*(`r t_nov_3$parameter`) = `r broman::myround(t_nov_3$statistic, 2)`, *p* =`r broman::myround( t_nov_3$p.value, 2)`; 4-year-olds: *t*(`r t_nov_4$parameter`) = `r broman::myround(t_nov_4$statistic, 2)`, *p* =`r broman::myround(t_nov_4$p.value, 2)`; 5-year-olds: *t*(`r t_nov_5$parameter`) = `r broman::myround(t_nov_5$statistic, 2)`, *p* =`r broman::myround(t_nov_5$p.value, 2)`), suggesting that they put two objects in the bucket because it was a fun activity and difficult to inhibit, and not because they did not know the referent. Among FF trials in which children placed two items in the bucket, they put the correct item in first about half of the time (8/19 trials total for 2-year-olds; 5/6 for 3-year-olds; 0/2 for 4-year-olds; 2/4 for 5-year-olds). 
 
-Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Figure \ref{fig:acc_e1}. Overall children generally chose the correct item for FF trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* <.001).
+Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Figure \ref{fig:acce1}. Overall children generally chose the correct item for FF trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* <.001).
 
 ```{r}
 rm(list=ls())
@@ -385,7 +408,7 @@ labels = c("2 years", "3 years", "4 years", "5 years"))
 ```
 
 
-```{r results_e1,fig.width=8, fig.height=6,out.width="5.75in", out.height="4.35in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 1. Number of looks to the experimenter based on phase, the number and familiarity of objects present, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.'}
+```{r resultse1,fig.width=8, fig.height=6, fig.cap='Results of Experiment 1. Number of looks to the experimenter based on phase, the number and familiarity of objects present, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.'}
 
 ggplot(msslooks, aes(x = phase_name, y = num_looks, 
                col = familiarity, group = familiarity)) + 
@@ -450,190 +473,13 @@ r_lm <- lmer(num_looks ~ num_objs * familiarity * age_c +
 response_lm <- summary(r_lm)
 ```
 
-```{r e1_table_l, echo = FALSE, results="asis"}
-e1_l.tab <- as.data.frame(label_lm$coef)
-
-e1_l.tab$Predictor <- c("Intercept",
-                      "Num objects (2)",
-                      "Familiarity (N)",
-                      "Age",
-                      "Num objects (2) * Familiarity (N)",
-                      "Num objects (2) * Age",
-                      "Familiarity (N) * Age",
-                      "Num objects (2) * Familiarity (N) * Age")
-
-rownames(e1_l.tab) <- NULL
-e1_l.tab <- e1_l.tab[,c(6,1:2,4:5)]
-names(e1_l.tab)[4:5] <- c("$t$ value","$p$ value")
-
-e1_l.tab %<>% 
-  mutate(
-    stars = ifelse(`$p$ value` > .1, "", 
-                   ifelse(`$p$ value` < .001, "***",
-                          ifelse(`$p$ value` < .01, "**",
-                                 ifelse(`$p$ value` < .05, "*",
-                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
-    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
-                         ifelse(`$p$ value` < .001, "$<$ .001",
-                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
-                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
-                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
-                                                     "Error")))))
-  )
-
-names(e1_l.tab)[6] <- c("")
-
-print(xtable(e1_l.tab,
-             align = c("l","l","r","r","r","r", "l"),
-             label = "tab:exp1_l_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the label phase in Experiment 1."),
-      include.rownames=FALSE,hline.after=c(0,nrow(e1_l.tab)),
-      sanitize.text.function=function(x){x},
-      caption.placement = 'bottom', 
-      table.placement = "b",
-      comment = F)
-```
-
-```{r e1_table_s, echo = FALSE, results="asis"}
-e1_s.tab <- as.data.frame(slide_lm$coef)
-
-e1_s.tab$Predictor <- c("Intercept",
-                      "Num objects (2)",
-                      "Familiarity (N)",
-                      "Age",
-                      "Num objects (2) * Familiarity (N)",
-                      "Num objects (2) * Age",
-                      "Familiarity (N) * Age",
-                      "Num objects (2) * Familiarity (N) * Age")
-
-rownames(e1_s.tab) <- NULL
-e1_s.tab <- e1_s.tab[,c(6,1:2,4:5)]
-names(e1_s.tab)[4:5] <- c("$t$ value","$p$ value")
-
-e1_s.tab %<>% 
-  mutate(
-    stars = ifelse(`$p$ value` > .1, "", 
-                   ifelse(`$p$ value` < .001, "***",
-                          ifelse(`$p$ value` < .01, "**",
-                                 ifelse(`$p$ value` < .05, "*",
-                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
-    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
-                         ifelse(`$p$ value` < .001, "$<$ .001",
-                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
-                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
-                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
-                                                     "Error")))))
-  )
-
-names(e1_s.tab)[6] <- c("")
-
-print(xtable(e1_s.tab,
-             align = c("l","l","r","r","r","r", "l"),
-             label = "tab:exp1_s_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the slide phase in Experiment 1."),
-      include.rownames=FALSE,hline.after=c(0,nrow(e1_s.tab)),
-      sanitize.text.function=function(x){x},
-      caption.placement = 'bottom', 
-      table.placement = "b",
-      comment = F)
-```
-
-
-```{r e1_table_p, echo = FALSE, results="asis"}
-e1_p.tab <- as.data.frame(planning_lm$coef)
-
-e1_p.tab$Predictor <- c("Intercept",
-                      "Num objects (2)",
-                      "Familiarity (N)",
-                      "Age",
-                      "Num objects (2) * Familiarity (N)",
-                      "Num objects (2) * Age",
-                      "Familiarity (N) * Age",
-                      "Num objects (2) * Familiarity (N) * Age")
-
-rownames(e1_p.tab) <- NULL
-e1_p.tab <- e1_p.tab[,c(6,1:2,4:5)]
-names(e1_p.tab)[4:5] <- c("$t$ value","$p$ value")
-
-e1_p.tab %<>% 
-  mutate(
-    stars = ifelse(`$p$ value` > .1, "", 
-                   ifelse(`$p$ value` < .001, "***",
-                          ifelse(`$p$ value` < .01, "**",
-                                 ifelse(`$p$ value` < .05, "*",
-                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
-    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
-                         ifelse(`$p$ value` < .001, "$<$ .001",
-                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
-                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
-                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
-                                                     "Error")))))
-  )
-
-names(e1_p.tab)[6] <- c("")
-
-print(xtable(e1_p.tab,
-             align = c("l","l","r","r","r","r", "l"),
-             label = "tab:exp1_p_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the planning phase in Experiment 1."),
-      include.rownames=FALSE,hline.after=c(0,nrow(e1_p.tab)),
-      sanitize.text.function=function(x){x},
-      caption.placement = 'bottom', 
-      table.placement = "b",
-      comment = F)
-```
-
-```{r e1_table_r, echo = FALSE, results="asis"}
-e1_r.tab <- as.data.frame(response_lm$coef)
-
-e1_r.tab$Predictor <- c("Intercept",
-                      "Num objects (2)",
-                      "Familiarity (N)",
-                      "Age",
-                      "Num objects (2) * Familiarity (N)",
-                      "Num objects (2) * Age",
-                      "Familiarity (N) * Age",
-                      "Num objects (2) * Familiarity (N) * Age")
-
-rownames(e1_r.tab) <- NULL
-e1_r.tab <- e1_r.tab[,c(6,1:2,4:5)]
-names(e1_r.tab)[4:5] <- c("$t$ value","$p$ value")
-
-e1_r.tab %<>% 
-  mutate(
-    stars = ifelse(`$p$ value` > .1, "", 
-                   ifelse(`$p$ value` < .001, "***",
-                          ifelse(`$p$ value` < .01, "**",
-                                 ifelse(`$p$ value` < .05, "*",
-                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
-    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
-                         ifelse(`$p$ value` < .001, "$<$ .001",
-                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
-                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
-                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
-                                                     "Error")))))
-  )
-
-names(e1_r.tab)[6] <- c("")
-
-print(xtable(e1_r.tab,
-             align = c("l","l","r","r","r","r", "l"),
-             label = "tab:exp1_r_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in the response phase in Experiment 1."),
-      include.rownames=FALSE,hline.after=c(0,nrow(e1_r.tab)),
-      sanitize.text.function=function(x){x},
-      caption.placement = 'bottom', 
-      table.placement = "b",
-      comment = F)
-```
-
 ###Social referencing
 
-Results of Experiment 1 are presented in Figure \ref{fig:results_e1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. Our initial planned analysis, a single model with phase as a factor, did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. 
+Results of Experiment 1 are presented in Figure \ref{fig:resultse1}. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more social referencing, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`.^[All regression tables can be found in Online Supplementary Materials.] Our initial planned analysis, a single model with phase as a factor, did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. 
 
 We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the *label* or *slide* phases. Thus, mere novelty or the presence of multiple objects was not enough to increase social referencing, perhaps because it was already at ceiling. However, we found an interaction effect of number of objects and familiarity during the *planning* ($\beta$ = `r broman::myround(planning_lm$coefficients[5], 1)`, *p* < .001) and *response* phases ($\beta$ = `r broman::myround(response_lm$coefficients[5], 1)`, *p* < .001), such that NN trials were associated with more looks. 
 
-There was no interaction with age in any phase.^[https://github.com/emilyfae/socref_uncert] Since an age trend in the *planning* phase was apparent in the plot (Figure \ref{fig:results_e1}), we conducted a post-hoc mixed-effects linear regression with age group as a dichotomous rather than a continuous variable (i.e., 2- and 3-year-olds vs. 4- and 5-year-olds) predicting the number of looks in the *planning* phase: `number of looks ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. We found a significant interaction of number of objects and familiarity ($\beta$ = `r broman::myround(planning_lm_age_group$coefficients[5], 1)`, *p* < .001), and a significant 3-way interaction between number of objects, familiarity, and age group, such that younger children looked at the speaker less than older children for NN trials. Although this was a post-hoc analysis, it suggests that there may be a trend for children to respond more quickly to uncertainty as they grow older. This could mean that they detect uncertainty more quickly, or that they are more proactive in seeking disambiguating information prior to initiating a response.
+There was no interaction with age in any phase.^[https://github.com/emilyfae/socref_uncert] Since an age trend in the *planning* phase was apparent in the plot (Figure \ref{fig:resultse1}), we conducted a post-hoc mixed-effects linear regression with age group as a dichotomous rather than a continuous variable (i.e., 2- and 3-year-olds vs. 4- and 5-year-olds) predicting the number of looks in the *planning* phase: `number of looks ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. We found a significant interaction of number of objects and familiarity ($\beta$ = `r broman::myround(planning_lm_age_group$coefficients[5], 1)`, *p* < .001), and a significant 3-way interaction between number of objects, familiarity, and age group, such that younger children looked at the speaker less than older children for NN trials. Although this was a post-hoc analysis, it suggests that there may be a trend for children to respond more quickly to uncertainty as they grow older. This could mean that they detect uncertainty more quickly, or that they are more proactive in seeking disambiguating information prior to initiating a response.
 
 ```{r echo = FALSE}
 #histogram for number of looks by phase. 
@@ -645,7 +491,7 @@ levels = c("label", "slide", "planning", "response"),
 labels = c("Label", "Slide", "Planning", "Response"))
 ```
 
-```{r hist_e1, fig.env='figure*',fig.width=6, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Distribution of the number of looks to the speaker in each phase.'}
+```{r histe1, fig.width=6, fig.cap='Distribution of the number of looks to the speaker in each phase.'}
  ggplot(hist, aes(num_looks, fill = num_looks)) +
   geom_histogram(stat = "count") +
    facet_grid(~phase_name) +
@@ -686,7 +532,7 @@ glm_e1_r_tab <- as.data.frame(glm_e1_r$coef)
 #this last one does not converge with age interaction.
 ```
 
-As discussed previously, an alternative analytic approach would be to fit a logistic mixed-effects regression predicting *whether or not* children look to the speaker in each phase, rather than the number of times they do so. In support of this approach, the distribution of looks is not normal for the slide, planning, and response phases, with the majority of trials containing no looks to the speaker (Figure \ref{fig:hist_e1}). To address this issue, we additionally fit separate logistic mixed-effects regressions with the following structure: `look (yes or no) ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge. 
+As discussed previously, an alternative analytic approach would be to fit a logistic mixed-effects regression predicting *whether or not* children look to the speaker in each phase, rather than the number of times they do so. In support of this approach, the distribution of looks is not normal for the slide, planning, and response phases, with the majority of trials containing no looks to the speaker (Figure \ref{fig:histe1}). To address this issue, we additionally fit separate logistic mixed-effects regressions with the following structure: `look (yes or no) ~ number of objects * familiarity * age group + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge. 
 
 The results of these analyses were similar to those of the linear models; number of objects and familiarity interacted in the *planning* and *response* phases such that there was more likely to be a look when there were two novel objects, ($\beta$s = `r broman::myround(glm_e1_p_tab$Estimate[5], 1)`, `r broman::myround(glm_e1_r_tab$Estimate[5], 1)`, *p*s <.05 & <.001). In addition, there was a significant interaction of number and familiarity of objects in the *slide* phase, such that NN trials were less likely to be associated with a look ($\beta$ = `r broman::myround(glm_e1_s_tab$Estimate[5], 1)`, *p* <.05). This latter finding was not predicted, but could reflect children's tendency to look more at novel stimuli, which would trade off with looking at the speaker, particularly when there is no utility to looking at the speaker, as when the objects are being slid across the table.
 
@@ -768,7 +614,7 @@ labels = c("FF", "FN", "NN"))
 acc_mss_e2$age_years <- as.factor(acc_mss_e2$age_years)
 ```
 
-```{r acc_e2, fig.env='figure*',fig.width=6, fig.height=3, fig.align='center', fig.pos='b', fig.cap='Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.'}
+```{r acce2, fig.env='figure*',fig.width=6, fig.height=3, fig.cap='Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.'}
 ggplot(acc_mss_e2, aes(age_years, mean, fill=trial_type)) +
   geom_bar(stat="identity", position = "dodge") + 
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
@@ -807,57 +653,7 @@ acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
                          data = lmer_data))
 ```
 
-```{r e2_acc_table, echo = FALSE, results="asis"}
-e2acc.tab <- as.data.frame(acclooks_mod$coef)
 
-e2acc.tab$Predictor <- c("Intercept",
-                      "Acc(Y)",
-                      "Age",
-                      "Phase(Label)",
-                      "Phase(Planning)",
-                      "Phase(Response)",
-                      "Acc(Y) * Age",
-                      "Acc(Y) * Phase(Label)",
-                      "Acc(Y) * Phase(Planning)",
-                      "Acc(Y) * Phase(Response)",
-                      "Age * Phase(Label)",
-                      "Age * Phase(Planning)",
-                      "Age * Phase(Response)",
-                      "Acc(Y) * Age * Phase(Label)",
-                      "Acc(Y) * Age * Phase(Planning)",
-                      "Acc(Y) * Age * Phase(Response)")
-
-rownames(e2acc.tab) <- NULL
-e2acc.tab <- e2acc.tab[,c(6,1:2,4:5)]
-names(e2acc.tab)[4:5] <- c("$t$ value","$p$ value")
-
-e2acc.tab %<>% 
-  mutate(
-    stars = ifelse(`$p$ value` > .1, "", 
-                   ifelse(`$p$ value` < .001, "***",
-                          ifelse(`$p$ value` < .01, "**",
-                                 ifelse(`$p$ value` < .05, "*",
-                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
-    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
-                         ifelse(`$p$ value` < .001, "$<$ .001",
-                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
-                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
-                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
-                                                     "Error")))))
-  )
-
-names(e2acc.tab)[6] <- c("")
-
-print(xtable(e2acc.tab,
-             align = c("l","l","r","r","r","r", "l"),
-             label = "tab:exp2acc_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing based on accuracy in Experiment 2."),
-      include.rownames=FALSE,hline.after=c(0,nrow(e2acc.tab)),
-      sanitize.text.function=function(x){x},
-      caption.placement = 'bottom', 
-      table.placement = "b",
-      comment = F)
-```
 
 ```{r echo = FALSE}
 #how often did children select two objects or no objects?
@@ -930,7 +726,7 @@ both_sum <- cor%>%
   summarize(both = sum(both))
 ```
 
-Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acc_e2}). Children sometimes put two items in the bucket, although they did so less frequently than in Experiment 1, perhaps because there were two objects available on every trial and it was thus less of a novelty (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). As in Experiment 1, the first item they placed in the bucket was coded as their response. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
+Children's accuracy for trials with a correct answer (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acce2}). Children sometimes put two items in the bucket, although they did so less frequently than in Experiment 1, perhaps because there were two objects available on every trial and it was thus less of a novelty (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). As in Experiment 1, the first item they placed in the bucket was coded as their response. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 1)`, *p* < .001) compared to familiar trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for novel ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 1)`, *p* < .001) and mutual trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 1)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 1)`, *p* = .12). 
 
 ###Social referencing and referential ambiguity
 
@@ -942,7 +738,7 @@ g_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
                          data = lmer_data))
 ```
 
-Children's social referencing based on trial type and gaze condition are presented in Figure \ref{fig:results_e2}. To quantify the main and interactive effects of familiarity, gaze informativity, phase, and age on social referencing, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ familiarity * age in months * gaze * phase + (familiarity | subject)`. In contrast to Experiment 1, a model with phase as a predictor converged.
+Children's social referencing based on trial type and gaze condition are presented in Figure \ref{fig:resultse2}. To quantify the main and interactive effects of familiarity, gaze informativity, phase, and age on social referencing, we fit a mixed-effects linear regression model with the following structure: `number of looks ~ familiarity * age in months * gaze * phase + (familiarity | subject)`. In contrast to Experiment 1, a model with phase as a predictor converged.
 
 First, do children reference a speaker more often when the objects and label are novel? Phase interacted with familiarity such that the *response* phase of NN trials was associated with significantly more looks ($\beta$ = `r broman::myround(g_lm$coefficients[17], 1)`, *p* < .001). This result is consistent with results from Experiment 1. However, in contrast to Experiment 1, the number of looks was not significantly greater for NN trials in the *planning* phase.
 
@@ -992,7 +788,7 @@ mslooks <- mslooks %>%
 ```
 
 
-```{r results_e2, fig.width=8, fig.height=5,out.width="5.75in", out.height="3.5in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on phase, trial type, gaze condition, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.'}
+```{r resultse2, fig.width=8, fig.height=5, fig.cap='Results of Experiment 2. Number of looks to the experimenter based on phase, trial type, gaze condition, and age. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals.'}
 
 ggplot(msslooks, aes(x = phase_name, y = num_looks, 
                col = familiarity, group = familiarity)) + 
@@ -1006,90 +802,6 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   labs(x = "Phase", y = "Number of Looks")  +
   ggthemes::theme_few() +
   langcog::scale_colour_solarized() 
-```
-
-```{r e2_table, echo = FALSE, results="asis"}
-e2.tab <- as.data.frame(g_lm$coef)
-
-e2.tab$Predictor <- c("Intercept",
-                      "Trial type(FN)",
-                      "Trial type(NN)",
-                      "Age",
-                      "Gaze(Y)",
-                      "Phase(Label)",
-                      "Phase(Planning)",
-                      "Phase(Response)",
-                      "Trial type(FN) * Age",
-                      "Trial type(NN) * Age",
-                      "Trial type(FN) * Gaze",
-                      "Trial type(NN) * Gaze",
-                      "Age * Gaze",
-                      "Trial type(FN) * Phase(Label)",
-                      "Trial type(NN) * Phase(Label)",
-                      "Trial type(FN) * Phase(Planning)",
-                      "Trial type(NN) * Phase(Planning)",
-                      "Trial type(FN) * Phase(Response)",
-                      "Trial type(NN) * Phase(Response)",
-                      "Age * Phase(Label)",
-                      "Age * Phase(Planning)",
-                      "Age * Phase(Response)",
-                      "Gaze * Phase(Label)",
-                      "Gaze * Phase(Planning)",
-                      "Gaze * Phase(Response)",
-                      "Trial type(FN) * Age * Gaze",
-                      "Trial type(NN) * Age * Gaze",
-                      "Trial type(FN) * Age * Phase(Label)",
-                      "Trial type(NN) * Age * Phase(Label)",
-                      "Trial type(FN) * Age * Phase(Planning)",
-                      "Trial type(NN) * Age * Phase(Planning)",
-                      "Trial type(FN) * Age * Phase(Response)",
-                      "Trial type(NN) * Age * Phase(Response)",
-                      "Trial type(FN) * Gaze * Phase(Label)",
-                      "Trial type(NN) * Gaze * Phase(Label)",
-                      "Trial type(FN) * Gaze * Phase(Planning)",
-                      "Trial type(NN) * Gaze * Phase(Planning)",
-                      "Trial type(FN) * Gaze * Phase(Response)",
-                      "Trial type(NN) * Gaze * Phase(Response)",
-                      "Age * Gaze * Phase(Label)",
-                      "Age * Gaze * Phase(Planning)",
-                      "Age * Gaze * Phase(Response)",
-                      "Trial type(FN) * Age * Gaze * Phase(Label)",
-                      "Trial type(NN) * Age * Gaze * Phase(Label)",
-                      "Trial type(FN) * Age * Gaze * Phase(Planning)",
-                      "Trial type(NN) * Age * Gaze * Phase(Planning)",
-                      "Trial type(FN) * Age * Gaze * Phase(Response)",
-                      "Trial type(NN) * Age * Gaze * Phase(Response)")
-
-rownames(e2.tab) <- NULL
-e2.tab <- e2.tab[,c(6,1:2,4:5)]
-names(e2.tab)[4:5] <- c("$t$ value","$p$ value")
-
-e2.tab %<>% 
-  mutate(
-    stars = ifelse(`$p$ value` > .1, "", 
-                   ifelse(`$p$ value` < .001, "***",
-                          ifelse(`$p$ value` < .01, "**",
-                                 ifelse(`$p$ value` < .05, "*",
-                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
-    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
-                         ifelse(`$p$ value` < .001, "$<$ .001",
-                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
-                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
-                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
-                                                     "Error")))))
-  )
-
-names(e2.tab)[6] <- c("")
-
-print(xtable(e2.tab,
-             align = c("l","l","r","r","r","r","l"),
-             label = "tab:exp2_reg",
-             caption = "Predictor estimates with standard errors and significance information for a linear mixed-effects model predicting social referencing in Experiment 2."),
-      include.rownames=FALSE,hline.after=c(0,nrow(e2.tab)),
-      sanitize.text.function=function(x){x},
-      caption.placement = 'bottom', 
-      table.placement = "b",
-      comment = F)
 ```
 
 ###Social referencing and accuracy
@@ -1138,7 +850,7 @@ levels = c(0, 1),
 labels = c("incorrect", "correct"))
 ```
 
-```{r acc_results_e2, fig.width=8, fig.height=4,out.width="6in", out.height="3in", fig.env='figure*', fig.align='center', fig.pos='b', fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy, phase, and age, collapsed across trial types and gaze conditions. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals. '}
+```{r accresultse2, fig.width=8, fig.height=4, fig.cap='Results of Experiment 2. Number of looks to the experimenter based on accuracy, phase, and age, collapsed across trial types and gaze conditions. Age in months was entered as a continuous variable in regression models but is presented here as a categorical variable for visual simplicity. Error bars are 95 percent confidence intervals. '}
 
 ggplot(msslooks_acc, aes(x = phase_name, y = num_looks, 
                col = Accuracy, group = Accuracy)) + 
