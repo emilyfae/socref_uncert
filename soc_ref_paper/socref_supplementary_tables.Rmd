@@ -342,7 +342,7 @@ acclooks_mod <- summary(lmer(num_looks ~ acc * age_c * phase_name +
 
 \newpage
 
-Table S5
+Table S6
 ```{r e2_acc_table, echo = FALSE, results="asis", tab.cap = NULL}
 e2acc.tab <- as.data.frame(acclooks_mod$coef)
 
@@ -406,7 +406,7 @@ g_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze * phase_name +
 
 \newpage
 
-Table S6
+Table S5
 ```{r e2_table, results="asis", tab.cap = NULL}
 e2.tab <- as.data.frame(g_lm$coef)
 

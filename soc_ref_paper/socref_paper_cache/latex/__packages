@@ -1,4 +1,5 @@
 base
+papaja
 tidyverse
 ggplot2
 tibble
@@ -22,4 +23,3 @@ broman
 kmr
 magrittr
 stargazer
-papaja

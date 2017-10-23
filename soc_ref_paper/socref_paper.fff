@@ -3,7 +3,11 @@
 [htbp]
 \centering
 \includegraphics{figs/design-1.pdf}
-\caption{\label{fig:design}Study design for experiments 1 and 2.}
+\caption{\label{fig:design}Study design for Experiments 1 and 2. Children
+were shown one or two objects, heard a label, and were asked to place
+the labeled object in a bucket. Referential ambiguity was manipulated
+through the familiarity of the objects present and through the
+availability of referential gaze.}
 \end{figure*}
 \efloatseparator
  
