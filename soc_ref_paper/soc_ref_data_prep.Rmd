@@ -23,6 +23,7 @@ library(markdown)
 library(lmerTest)
 library(ggthemes)
 library(stringr)
+library(knitr)
 ```
 
 ```{r include=FALSE}
@@ -86,6 +87,25 @@ age_months$age_years <- factor(age_months$age_years,
 levels = c(2, 3, 4, 5),
 labels = c("two", "three", "four", "five"))
 ```
+
+Demographics to report in paper.
+
+```{r}
+demo_report <- left_join(d.raw, demo)%>%
+  select(SID, age_years, gender, ethnicity, hispanic, parent_ed)%>%
+  distinct
+
+gendertab <- table(demo_report$gender, demo_report$age_years)
+
+sestab <- demo_report %>%
+  group_by(parent_ed)%>%
+  summarise(years_ed = length(parent_ed))
+
+ethnicitytab <- demo_report %>%
+  group_by(ethnicity, hispanic)%>%
+  summarise(ethnic = length(ethnicity))
+```
+
 
 Accuracy.
 
@@ -162,6 +182,24 @@ age_months <- d %>%
 age_months$age_years <- factor(age_months$age_years,
 levels = c(3, 4),
 labels = c("three", "four"))
+```
+
+Demographics to report in paper.
+
+```{r}
+demo_report <- left_join(d.raw, demo)%>%
+  select(SID, age_years, gender, ethnicity, hispanic, parent_ed)%>%
+  distinct
+
+gendertab <- table(demo_report$gender, demo_report$age_years)
+
+sestab <- demo_report %>%
+  group_by(parent_ed)%>%
+  summarise(years_ed = length(parent_ed))
+
+ethnicitytab <- demo_report %>%
+  group_by(ethnicity, hispanic)%>%
+  summarise(ethnic = length(ethnicity))
 ```
 
 Accuracy.
