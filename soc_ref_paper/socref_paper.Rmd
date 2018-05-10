@@ -482,39 +482,6 @@ We next examined children's looking behavior for each trial type across the four
 
 We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the *label* phase (Figure \ref{fig:resultse1}). We also did not observe any significant effects in the *slide* phase. However, we found an interaction effect of number of objects and familiarity during the *planning* ($\beta$ = `r broman::myround(p_lm$coefficients[5], 2)`, *p* < .001) and *response* phases ($\beta$ = `r broman::myround(r_lm$coefficients[5], 2)`, *p* < .001), such that NN trials were associated with more looks. Age did not interact with number of objects or familiarity. 
 
-```{r}
-glm_e1_l <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "label"), 
-              family = "binomial"))
-
-glm_e1_l_tab <- as.data.frame(glm_e1_l$coef)
-
-glm_e1_s <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "slide"), 
-              family = "binomial"))
-
-glm_e1_s_tab <- as.data.frame(glm_e1_s$coef)
-
-glm_e1_p <- summary(glmer(soc_ref ~ num_objs * familiarity * age_c +
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "planning"), 
-              family = "binomial"))
-
-glm_e1_p_tab <- as.data.frame(glm_e1_p$coef)
-
-glm_e1_r <- summary(glmer(soc_ref ~ num_objs * familiarity + age_c +
-                (1|SID), 
-              data = filter(lmer_data, phase_name == "response"), 
-              family = "binomial"))
-
-glm_e1_r_tab <- as.data.frame(glm_e1_r$coef)
-#this last one does not converge with age interaction.
-```
-
-An alternative analytic approach would be to fit a logistic mixed-effects regression predicting *whether or not* children look to the speaker in each phase, rather than the number of times they do so. In support of this approach, the distribution of looks is not normal for the slide, planning, and response phases, with the majority of trials containing no looks to the speaker (Figure \ref{fig:hist}). To address this issue, we additionally fit separate logistic mixed-effects regressions with the following structure: `look (yes or no) ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. A single model with phase as a factor did not converge. 
-
 The results of these analyses were similar to those of the linear models; number of objects and familiarity interacted in the *planning* and *response* phases such that there was more likely to be a look when there were two novel objects, ($\beta$s = `r broman::myround(glm_e1_p_tab$Estimate[5], 2)`, `r broman::myround(glm_e1_r_tab$Estimate[5], 2)`, *p*s <.05 & <.001). In addition, there was a significant interaction of number and familiarity of objects in the *slide* phase, such that NN trials were less likely to be associated with a look ($\beta$ = `r broman::myround(glm_e1_s_tab$Estimate[5], 2)`, *p* <.05). This latter finding was not predicted, but could reflect children's tendency to look more at novel stimuli, which would trade off with looking at the speaker, particularly when there is no utility to looking at the speaker, as when the objects are being slid across the table.
 
 In summary, children looked to the speaker more often when planning and executing a response under uncertainty. These results suggest that children were aware that they did not have sufficient knowledge to identify the referent and act on it, and referenced the speaker to resolve this uncertainty. Surprisingly, we did not observe an effect of age, suggesting that by age 2 children are already selective in their information gathering to resolve lexical ambiguity. 
@@ -726,29 +693,6 @@ lm_p <- summary(lmer(num_looks ~ trial_type *  age_c * gaze  +
 lm_r <- summary(lmer(num_looks ~ trial_type *  age_c * gaze  +
                            (1| SID), 
                          data = filter(lmer_data, phase_name == "response")))
-
-##########
-
-#logistic regressions
-glm_l <- summary(glmer(soc_ref ~ trial_type +  age_c * gaze  +
-                           (1 | SID), 
-                         data = filter(lmer_data, phase_name == "label"),
-                       family = "binomial"))
-
-glm_s <- summary(glmer(soc_ref ~ trial_type +  age_c * gaze  +
-                           (1| SID), 
-                         data = filter(lmer_data, phase_name == "slide"),
-                       family = "binomial"))
-
-glm_p <- summary(glmer(soc_ref ~ trial_type +  age_c * gaze  +
-                           (1 | SID), 
-                         data = filter(lmer_data, phase_name == "planning"),
-                       family = "binomial"))
-
-glm_r <- summary(glmer(soc_ref ~ trial_type +  age_c * gaze  +
-                           (1| SID), 
-                         data = filter(lmer_data, phase_name == "response"),
-                       family = "binomial"))
 ```
 
 Experiment 2 was designed to test whether different amounts of referential evidence elicit differential amounts of social information gathering. If so, this would suggest that young children are sensitive to graded evidence for a hypothesis (e.g., that this object is the "blicket"). The amount of referential evidence was manipulated through the familiarity of objects presented (NN vs FN vs FF trials) and whether or not gaze was informative (gaze vs. no gaze). If children are sensitive to graded evidence, we might expect a pattern of looking that conforms to (NN > FN > FF) and (no gaze > gaze), with the possibility of an interaction between gaze condition and familiarity.
@@ -756,8 +700,6 @@ Experiment 2 was designed to test whether different amounts of referential evide
 Children's patterns of looking based on familiarity and gaze condition are presented in Figure \ref{fig:resultse2}. To quantify the main and interactive effects of familiarity, gaze condition, and age on children's looking, we fit separate mixed-effects linear regression models for each phase (label, planning, slide, response) with the following structure: `number of looks ~ familiarity * age in months * gaze + (1 | subject)`. 
 
 We found no effect of familiarity, gaze condition, or age on looking in the *label* phase. In the *slide* phase, both FF ($\beta$ = `r broman::myround(lm_s$coefficients[2], 2)`, *p* < .01) and NN trials ($\beta$ = `r broman::myround(lm_s$coefficients[3], 2)`, *p* = .047) elicited more looking compared to FN trials, and there were no effects of or interactions with gaze condition or age. In the *planning* phase, we found that FF trials were associated with less looking than FN trials ($\beta$ = `r broman::myround(lm_p$coefficients[2], 2)`, *p* = .045) and NN trials were associated with more looking compared to FN trials ($\beta$ = `r broman::myround(lm_p$coefficients[3], 2)`, *p* < .01), and there were no effects of or interactions with gaze condition or age. In the *response* phase, FF trials elicited less looking ($\beta$ = `r broman::myround(lm_r$coefficients[2], 2)`, *p* < .001) and NN trials elicited more looking ($\beta$ = `r broman::myround(lm_r$coefficients[3], 2)`, *p* = .02) compared to FN trials. In addition, the gaze condition was associated with less looking compared to the no-gaze condition ($\beta$ = `r broman::myround(lm_r$coefficients[5], 2)`, *p* = .03), and gaze interacted with familiarity such that FF trials in the gaze condition were associated with more looking than FF trials in the no-gaze condition ($\beta$ = `r broman::myround(lm_r$coefficients[8], 2)`, *p* < .01). 
-
-As in Experiment 1, we additionally fit mixed-effects logistic regressions with looking quantified as a binary variable (look vs. no look) for each phase, since the number of looks was not normally distributed (Figure \ref{fig:histe1}). The models had the following structure: `look (yes or no) ~ trial type + age in months + (number of objects + familiarity | subject)`. The interaction terms between trial type and age were trimmed due to model non-convergence. We observed a similar pattern of results compared to the linear models, except that the difference between FF and FN trials was not significant in the response phase. Additionally, similar to Experiment 1, there was an effect of trial type in the *slide* phase such that children looked at the experimenter more for FF trials.
 
 In summary, in the *slide*, *planning*, and *response* phases, children showed the pattern of responding with respect to graded evidence that we predicted. They looked at the experimenter the most for NN trials, the least for FF trials, and an intermediate amount for FN trials. This suggests that the likelihood of children seeking disambiguating information is tuned to the amount of referential evidence they receive. Further supporting this idea, children looked more at the experimenter when she did not gaze at the object she was referring to during labeling, suggesting that children attended to this evidence and it contributed to their certainty in their response. 
 
