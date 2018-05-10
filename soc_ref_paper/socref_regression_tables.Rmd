@@ -1,0 +1,418 @@
+---
+output:
+  pdf_document: default
+  word_document: default
+header-includes: \usepackage{caption} \captionsetup[table]{labelformat=empty} \usepackage{longtable}
+geometry: margin=.75in
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r global_options, include=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = FALSE, 
+                      fig.pos = "tb", fig.path='figs/',
+                      echo=FALSE, warning=FALSE, cache=TRUE, message=FALSE, sanitize = TRUE)
+```
+
+
+```{r, libraries, echo = FALSE}
+library(tidyverse)
+library(png)
+library(grid)
+library(ggplot2)
+library(xtable)
+library(langcog)
+library(ggplot2)
+library(rjson)
+library(stringr)
+library(lme4)
+library(knitr)
+library(markdown)
+library(lmerTest)
+library(ggthemes)
+library(psych)
+library(broman)
+library(kmr)
+library(magrittr)
+library(papaja)
+```
+
+
+```{r}
+rm(list=ls())
+load("soc_ref_e1.RData")
+
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(num_objs = factor(num_objs), 
+         familiarity = factor(familiarity), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name),
+         soc_ref = social_ref)
+```
+
+
+```{r}
+l_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs  | SID),
+           data = filter(lmer_data, phase_name == "label")))
+
+s_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs  | SID),
+           data = filter(lmer_data, phase_name == "slide")))
+
+p_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs  | SID),
+           data = filter(lmer_data, phase_name == "planning")))
+
+r_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
+             (num_objs | SID),
+           data = filter(lmer_data, phase_name == "response")))
+```
+
+
+```{r e1_table_, results="asis", tab.cap = NULL}
+#label
+e1_l.tab <- as.data.frame(l_lm$coef)
+
+e1_l.tab$Predictor <- c("Intercept",
+                      "Num objs (2)",
+                      "Fam (N)",
+                      "Age",
+                      "Num objs (2) * Fam (N)",
+                      "Num objs (2) * Age",
+                      "Fam (N) * Age",
+                      "Num objs (2) * Fam (N) * Age")
+
+e1_l.tab$Phase <- c("Label",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "")
+
+rownames(e1_l.tab) <- NULL
+e1_l.tab <- e1_l.tab[,c(7,6,1:2,4:5)]
+names(e1_l.tab)[4:6] <- c("Std. Error","$t$ value","$p$ value")
+
+#slide
+e1_s.tab <- as.data.frame(s_lm$coef)
+
+e1_s.tab$Predictor <- c("Intercept",
+                      "Num objs (2)",
+                      "Fam (N)",
+                      "Age",
+                      "Num objs (2) * Fam (N)",
+                      "Num objs (2) * Age",
+                      "Fam (N) * Age",
+                      "Num objs (2) * Fam (N) * Age")
+
+e1_s.tab$Phase <- c("Slide",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "")
+
+rownames(e1_s.tab) <- NULL
+e1_s.tab <- e1_s.tab[,c(7,6,1:2,4:5)]
+names(e1_s.tab)[4:6] <- c("Std. Error","$t$ value","$p$ value")
+
+#planning
+e1_p.tab <- as.data.frame(p_lm$coef)
+
+e1_p.tab$Predictor <- c("Intercept",
+                      "Num objs (2)",
+                      "Fam (N)",
+                      "Age",
+                      "Num objs (2) * Fam (N)",
+                      "Num objs (2) * Age",
+                      "Fam (N) * Age",
+                      "Num objs (2) * Fam (N) * Age")
+
+e1_p.tab$Phase <- c("Planning",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "")
+
+rownames(e1_p.tab) <- NULL
+e1_p.tab <- e1_p.tab[,c(7,6,1:2,4:5)]
+names(e1_p.tab)[4:6] <- c("Std. Error","$t$ value","$p$ value")
+
+#response
+e1_r.tab <- as.data.frame(r_lm$coef)
+
+e1_r.tab$Predictor <- c("Intercept",
+                      "Num objs (2)",
+                      "Fam (N)",
+                      "Age",
+                      "Num objs (2) * Fam (N)",
+                      "Num objs (2) * Age",
+                      "Fam (N) * Age",
+                      "Num objs (2) * Fam (N) * Age")
+
+e1_r.tab$Phase <- c("Response",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "")
+
+
+rownames(e1_r.tab) <- NULL
+e1_r.tab <- e1_r.tab[,c(7,6,1:2,4:5)]
+names(e1_r.tab)[4:6] <- c("Std. Error","$t$ value","$p$ value")
+
+e1.tab <- bind_rows(e1_l.tab, e1_s.tab)%>%
+  bind_rows(e1_p.tab)%>%
+  bind_rows(e1_r.tab)
+
+e1.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e1.tab)[7] <- c("")
+
+caption <- function(x, y){
+paste0(x, '{\\emph{',y, '}}')
+}
+
+
+print(xtable(e1.tab,
+             align = c("l","l","l","r","r","r","r", "l"),
+            caption = caption("Table 2. ", "Results from separate linear mixed-effects models predicting the number of times children looked at the speaker during the label, slide, planning, and response phases in Experiment 1. Parentheticals indicate the reference level for dummy-coded variables.")),
+      include.rownames=FALSE,
+      hline.after=c(-1,0,nrow(e1_l.tab),nrow(e1_l.tab)*2, nrow(e1_l.tab)*3, nrow(e1_l.tab)*4),
+      caption.placement = 'top',
+      sanitize.text.function=function(x){x},
+      comment = FALSE)
+```
+
+```{r}
+rm(list=ls())
+load("soc_ref_e2.RData")
+
+lmer_data <- d %>%
+  filter(!exclude) %>%
+  mutate(trial_type = factor(trial_type), 
+         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         phase_name = factor(phase_name), 
+         gaze = factor(Gaze),
+         acc = factor(acc),
+         soc_ref = social_ref)
+```
+
+```{r}
+lmer_data$trial_type <- relevel(lmer_data$trial_type, ref = "mutual")
+lmer_data$gaze <- relevel(lmer_data$gaze, ref = "no_gaze")
+
+l_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze  +
+                           (1 | SID), 
+                         data = filter(lmer_data, phase_name == "label")))
+
+s_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze  +
+                           (1| SID), 
+                         data = filter(lmer_data, phase_name == "slide")))
+
+p_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze  +
+                           (1 | SID), 
+                         data = filter(lmer_data, phase_name == "planning")))
+
+r_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze  +
+                           (1| SID), 
+                         data = filter(lmer_data, phase_name == "response")))
+```
+
+```{r e2_table_, results="asis", tab.cap = NULL}
+#label
+e2_l.tab <- as.data.frame(l_lm$coef)
+
+e2_l.tab$Predictor <- c("Intercept",
+                      "Trial Type (FF)",
+                      "Trial Type (NN)",
+                      "Age",
+                      "Gaze (Gaze)",
+                      "Trial Type (FF) * Age",
+                      "Trial Type (NN) * Age",
+                      "Trial Type (FF) * Gaze (Gaze)",
+                      "Trial Type (NN) * Gaze (Gaze)",
+                      "Age * Gaze (Gaze)",
+                      "Trial Type (FF) * Gaze (Gaze) * Age",
+                      "Trial Type (NN) * Gaze (Gaze) * Age")
+
+e2_l.tab$Phase <- c("Label",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "")
+
+rownames(e2_l.tab) <- NULL
+e2_l.tab <- e2_l.tab[,c(7,6,1:2,4:5)]
+names(e2_l.tab)[4:6] <- c("Std. Error","$t$ value","$p$ value")
+
+#slide
+e2_s.tab <- as.data.frame(s_lm$coef)
+
+e2_s.tab$Predictor <- c("Intercept",
+                      "Trial Type (FF)",
+                      "Trial Type (NN)",
+                      "Age",
+                      "Gaze (Gaze)",
+                      "Trial Type (FF) * Age",
+                      "Trial Type (NN) * Age",
+                      "Trial Type (FF) * Gaze (Gaze)",
+                      "Trial Type (NN) * Gaze (Gaze)",
+                      "Age * Gaze (Gaze)",
+                      "Trial Type (FF) * Gaze (Gaze) * Age",
+                      "Trial Type (NN) * Gaze (Gaze) * Age")
+
+e2_s.tab$Phase <- c("Slide",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "")
+
+rownames(e2_s.tab) <- NULL
+e2_s.tab <- e2_s.tab[,c(7,6,1:2,4:5)]
+names(e2_s.tab)[4:6] <- c("Std. Error","$t$ value","$p$ value")
+
+#planning
+e2_p.tab <- as.data.frame(p_lm$coef)
+
+e2_p.tab$Predictor <- c("Intercept",
+                      "Trial Type (FF)",
+                      "Trial Type (NN)",
+                      "Age",
+                      "Gaze (Gaze)",
+                      "Trial Type (FF) * Age",
+                      "Trial Type (NN) * Age",
+                      "Trial Type (FF) * Gaze (Gaze)",
+                      "Trial Type (NN) * Gaze (Gaze)",
+                      "Age * Gaze (Gaze)",
+                      "Trial Type (FF) * Gaze (Gaze) * Age",
+                      "Trial Type (NN) * Gaze (Gaze) * Age")
+
+e2_p.tab$Phase <- c("Planning",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "")
+
+rownames(e2_p.tab) <- NULL
+e2_p.tab <- e2_p.tab[,c(7,6,1:2,4:5)]
+names(e2_p.tab)[4:6] <- c("Std. Error","$t$ value","$p$ value")
+
+#response
+e2_r.tab <- as.data.frame(r_lm$coef)
+
+e2_r.tab$Predictor <- c("Intercept",
+                      "Trial Type (FF)",
+                      "Trial Type (NN)",
+                      "Age",
+                      "Gaze (Gaze)",
+                      "Trial Type (FF) * Age",
+                      "Trial Type (NN) * Age",
+                      "Trial Type (FF) * Gaze (Gaze)",
+                      "Trial Type (NN) * Gaze (Gaze)",
+                      "Age * Gaze (Gaze)",
+                      "Trial Type (FF) * Gaze (Gaze) * Age",
+                      "Trial Type (NN) * Gaze (Gaze) * Age")
+
+e2_r.tab$Phase <- c("Response",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "",
+                      "")
+
+
+rownames(e2_r.tab) <- NULL
+e2_r.tab <- e2_r.tab[,c(7,6,1:2,4:5)]
+names(e2_r.tab)[4:6] <- c("Std. Error","$t$ value","$p$ value")
+
+e2.tab <- bind_rows(e2_l.tab, e2_s.tab)%>%
+  bind_rows(e2_p.tab)%>%
+  bind_rows(e2_r.tab)
+
+e2.tab %<>% 
+  mutate(
+    stars = ifelse(`$p$ value` > .1, "", 
+                   ifelse(`$p$ value` < .001, "***",
+                          ifelse(`$p$ value` < .01, "**",
+                                 ifelse(`$p$ value` < .05, "*",
+                                        ifelse(`$p$ value` < .1, ".", "Error"))))),
+    
+    `$p$ value` = ifelse(`$p$ value` > .1, round(`$p$ value`, 2), 
+                         ifelse(`$p$ value` < .001, "$<$ .001",
+                                ifelse(`$p$ value` < .01, round(`$p$ value`, 2),
+                                       ifelse(`$p$ value` < .05, round(`$p$ value`, 2),
+                                              ifelse(`$p$ value` < .1, round(`$p$ value`, 2), 
+                                                     "Error")))))
+  )
+
+names(e2.tab)[7] <- c("")
+
+caption <- function(x, y){
+paste0(x, '{\\emph{',y, '}}')
+}
+
+print(xtable(e2.tab,
+             align = c("l","l","l","r","r","r","r", "l"),
+             caption = caption("Table 3. ", "Results from separate linear mixed-effects models predicting the number of times children looked at the speaker during the label, slide, planning, and response phases in Experiment 2. Parentheticals indicate the reference level for dummy-coded variables.")),
+      include.rownames=FALSE,
+      hline.after=c(-1,0,nrow(e2_l.tab),nrow(e2_l.tab)*2, nrow(e2_l.tab)*3, nrow(e2_l.tab)*4),
+      caption.placement = 'top',
+      sanitize.text.function=function(x){x},
+      comment = FALSE)
+```
+
