@@ -1,6 +1,6 @@
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
-[htbp]
+
 \centering
 \includegraphics{figs/design-1.pdf}
 \caption{\label{fig:design}Study design for Experiments 1 and 2. Children
@@ -13,7 +13,7 @@ availability of referential gaze.}
  
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
-[htbp]
+
 \centering
 \includegraphics{figs/acce1-1.pdf}
 \caption{\label{fig:acce1}Accuracy for FF trials in Experiment 1. Error bars
@@ -23,7 +23,7 @@ are 95 percent confidence intervals.}
  
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
-[htbp]
+
 \centering
 \includegraphics{figs/resultse1-1.pdf}
 \caption{\label{fig:resultse1}Results of Experiment 1. Number of looks to
@@ -36,17 +36,17 @@ visual simplicity. Error bars are 95 percent confidence intervals.}
  
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
-[htbp]
+
 \centering
-\includegraphics{figs/histe1-1.pdf}
-\caption{\label{fig:histe1}Distribution of the number of looks to the
-speaker in each phase.}
+\includegraphics{figs/hist-1.pdf}
+\caption{\label{fig:hist}Distribution of the number of looks to the speaker
+in each phase.}
 \end{figure*}
 \efloatseparator
  
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
-[htbp]
+
 \centering
 \includegraphics{figs/acce2-1.pdf}
 \caption{\label{fig:acce2}Accuracy for trials with a correct answer
@@ -57,7 +57,7 @@ are 95 percent confidence intervals.}
  
 \begin{figure*}[hbt]
 \ifnextchar[{\eatarg}{}
-[htbp]
+
 \centering
 \includegraphics{figs/resultse2-1.pdf}
 \caption{\label{fig:resultse2}Results of Experiment 2. Number of looks to
@@ -65,20 +65,6 @@ the experimenter based on phase, trial type, gaze condition, and age.
 Age in months was entered as a continuous variable in regression models
 but is presented here as a categorical variable for visual simplicity.
 Error bars are 95 percent confidence intervals.}
-\end{figure*}
-\efloatseparator
- 
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-[htbp]
-\centering
-\includegraphics{figs/accresultse2-1.pdf}
-\caption{\label{fig:accresultse2}Results of Experiment 2. Number of looks to
-the experimenter based on accuracy, phase, and age, collapsed across
-trial types and gaze conditions. Age in months was entered as a
-continuous variable in regression models but is presented here as a
-categorical variable for visual simplicity. Error bars are 95 percent
-confidence intervals.}
 \end{figure*}
 \efloatseparator
  
