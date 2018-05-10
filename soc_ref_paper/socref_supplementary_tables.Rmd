@@ -68,8 +68,6 @@ r_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
            data = filter(lmer_data, phase_name == "response")))
 ```
 
-
-Table 2
 ```{r e1_table_, results="asis", tab.cap = NULL}
 #label
 e1_l.tab <- as.data.frame(l_lm$coef)
@@ -194,20 +192,21 @@ e1.tab %<>%
 
 names(e1.tab)[7] <- c("")
 
-italic <- function(x){
-paste0('{\\emph{',x, '}}')
+caption <- function(x, y){
+paste0(x, '{\\emph{',y, '}}')
 }
+
 
 print(xtable(e1.tab,
              align = c("l","l","l","r","r","r","r", "l"),
-             caption = italic("Results from separate linear mixed-effects models predicting social referencing for the label, slide, planning, and response phases in Experiment 1.")),
+            caption = caption("Table 2. ", "Results from separate linear mixed-effects models predicting the number of times children looked at the speaker during the label, slide, planning, and response phases in Experiment 1. Parentheticals indicate the reference level for dummy-coded variables.")),
       include.rownames=FALSE,
       hline.after=c(-1,0,nrow(e1_l.tab),nrow(e1_l.tab)*2, nrow(e1_l.tab)*3, nrow(e1_l.tab)*4),
       caption.placement = 'top',
       sanitize.text.function=function(x){x},
       comment = FALSE)
 ```
-*Note*: Parentheticals indicate the reference level for dummy-coded variables.
+
 
 ```{r}
 rm(list=ls())
@@ -243,8 +242,6 @@ r_lm <- summary(lmer(num_looks ~ trial_type *  age_c * gaze  +
                          data = filter(lmer_data, phase_name == "response")))
 ```
 
-
-Table 3
 ```{r e2_table_, results="asis", tab.cap = NULL}
 #label
 e2_l.tab <- as.data.frame(l_lm$coef)
@@ -401,13 +398,13 @@ e2.tab %<>%
 
 names(e2.tab)[7] <- c("")
 
-italic <- function(x){
-paste0('{\\emph{',x, '}}')
+caption <- function(x, y){
+paste0(x, '{\\emph{',y, '}}')
 }
 
 print(xtable(e2.tab,
              align = c("l","l","l","r","r","r","r", "l"),
-             caption = italic("Results from separate linear mixed-effects models predicting social referencing for the label, slide, planning, and response phases in Experiment 1.")),
+             caption = caption("Table 3. ", "Results from separate linear mixed-effects models predicting the number of times children looked at the speaker during the label, slide, planning, and response phases in Experiment 2. Parentheticals indicate the reference level for dummy-coded variables.")),
       include.rownames=FALSE,
       hline.after=c(-1,0,nrow(e2_l.tab),nrow(e2_l.tab)*2, nrow(e2_l.tab)*3, nrow(e2_l.tab)*4),
       caption.placement = 'top',
