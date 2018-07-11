@@ -1,0 +1,248 @@
+---
+title: "soc_ref_data_prep"
+author: "Emily"
+date: "1/30/2017"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, libraries}
+library(png)
+library(grid)
+library(ggplot2)
+library(xtable)
+library(langcog)
+library(tidyverse)
+library(lme4)
+library(markdown)
+library(lmerTest)
+library(ggthemes)
+library(stringr)
+library(knitr)
+library(magrittr)
+```
+
+```{r include=FALSE}
+d.raw <- data.frame()
+files <- dir("../../data_e1/coder_1")
+
+for (f in files) {
+  jf <- paste("../../data_e1/coder_1/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
+                   line = jd$phase.ordinal,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset = jd$phase.onset,
+                   phase_offset = jd$phase.offset, 
+                   num_looks = jd$reference.num_looks,
+                   exclude = as.numeric(jd$reference.exclude))
+  d.raw <- bind_rows(d.raw, id)
+}
+
+files <- dir("../../data_e1/coder_2")
+
+for (f in files) {
+  jf <- paste("../../data_e1/coder_2/",f,sep="")
+  jd <- read.csv(jf)
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
+                   line = as.numeric(jd$phase.ordinal),
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset = as.numeric(jd$phase.onset),
+                   phase_offset = as.numeric(jd$phase.offset), 
+                   num_looks = as.numeric(jd$reference.num_looks),
+                   exclude = as.numeric(jd$reference.exclude))
+  d.raw <- bind_rows(d.raw, id)
+}
+```
+
+```{r include=FALSE}
+demo <- read.csv("../../demographics/demo_soc_ref_uncert_exp1.csv") 
+demo$age <- as.numeric(demo$age)
+demo$age_years <- trunc(demo$age, digits = 0)
+demo$age_months <- demo$age*12
+
+trial_info <- read.csv("../keys/trial_info_e1.csv")
+```
+
+```{r include=FALSE}
+d <- left_join(d.raw, demo) %>%
+  select(SID, phase, num_looks, exclude, age_years, age_months, line, Condition, phase_onset, phase_offset) %>%
+  mutate(phase_length = phase_offset - phase_onset,
+         social_ref = as.numeric(num_looks>0),) %>%
+  left_join(trial_info, by = c("Condition","line"))%>%
+  filter(phase_length > 50)
+```
+
+Demographics to report in paper.
+
+```{r}
+demo_report <- left_join(d.raw, demo)%>%
+  select(SID, age_years, gender, ethnicity, hispanic, parent_ed)%>%
+  distinct
+
+gendertab <- table(demo_report$gender, demo_report$age_years)
+
+sestab <- demo_report %>%
+  group_by(parent_ed)%>%
+  summarise(years_ed = length(parent_ed))
+
+ethnicitytab <- demo_report %>%
+  group_by(ethnicity, hispanic)%>%
+  summarise(ethnic = length(ethnicity))
+```
+
+Accuracy and original responses.
+
+```{r}
+#accuracy
+acc <- read.csv("../../data_e1/accuracy_e1_2.csv")%>%
+  gather("trial", "acc", X1:X12)
+
+acc$trial <- as.numeric(str_replace(acc$trial, "X", ""))
+acc$acc <- as.factor(acc$acc)
+
+#original responses
+responses <- read.csv("../../data_e1/accuracy_e1.csv")%>%
+ gather("trial", "response", X1:X12)%>%
+  select(SID, trial, response)
+
+responses$trial <- as.numeric(str_replace(responses$trial, "X", ""))
+```
+
+Merge referencing data with accuracy and original response.
+```{r}
+d%<>%
+  left_join(acc)%>%
+  left_join(responses)
+```
+
+Save.
+```{r}
+save(d, file = "soc_ref_e1.RData")
+```
+
+```{r}
+rm(list=ls())
+
+d.raw <- data.frame()
+files <- dir("../../data_e2/coder_1")
+
+for (f in files) {
+  jf <- paste("../../data_e2/coder_1/",f,sep="")
+  jd <- read.csv(jf)
+  
+  id <- data.frame(SID = str_replace(f, ".csv", ""),
+                   line = jd$phase.ordinal,
+                   phase = as.numeric(jd$phase.1_2_3_4),
+                   phase_onset = jd$phase.onset,
+                   phase_offset = jd$phase.offset, 
+                   num_looks = jd$reference.num_looks,
+                   num_ques = as.numeric(jd$reference.num_ques),
+                   num_sou = jd$reference.num_SOU,
+                   exclude = as.numeric(jd$reference.exclude))
+  d.raw <- bind_rows(d.raw, id)}
+```
+
+```{r}
+demo <- read.csv("../../demographics/demo_soc_ref_uncert_exp2.csv") 
+demo$age <- as.numeric(demo$age)
+demo$age_years <- trunc(demo$age, digits = 0)
+demo$age_months <- demo$age*12
+
+trial_info <- read.csv("../keys/trial_info_e2.csv")
+```
+
+```{r}
+d <- left_join(d.raw, demo) %>%
+  select(SID, phase, num_looks, num_ques, num_sou, exclude, age_years, age_months, line, Condition, Gaze, phase_onset, phase_offset) %>%
+  mutate(phase_length = phase_offset - phase_onset) %>%
+  mutate(social_ref = as.numeric(num_looks>0))%>%
+  left_join(trial_info, by = c("Condition","line"))%>%
+  mutate(first_half = between(trial, 1, 4))
+
+age_months <- d %>%
+  group_by(age_years) %>%
+  multi_boot_standard(col = "age_months")
+
+age_months$age_years <- factor(age_months$age_years,
+levels = c(3, 4),
+labels = c("three", "four"))
+```
+
+Demographics to report in paper.
+
+```{r}
+demo_report <- left_join(d.raw, demo)%>%
+  select(SID, age_years, gender, ethnicity, hispanic, parent_ed)%>%
+  distinct
+
+gendertab <- table(demo_report$gender, demo_report$age_years)
+
+sestab <- demo_report %>%
+  group_by(parent_ed)%>%
+  summarise(years_ed = length(parent_ed))
+
+ethnicitytab <- demo_report %>%
+  group_by(ethnicity, hispanic)%>%
+  summarise(ethnic = length(ethnicity))
+```
+
+Accuracy and original responses
+
+```{r}
+#accuracy
+acc <- read.csv("../../data_e2/accuracy_e2_2.csv")%>%
+  gather("trial", "acc", X1:X12)
+
+acc$trial <- as.numeric(str_replace(acc$trial, "X", ""))
+acc$acc <- as.factor(acc$acc)
+
+#gaze acc
+acc_gaze <- read.csv("../../data_e2/accuracy_e2.csv")%>%
+  gather("trial", "response", X1:X12)
+
+acc_gaze$trial <- as.numeric(str_replace(acc_gaze$trial, "X", ""))
+acc_gaze$response <- str_replace(acc_gaze$response, "LR", "L")
+acc_gaze$response <- str_replace(acc_gaze$response, "RL", "R")  
+
+accuracy_key <- read.csv("../keys/accuracy_key_gaze.csv")
+
+#combine with data file
+acc_g <- acc_gaze %>%
+  left_join(accuracy_key)%>%
+  mutate(acc_gaze = response == gaze_answer)%>%
+  select(SID, trial, acc_gaze, response)
+
+acc%<>%
+  left_join(acc_g)%>%
+  mutate(trial = as.numeric(trial))
+
+d%<>%
+  left_join(acc)
+
+#code accuracy for novel trials with gaze
+d$acc[d$trial_type == "novel" & d$Gaze == "gaze" & d$acc_gaze] <- 1
+d$acc[d$trial_type == "novel" & d$Gaze == "gaze" & !d$acc_gaze] <- 0
+d$acc[d$response == "NC" | d$response == "B"] <- NA
+
+#original responses
+response <- read.csv("../../data_e2/accuracy_e2.csv")%>%
+  gather("trial", "response", X1:X12)%>%
+  select(SID, trial, response)
+
+response$trial <- as.numeric(str_replace(response$trial, "X", ""))
+
+d%<>%
+  left_join(response)
+```
+
+Save.
+```{r}
+save(d, file = "soc_ref_e2.RData")
+```
+
