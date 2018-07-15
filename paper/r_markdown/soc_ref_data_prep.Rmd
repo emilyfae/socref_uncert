@@ -73,7 +73,7 @@ trial_info <- read.csv("../keys/trial_info_e1.csv")
 d <- left_join(d.raw, demo) %>%
   select(SID, phase, num_looks, exclude, age_years, age_months, line, Condition, phase_onset, phase_offset) %>%
   mutate(phase_length = phase_offset - phase_onset,
-         social_ref = as.numeric(num_looks>0),) %>%
+         social_ref = as.numeric(num_looks>0))%>%
   left_join(trial_info, by = c("Condition","line"))%>%
   filter(phase_length > 50)
 ```
@@ -123,7 +123,7 @@ d%<>%
 
 Save.
 ```{r}
-save(d, file = "soc_ref_e1.RData")
+save(d, file = "../processed_data/soc_ref_e1.RData")
 ```
 
 ```{r}
@@ -243,6 +243,6 @@ d%<>%
 
 Save.
 ```{r}
-save(d, file = "soc_ref_e2.RData")
+save(d, file = "../processed_data/soc_ref_e2.RData")
 ```
 
