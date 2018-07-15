@@ -47,7 +47,6 @@ knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = FALSE,
 library(papaja)
 library(tidyverse)
 library(png)
-library(grid)
 library(ggplot2)
 library(xtable)
 library(lme4)
@@ -56,13 +55,9 @@ library(markdown)
 library(lmerTest)
 library(ggthemes)
 library(psych)
-library(broman)
 library(magrittr)
-library(stargazer)
 library(langcog)
 library(tidyboot)
-library(graphics)
-library(stargazer)
 ```
 
 Early childhood is marked by the rapid acquisition of new concepts, rules, and language, and theories of cognitive development have increasingly focused on the active role that children play in these cognitive achievements [@Xu2013]. Recent work highlights that young children actively explore [@Schulz2007] and ask questions [@Chouinard2007; @Ruggeri2017] in ways that seem specifically targeted to reduce uncertainty. Furthermore, they benefit from the ability to control the timing and content of their learning [@Markant2016]. These activities have been termed “active learning,” to distinguish them from learning contexts in which the learner does not have control over their learning input [@Gureckis2012]. 
