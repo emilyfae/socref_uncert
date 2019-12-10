@@ -1,5 +1,5 @@
 ---
-title             : "Children's social information gathering is sensitive to referential ambiguity"
+title             : "Children's social information seeking is sensitive to referential ambiguity"
 shorttitle        : "Information gathering reflects uncertainty"
 author: 
   - name          : "Emily Hembacher"
@@ -16,7 +16,7 @@ affiliation:
     institution   : "Stanford University"
 author_note: |
 abstract: |
- We examined children's spontaneous information gathering in response to referential ambiguity. Children ages 2-5 (n=160) identified the referents of familiar and novel labels. Ambiguity was manipulated through the number of objects present and their familiarity (Experiments 1 and 2), and the availability of referential gaze (Experiment 2). In both experiments, children sought disambiguating social information more often while responding when the referent was ambiguous. In Experiment 2, 3- to 4-year-olds also demonstrated sensitivity to graded referential evidence. These results suggest that social information gathering is an active learning behavior that could contribute to language acquisition in early childhood.
+ We examined children's spontaneous information seeking in response to referential ambiguity. Children ages 2-5 (n=160) identified the referents of familiar and novel labels, and we manipulated ambiguity by changing the number of objects present and their familiarity (Experiments 1 and 2), and the availability of referential gaze (Experiment 2). In both experiments, children looked to the face of the experimenter more often while responding, specifically when the referent was ambiguous. In Experiment 2, 3- to 4-year-olds also demonstrated sensitivity to graded referential evidence. These results suggest that social information seeking is an active learning behavior that could contribute to language acquisition in early childhood.
   
 keywords          : "information gathering; help seeking; word learning; uncertainty."
 wordcount         : "XYZ"
@@ -77,15 +77,16 @@ Object sharing is only one example of a broad class of social behaviors that cou
 
 Vaish, Demir and Baldwin [-@Vaish2011] made a first test of this hypothesis, asking whether 12- to 18-month-olds referenced adult gaze when they were uncertain. In that study, children heard an experimenter produce a label for an object in the presence of one or two novel objects. The children looked at the experimenter more often when there were two objects present, suggesting that they were sensitive to some aspect of the uncertainty in the two-object situation. This study supports the idea that even toddlers relatively early in the language learning process may look for social information in the presence of uncertainty. The present experiments use this paradigm to further explore the extent to which the observed behavior might be a signal of active learning behavior that would be relevant for early word learning. 
 
-To investigate the relationship between referential uncertainty and the search for social information. We conducted two experiments in which we asked children to select the referent of either a known or novel label under different levels of referential uncertainty (with one or two objects present, either familiar, novel, or a combination). We then measured whether they looked to the face of the experimenter (presumably for disambiguating gaze information). Our specific questions were:
+To investigate the relationship between referential uncertainty and the search for social information, we conducted two experiments in which we asked children to select the referent of either a known or novel label under different levels of referential uncertainty (with one or two objects present, either familiar, novel, or a combination). We then measured whether they looked to the face of the experimenter (presumably for disambiguating gaze information). To avoid confusion with social referencing in child-caregiver relations [@walden1988], we call this behavior "social information seeking." Our specific questions were:
 
-1. whether children searched for social information selectively in cases of true referential ambiguity (in conditions where there were multiple novel objects); 
-2. what the timecourse of this search was, relative to a comprehension task; and
-3. whether children's search for social information was sensitive to gradations in uncertainty about reference (operationalized by cases where the referent was unknown but could be inferred from the context).
+1. whether children showed social information seeking selectively in cases of true referential ambiguity (in conditions where there were multiple novel objects); 
+2. what the timecourse of social information seeking was, relative to a comprehension task; 
+3. whether children's social information seeking was sensitive to gradations in uncertainty about reference (operationalized by cases where the referent was unknown but could be inferred from the context); and 
+4. whether children's social information seeking was sensitive to the informativeness of the cues provided by their partner. 
 
-Our participants were 2-5 year-old children. Because we wanted to ensure that familiar labels were known to all children in our study, we chose the youngest group in our sample to be younger than than the toddlers in @vaish2011. We also selected a broad age range for our first experiment because we were interested in whether we would observe developmental changes in either the presence or timecourse of social information seeking. The range from 2-5 years spans a developmental period in which children improve substantially in their ability to identify their own ignorance and uncertainty, including in the linguistic domain [@Coughlin2014; @Hembacher2014; @Lyons2011; @Marazita2004; @Rohwer2012], thus we hypothesized that we might observe change in this period.
+Our participants were 2-5 year-old children. Because we wanted to ensure that familiar labels were known to all children in our study, we chose the youngest group in our sample to be younger than than the toddlers in @vaish2011. We also selected a broad age range for our first experiment because we were interested in whether we would observe developmental changes in either the presence or timecourse of social information seeking. The range from 2-5 years spans a developmental period in which children improve substantially in their ability to identify their own ignorance and uncertainty, including in the linguistic domain [@Coughlin2014; @Hembacher2014; @Lyons2011; @Marazita2004; @Rohwer2012], thus we hypothesized that we might observe change in this period. (Since we observed limited developmental change, in Experiment 2 we focused on 3-4 year-olds.)
 
-In sum, our current studies were designed to probe the extent to which children's looks to the face of an adult might be reflective of active learning processes relevant to language learning -- that is, a selective search for clarification or guidance in the face of referential uncertainty. 
+In sum, our current studies were designed to probe the extent to which children's social information seeking might be reflective of active learning processes relevant to language learning -- that is, a selective search for clarification or guidance in the face of referential uncertainty. 
 
 # Experiment 1
 
@@ -94,9 +95,9 @@ img <- png::readPNG(here("writeup/journal/paper/figs/socref_design.png"))
 grid::grid.raster(img)
 ```
 
-In Experiment 1, we examined whether children would visually reference a speaker more often when the speaker produced a referentially ambiguous label compared to an unambiguous label. Children sat across from an experimenter who labeled an object on the table between them (Figure \ref{fig:design}). The experimenter then asked the child to place the named object in a bucket. Across trials, there were either one or two objects on the table, which were either familiar or novel to the child. This design allowed us to test whether merely having more than one object present is sufficient to increase information gathering, or if referential ambiguity (and thus epistemic uncertainty) is the underlying factor. If the latter is true, we expected children to increase their looking to the experimenter only on trials with two unfamiliar objects, when the object-label mapping was not known and could not be inferred.
+In Experiment 1, we examined whether children would seek social information from a speaker more often when the speaker produced a referentially ambiguous label compared to an unambiguous label (question 1 above). In our experiment, children sat across from an experimenter who labeled an object on the table between them. The experimenter then asked the child to place the named object in a bucket. Across trials, there were either one or two objects on the table, which were either familiar or novel to the child. Figure \ref{fig:design} shows the design and condition structure of the experiment. While @Vaish2011 varied the number of objects present in the scene, they did not investigate whether the effect they observed was generally due to the presence of two objects or specific to the ambiguity of the novel label in the presence of two novel objects (in part because the children in their study were so young). If children's social information seeking was selective in this way, we expected children to increase their looking to the experimenter only on trials with two unfamiliar objects, when the object-label mapping was not known and could not be inferred.
 
-We were interested in the amount of information gathering children exhibited across the trial. We considered four different phases of each trial based on the notion that children might expect different social information at different stages of the task. Specifically, we predicted that children might expect the speaker's gaze direction to be informative during the labeling itself, as speakers tend to look at objects they refer to. We also predicted that later in the trial, as children reached for an object and placed it in the bucket, they might expect evaluative feedback about their choice (e.g., facial expressions of encouragement or discouragement).
+We were also interested in the timecourse of social information seeking (question 2 above); in particular, whether children's social information seeking was immediately triggered by referential uncertainty or showed some dependency on the child's own action. Because our paradigm was a live interaction between child and experimenter, there was intrinsic variability in timing from to trial. Thus, we were not able to consider absolute timecourses; instead we considered four different phases of each trial based on the notion that children might expect different social information at different stages of the task. Specifically, we predicted that children might expect the speaker's gaze direction to be informative during the labeling itself, as speakers tend to look at objects they refer to. We also predicted that later in the trial, as children reached for an object and placed it in the bucket, they might expect evaluative feedback about their choice (e.g., facial expressions of encouragement or discouragement).
 
 ```{r}
 load(here("writeup/journal/processed_data/soc_ref_e2.RData"))
@@ -139,6 +140,7 @@ save(phases, file = here("writeup/journal/processed_data/phases.RData"))
 We recruited a planned sample of 80 children ages 2-5 years from the Children’s Discovery Museum in San Jose, California^[Planned sample size, exclusion criteria, and analysis plan preregistered at https://osf.io/y7mvt.]. The sample included 20 2-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="two"], 1)` months), 20 3-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="three"], 1)` months), 20 4-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="four"], 1)` months), and 20 5-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="five"], 1)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 10), because they were unable to complete at least half of the trials in the task (*n* = 4), because of parental interference (*n* = 1), or due to experimenter or technical errors (*n* = 5). 
 
 ### Stimuli and Design
+
 Children were presented with one or two objects, heard a label, and were asked to put the labeled object in a bucket. Half of the objects were selected to be familiar to children (e.g., a cow) and half were selected to be novel (e.g., an unusual-looking nozzle). The familiar items had names that the majority of children recognize by 24 months [@Frank2016]. There were four possible trial types based on the number and familiarity of the objects present: one familiar object (F), one novel object (N), two familiar objects (FF), and two novel objects (NN). There were three trials of each type, for a total of twelve trials. Trial types were presented sequentially in an order that was counterbalanced across participants. The assignment of individual objects to trial types was counterbalanced. On F and FF trials, the familiar label for the target object was used (e.g., “cow”). On N and NN trials, a novel label was used (e.g., “dawnoo”).
 
 The critical manipulation was of referential ambiguity; F and FF trials were referentially unambiguous, as children were expected to be certain about the objects and their labels. Similarly, on N trials, children were expected to be certain about the label referent as there was only one option. However, NN trials were referentially ambiguous, as the novel label could apply to either novel object.
@@ -147,7 +149,7 @@ Throughout the task, the experimenter never gazed at the object they were labeli
 
 ### Procedure
 
-Throughout the study, the child sat at one end of a large circular table, and the experimenter stood at the opposite end. Each trial proceeded as follows: the experimenter placed one or two objects on the left and/or right sides of the table, out of reach of the child so that the child could not interact with the toys during the labeling event. For one-object trials, the location of the object (left or right) alternated between trials. After placing the objects, the experimenter said, “Hey look, there’s a (target) here.” The experimenter gazed at the center of the table rather than the object they labeled. The experimenter waited approximately two seconds based on a visual metronome placed within view before saying, “Can you put the (target) in the bucket?” They then pushed the object(s) forward within reach of the child and placed a plastic bucket in the center of the table, also within reach of the child. If the child did not respond within 10 seconds, the experimenter repeated the question. The experimenter provided no accuracy feedback to children throughout the trial. After the child placed an object in the bucket, the experimenter said "okay!" or "thank you!" to maintain a positive interaction without providing information about accuracy. Prior to the twelve experimental trials, there were two training trials: an F trial and an FF trial, to acquaint the child with the procedure. If children chose the wrong object on the FF trial (which happened rarely), they were corrected. A camera placed to the side of the experimenter captured the participant’s face, so that looking behavior could be coded from video.
+Families were recruited from the floor of the museum to join the experimenter in a small research room. Parents were asked to sit quietly to the side. Throughout the study, the child sat at one end of a large circular table, and the experimenter stood at the opposite end. Each trial proceeded as follows: the experimenter placed one or two objects on the left and/or right sides of the table, out of reach of the child so that the child could not interact with the toys during the labeling event. For one-object trials, the location of the object (left or right) alternated between trials. After placing the objects, the experimenter said, “Hey look, there’s a (target) here.” The experimenter gazed at the center of the table rather than the object they labeled. The experimenter waited approximately two seconds based on a visual metronome placed within view before saying, “Can you put the (target) in the bucket?” They then pushed the object(s) forward within reach of the child and placed a plastic bucket in the center of the table, also within reach of the child. If the child did not respond within 10 seconds, the experimenter repeated the question. The experimenter provided no accuracy feedback to children throughout the trial. After the child placed an object in the bucket, the experimenter said "okay!" or "thank you!" to maintain a positive interaction without providing information about accuracy. Prior to the twelve experimental trials, there were two training trials: an F trial and an FF trial, to acquaint the child with the procedure. If children chose the wrong object on the FF trial (which happened rarely), they were corrected. A camera placed to the side of the experimenter captured the participant’s face, so that looking behavior could be coded from video.
 
 ### Coding procedure and analytic plan
 
@@ -165,20 +167,20 @@ missingfour <- missing$excluded[missing$age_years == 4]
 missingfive <- missing$excluded[missing$age_years == 5]
 ```
 
-Videos were coded using DataVyu software (http://datavyu.org). For each participant, we coded the number of times they referenced the experimenter throughout each trial. An alternative analytic option would be to simply code whether or not children looked at the experimenter. However, during piloting, we found that most children looked up to the experimenter at least once while they were labeling the object, suggesting that a binary measure of looking would not be meaningful.
+Videos were coded using DataVyu software (http://datavyu.org). For each participant, we coded the number of times they referenced the experimenter throughout each trial. An alternative analytic option would be to simply code whether or not children looked at the experimenter. However, during piloting, we found that most children looked up to the experimenter at least once while they were labeling the object, suggesting that a binary measure of looking would not be meaningful.^[We considered coding absolute looking time to the experimenter, but, given that the experimenter gave no information about their referent, we were uncertain whether longer looking was an adaptive response in this situation. In contrast, more discrete looks to the experimenter could represent "checking in" with the experimenter in the hope that they were now providing relevant information.]
 
-Because we were interested in the precise circumstances in which children feel uncertain enough to reference a speaker, we coded the number of looks that occurred during four distinct phases of the trial: a *label* phase, which began at the utterance of the label and ended when the experimenter began to slide the objects, a *slide* phase, in which the experimenter slid the object(s) into the child’s reach, a *planning* phase, which began at the end of the slide and ended when the child touched an object, and a *response* phase, which began when the child touched an object and ended when the child released the object into the bucket. If a look began in one phase but continued into another, we counted it as a look in both phases.
+Because we were interested in the precise circumstances in which children feel uncertain enough to reference a speaker, we coded the number of looks that occurred during four distinct phases of the trial: a *label* phase, which began at the utterance of the label and ended when the experimenter began to slide the objects, a *slide* phase, in which the experimenter slid the object(s) into the child’s reach, a *planning* phase, which began at the end of the slide and ended when the child touched an object, and a *response* phase, which began when the child touched an object and ended when the child released the object into the bucket. If a look began in one phase but continued into another, we counted it as a look in both phases.^[We did not code looks to the child's parent, although anecdotally these did occasionally occur.]
 
 We also noted any trials that should be excluded from analyses due to the child's interference with the timing of the trial (e.g., talking over the experimenter), experimenter error, or outside distractions that interfered with the timing of the trial (e.g., noise from a sibling). These trial-wise exclusion criteria were preregistered. In total, we excluded `r broman::myround(missingtwo*100, 1)`% of trials from 2-year-olds, `r broman::myround(missingthree*100, 1)`% of trials from 3-year-olds, `r broman::myround(missingfour*100, 1)`% of trials from 4-year-olds, and `r broman::myround(missingthree*100, 1)`% of trials from 5-year-olds on this basis. 
 A second coder independently scored the number of looks for one third of the trials for each participant to establish reliability. Inter-rater reliability for the number of looks in each phase was high, intraclass correlation *r* = .97, *p* < .001.
 
 Table \ref{tab:phases} displays the average durations of each of the four phases. The *label* and *response* phases are longer on average than the *planning* and *slide* phases. However, note that we are interested in comparing the amount of looking across ambiguity conditions and not across phases directly.
 
-To quantify the effects of the number and familiarity of objects on children's looking, along with any developmental trends, we planned to fit a linear mixed-effects regression. Mixed-effects models account for both fixed and random factors (such as participants and stimuli). Compared with traditional ANOVA approaches, these models provide a more accurate estimate of whether results will generalize beyond the participants and items that were sampled (Baayen, Davidson, & Bates, 2008). As recommended by Barr, Levy, Scheepers, and Tily (2013), we begin with a maximal model and trim according to our standard laboratory procedures : `number of looks ~ number of objects * familiarity * phase * age in months + (number of objects * familiarity | subject) + (1 | item)`. Random effects are denoted by parentheses. This model specification was preregistered, as noted above.
+To quantify the effects of the number and familiarity of objects on children's looking, along with any developmental trends, we planned to fit a linear mixed-effects regression. Mixed-effects models account for both fixed and random factors (such as participants and stimuli). Compared with traditional ANOVA approaches, these models provide a more accurate estimate of whether results will generalize beyond the participants and items that were sampled @Baayen2008. As recommended by @Barr2013, we begin with a maximal model and trim according to our standard laboratory procedures : `number of looks ~ number of objects * familiarity * phase * age in months + (number of objects * familiarity | subject) + (1 | item)`. Random effects are denoted by parentheses. This model specification was preregistered, as noted above.
 
 ## Results and Discussion
 
-###Accuracy
+### Accuracy
 
 ```{r, echo = FALSE}
 
@@ -330,13 +332,15 @@ acc_t <- d %>%
 acctest <- t.test(acc_t$acc[acc_t$age_years == 2], mu = .5)
 ```
 
-We examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (2-year-olds: `r broman::myround(tot2, 1)`% of 2-object trials; 3-year-olds: `r broman::myround(tot3, 1)`%; 4-year-olds: `r broman::myround(tot4, 1)`%; 5-year-olds: `r broman::myround(tot5, 1)`%), despite instructions to choose only one. The first object children put in the bucket was coded as their response. Children in each age group were equally likely to put two objects in the bucket for familiar and unfamiliar trials (2-year-olds: *t*(`r t_nov_2$parameter`) = `r broman::myround(t_nov_2$statistic, 2)`, *p* =`r broman::myround( t_nov_2$p.value, 2)`; 3-year-olds: *t*(`r t_nov_3$parameter`) = `r broman::myround(t_nov_3$statistic, 2)`, *p* =`r broman::myround( t_nov_3$p.value, 2)`; 4-year-olds: *t*(`r t_nov_4$parameter`) = `r broman::myround(t_nov_4$statistic, 2)`, *p* =`r broman::myround(t_nov_4$p.value, 2)`; 5-year-olds: *t*(`r t_nov_5$parameter`) = `r broman::myround(t_nov_5$statistic, 2)`, *p* =`r broman::myround(t_nov_5$p.value, 2)`), suggesting that they put two objects in the bucket because it was a fun activity and difficult to inhibit, and not because they did not know the referent. Among FF trials in which children placed two items in the bucket, they put the correct item in first about half of the time (8/19 trials total for 2-year-olds; 5/6 for 3-year-olds; 0/2 for 4-year-olds; 2/4 for 5-year-olds). 
+First, to understand whether children were engaged by the task and complying with instructions, 
+we examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (2-year-olds: `r broman::myround(tot2, 1)`% of 2-object trials; 3-year-olds: `r broman::myround(tot3, 1)`%; 4-year-olds: `r broman::myround(tot4, 1)`%; 5-year-olds: `r broman::myround(tot5, 1)`%), despite instructions to choose only one. The first object children put in the bucket was coded as their response. Children in each age group were equally likely to put two objects in the bucket for familiar and unfamiliar trials (2-year-olds: *t*(`r t_nov_2$parameter`) = `r broman::myround(t_nov_2$statistic, 2)`, *p* =`r broman::myround( t_nov_2$p.value, 2)`; 3-year-olds: *t*(`r t_nov_3$parameter`) = `r broman::myround(t_nov_3$statistic, 2)`, *p* =`r broman::myround( t_nov_3$p.value, 2)`; 4-year-olds: *t*(`r t_nov_4$parameter`) = `r broman::myround(t_nov_4$statistic, 2)`, *p* =`r broman::myround(t_nov_4$p.value, 2)`; 5-year-olds: *t*(`r t_nov_5$parameter`) = `r broman::myround(t_nov_5$statistic, 2)`, *p* =`r broman::myround(t_nov_5$p.value, 2)`), suggesting that they put two objects in the bucket because it was a fun activity and difficult to inhibit, and not because they did not know the referent. Among FF trials in which children placed two items in the bucket, they put the correct item in first about half of the time (8/19 trials total for 2-year-olds; 5/6 for 3-year-olds; 0/2 for 4-year-olds; 2/4 for 5-year-olds). 
 
 Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Figure \ref{fig:acce1}. Overall children generally chose the correct item for FF trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* < .001).
 
 ```{r}
 rm(list = ls())
 load(here("writeup/journal/processed_data/soc_ref_e1.RData"))
+d <- as_tibble(d)
 ```
 
 ```{r}
@@ -409,21 +413,34 @@ lmer_data <- d %>%
 
 ```{r lmer_e1, results="asis"}
 l_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
-             (num_objs  | SID),
+             (1  | SID),
            data = filter(lmer_data, phase_name == "label")))
 
 s_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
-             (num_objs  | SID),
+             (1  | SID),
            data = filter(lmer_data, phase_name == "slide")))
 
 p_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
-             (num_objs  | SID),
+             (1  | SID),
            data = filter(lmer_data, phase_name == "planning")))
 
 r_lm <- summary(lmer(num_looks ~ num_objs * familiarity * age_c +
-             (num_objs | SID),
+             (1 | SID),
            data = filter(lmer_data, phase_name == "response")))
 ```
+
+
+```{r bayesian, eval=FALSE}
+library(brms)
+library(rstan)
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = TRUE)
+
+bmod <- brm(num_looks ~ num_objs * familiarity * age_c + (1 | SID), 
+            data = filter(lmer_data, phase_name == "response"), 
+            family = poisson())
+```
+
 
 ```{r}
 #label
@@ -574,7 +591,7 @@ levels = c("label", "slide", "planning", "response"),
 labels = c("Label", "Slide", "Planning", "Response"))
 ```
 
-```{r hist, fig.width=6, fig.cap='Distribution of the number of looks to the speaker in each phase.'}
+```{r hist, fig.width=6, fig.cap='Histograms of the total number of looks to the speaker in each phase of each experiment, irrespective of condition.'}
  ggplot(hist, aes(num_looks, fill = num_looks)) +
   geom_histogram(stat = "count") +
    facet_grid(Experiment~phase_name) +
@@ -583,26 +600,44 @@ labels = c("Label", "Slide", "Planning", "Response"))
   scale_fill_discrete(name = "Trial type")
 ```
 
-### Social information gathering and referential ambiguity
+### Social information seeking and referential ambiguity
 
-We next examined children's looking behavior for each trial type across the four phases of the trial (Figure \ref{fig:resultse1}). The distribution of number of looks are presented in figure \ref{fig:resultse1}. Note that the most common response is to reference the speaker at least once during the *label* phase, but to not reference the speaker at all during the other phases. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more looking, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. Our initial planned analysis, a single model with phase as a factor, did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. 
+We next examined children's looking behavior for each trial type across the four phases of the trial (Figure \ref{fig:resultse1}). The distribution of number of looks are presented in figure \ref{fig:resultse1}. Note that the most common response is to reference the speaker at least once during the *label* phase, but to not reference the speaker at all during the other phases. 
+
+To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more looking, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. Our initial planned analysis, a single model with phase as a factor, did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. Our final models included a random intercept by subject. 
 
 We did not find any main or interaction effects of number of objects, familiarity, or age on number of looks during the *label* phase (Table 2). We also did not observe any significant effects in the *slide* phase. However, we found an interaction effect of number of objects and familiarity during the *planning* ($\beta$ = `r broman::myround(p_lm$coefficients[5], 2)`, *p* < .001) and *response* phases ($\beta$ = `r broman::myround(r_lm$coefficients[5], 2)`, *p* < .001), such that NN trials were associated with more looks. Age did not interact with number of objects or familiarity. 
 
-In summary, children looked to the speaker more often when planning and executing a response under uncertainty. These results suggest that children were aware that they did not have sufficient knowledge to identify the referent and act on it and referenced the speaker to resolve this uncertainty. Surprisingly, we did not observe an effect of age, suggesting that by age 2 children are already selective in their information gathering to resolve referential ambiguity.
+### Trial-ordering effects
+
+```{r}
+lmer_data$trial_c <- as.numeric(langcog::scale(lmer_data$trial, scale = FALSE))
+r_lm_order <- summary(lmer(num_looks ~ num_objs * familiarity * age_c * trial_c +
+             (1 | SID),
+           data = filter(lmer_data, phase_name == "response")))
+```
+
+
+One possible issue in our experimental paradigm was that -- although we were interested in social information gathering -- our setup actually discouraged this behavior. In order to avoid order confounds, the experimenter's gaze was intentionally uninformative as to their intention. This uninformative response may have led children to seek social information less over the course of the experiment. To investigate this hypothesis, we fit an exploratory model to data from the response phase that included both a main effect of trial number and interactions of trial number with age, familiarity, and number of objects. This model had a very comparable interaction of number of objects and familiarity to the model without trial number ($\beta$ = `r broman::myround(r_lm_order$coefficients[6], 2)`, *p* < .001). Unexpectedly, it also showed a small but reliable positive interactions of trial with age ($\beta$ = `r broman::myround(r_lm_order$coefficients[11], 3)`, *p* = `r broman::myround(r_lm_order$coefficients[11,5], 3)`) and a small negative interaction with novelty and age ($\beta$ = `r broman::myround(r_lm_order$coefficients[15], 3)`, *p* = `r broman::myround(r_lm_order$coefficients[15,5], 3)`). Thus, overall, older children may have been looking more as the experiment progressed. Importantly, there was no reliable main effect of trial number ($\beta$ = `r broman::myround(r_lm_order$coefficients[5], 2)`, *p* < `r broman::myround(r_lm_order$coefficients[5,5], 3)`). 
+
+
+### Discussion
+
+In summary, children looked to the speaker more often when planning and executing a response under uncertainty. This result suggests that children were aware that they did not have sufficient knowledge to identify the referent and act on it and referenced the speaker to resolve this uncertainty. Surprisingly, we did not observe an effect of age, suggesting that by age 2 children are already selective in their information gathering to resolve referential ambiguity.
 
 Notably, and in contrast to Vaish et al., we did not find the expected effect of referential ambiguity in the *label* phase. Thus, mere novelty or the presence of multiple objects was not enough to increase children's looking when the experimenter was producing the label. Since individuals tend to look at someone who is speaking, children may have looked at the experimenter at least once regardless of referential ambiguity, minimizing possible condition differences. It is also possible that children failed to predict that they would need more information until later in the trial, when they were actually faced with making a decision.
 
-A third possibility is that this finding is an artifact of our design, in which the speaker gazed at the center of the table rather than the referent of the label. Children may have realized that the speaker's gaze direction during labeling was not informative. Relatedly, children may have found it strange to interact with a speaker who did not gaze at the object they were labeling, which may have produced unnatural patterns of looking. Experiment 2 tests these possibilities and further examines whether children's information gathering is sensitive to graded uncertainty.
+A third possibility is that this finding is an artifact of our design, in which the speaker gazed at the center of the table rather than the referent of the label. Children may have realized that the speaker's gaze direction during labeling was not informative. Relatedly, children may have found it strange to interact with a speaker who did not gaze at the object they were labeling, which may have produced unnatural patterns of looking. Although we did not find trial-order effects supporting this idea, this oddity effect might still have been present from the beginning of the experiment onward. Experiment 2 tests these possibilities and further examines whether children's information gathering is sensitive to graded uncertainty.
 
 # Experiment 2
 
-Experiment 2 was designed to achieve several goals. First, we aimed to replicate the finding from Experiment 1 that children reference a social partner on the basis of referential ambiguity while executing a decision. Second, we tested whether children's information gathering is graded with respect to graded evidence about a label's referent.
+Experiment 2 was designed to achieve several goals. We aimed to replicate the finding from Experiment 1 that children reference a social partner on the basis of referential ambiguity while executing a decision. We also aimed to test whether children's information seeking is graded with respect to graded evidence about a label's referent. Evidence for graded information seeking would suggest that this behavior might be a valuable active learning behavior, as it would be responsive to the learner's level of uncertainty (rather than, for example, only being cued by complete ignorance -- as in our NN condition). 
 
-To this end, we manipulated two sources of referential evidence. We added trials with 1 novel and 1 familiar object (FN) and a novel label. This condition contains evidence about reference since the familiar item can be excluded [@Markman1988], but may not be as conclusive as trials with a familiar target. Thus, we predicted that, in the aggregate, children would show the most looking to the speaker in the NN condition, the least in the FF condition, and an intermediate amount in the FN condition. In addition, we manipulated between participants whether or not the speaker gazed at the objects they referred to, and thus, whether or not their gaze was an informative cue to reference. We predicted that having access to referential gaze as an informative cue would make children less likely to reference the speaker during their decision, but perhaps more likely to reference the speaker during labeling. Critically, this also allowed us to test whether children's information gathering is selective on the basis of referential ambiguity during labeling if the speaker's gaze is informative, addressing an interpretive issue in Experiment 1.
+To this end, in Experiment 2 we manipulated two sources of referential evidence. First, we added trials with 1 novel and 1 familiar object (FN) and a novel label. This condition contains evidence about reference since the familiar item can be excluded [@Markman1988], but may not be as conclusive as trials with a familiar target. Thus, we predicted that, in the aggregate, children would show the most looking to the speaker in the NN condition, the least in the FF condition, and an intermediate amount in the FN condition. This ordering of conditions would provide evidence for gradedness in the aggregate representation of referential uncertainty.
 
-Since we did not observe any difference between F and N trials in Experiment 1, we eliminated single-object trials. Additionally, we restricted the sample to 3- and 4-year-olds, as we did not observe developmental differences in Experiment 1. Three- and 4-year-olds were chosen because we planned to include age in months as a continuous variable in our regression models, and contiguous age groups are thus preferable. Furthermore, 2-year-olds seemed to have more difficulty completing the task in Experiment 1, as evidenced by their lower accuracy rate and higher rate of placing two objects in the bucket.
+Second, we manipulated between participants whether or not the speaker gazed at the objects they referred to, and thus, whether or not their gaze was an informative cue to reference. We predicted that having access to referential gaze as an informative cue would make children less likely to reference the speaker during their decision, but perhaps more likely to reference the speaker during labeling. Critically, this manipulation also allowed us to test whether  Experiment 1 was compromised by the uninformativeness of the experimenter. 
 
+Since we did not observe any difference between F and N trials in Experiment 1, we eliminated single-object trials. As we did not observe major developmental differences in Experiment 1, we restricted the sample to 3- and 4-year-olds. Three- and 4-year-olds were chosen because we planned to include age in months as a continuous variable in our regression models, and contiguous age groups are thus preferable. Furthermore, 2-year-olds seemed to have more difficulty completing the task in Experiment 1, as evidenced by their lower accuracy rate and higher rate of placing two objects in the bucket.
 
 ## Methods
 
@@ -639,7 +674,7 @@ We recruited a planned sample of 80 children ages 3-4 years from the Children’
 
 ### Stimuli and Design
 
-The stimuli and design were similar to Experiment 1 but included three trial types: FF, NN, and FN. There were four of each trial type, totaling twelve trials. In addition, we manipulated the experimenter’s gaze behavior between participants. For half of the participants, the experimenter gazed at the center of the table while labeling objects (uninformative gaze); for the remaining half, they gazed directly at the objects they labeled (informative gaze).
+The stimuli and design were similar to Experiment 1 but included three trial types: FF, NN, and FN. There were four of each trial type, totaling twelve trials. In addition, we manipulated the experimenter’s gaze behavior between participants. For half of the participants, the experimenter gazed at the center of the table while labeling objects (uninformative gaze); for the remaining half, they gazed directly at the particular object they were labeling (informative gaze).
 
 ### Procedure
 
@@ -673,7 +708,7 @@ acc_mss_e2$age_years <- as.factor(acc_mss_e2$age_years)
 
 ```{r acce2, fig.env='figure*',fig.width=6, fig.height=3, fig.cap='Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.'}
 ggplot(acc_mss_e2, aes(age_years, mean, fill = trial_type)) +
-  geom_bar(stat="identity", position = "dodge") + 
+  geom_bar(stat = "identity", position = "dodge") + 
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
              position = position_dodge(width = .9)) + 
   facet_wrap(~ Gaze)  +
@@ -774,9 +809,11 @@ acc_mod <- summary(glmer(acc ~ trial_type * gaze + age_c  +
                        family = "binomial"))
 ```
 
-Children's accuracy for trials with a correct answer possible (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acce2}). Children sometimes put two items in the bucket, although they did so less frequently than in Experiment 1, perhaps because there were two objects available on every trial and it was thus less of a novelty (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). As in Experiment 1, the first item they placed in the bucket was coded as their response. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for NN ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 2)`, *p* < .001) and FN trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 2)`, *p* < .001) compared to FF trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for NN ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 2)`, *p* < .001) and FN trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 2)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 2)`, *p* = .12). 
+We again begin by analyzing children's task accuracy for trials with a correct answer possible (i.e., FF, FN, and all trials with gaze), which we calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acce2}). Children sometimes put two items in the bucket, although they did so less frequently than in Experiment 1, perhaps because there were two objects available on every trial and it was thus less of a novelty (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). As in Experiment 1, the first item they placed in the bucket was coded as their response. 
 
-### Information gathering and referential ambiguity
+To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 2)`, *p* = .12). Accuracy was significantly lower for NN ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 2)`, *p* < .001) and FN trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 2)`, *p* < .001) compared to FF trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for NN ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 2)`, *p* < .001) and FN trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 2)`, *p* < .001). This last result is a useful check of our gaze manipulation; it suggests that children effectively made use of the social information that was present in the gaze condition. 
+
+### Information seeking and referential ambiguity
 
 ```{r}
 lmer_data$trial_type <- relevel(lmer_data$trial_type, ref = "mutual")
@@ -798,7 +835,7 @@ lm_r <- summary(lmer(num_looks ~ trial_type *  age_c * gaze  +
                          data = filter(lmer_data, phase_name == "response")))
 ```
 
-Experiment 2 was designed to test whether different amounts of referential evidence elicit differential amounts of social information gathering. If so, this would suggest that young children are sensitive to graded evidence for a hypothesis (e.g., that this object is the "blicket"). The amount of referential evidence was manipulated through the familiarity of objects presented (NN vs FN vs FF trials) and whether or not gaze was informative (gaze vs. no gaze). If children are sensitive to graded evidence, we might expect a pattern of looking that conforms to (NN > FN > FF) and (no gaze > gaze), with the possibility of an interaction between gaze condition and familiarity.
+Experiment 2 was designed to test whether different amounts of referential evidence elicit differential amounts of social information seeking If so, this would suggest that young children are sensitive to graded evidence for a hypothesis (e.g., that this object is the "blicket"). The amount of referential evidence was manipulated through the familiarity of objects presented (NN vs FN vs FF trials) and whether or not gaze was informative (gaze vs. no gaze). If children are sensitive to graded evidence, we might expect a pattern of looking that conforms to (NN > FN > FF) and (no gaze > gaze), with the possibility of an interaction between gaze condition and familiarity.
 
 Children's patterns of looking based on familiarity and gaze condition are presented in \ref{fig:resultse2}. To quantify the main and interactive effects of familiarity, gaze condition, and age on children's looking, we fit separate mixed-effects linear regression models for each phase (*label*, *slide*, *planning*, *response*) with the following structure: `number of looks ~ familiarity * age in months * gaze + (1 | subject)`.
 
@@ -809,6 +846,13 @@ In summary, in the *slide*, *planning*, and *response* phases, children showed t
 Additionally, familiarity interacted with gaze condition, but not in the predicted direction. Instead, FF trials with referential gaze elicited more looking than FF trials without referential gaze. Although we did not predict this result, it is possible that when children were already quite certain, they were more likely to seek feedback from a social partner whose gaze patterns were more naturalistic.
 
 Finally, similar to Experiment 1, we did not observe selective looking during the *label* phase, even among children in the gaze condition. This result rules out the possibility that children were less selective during labeling during Experiment 1 because they learned that the experimenter's gaze direction was not informative. Instead, young children may attend to someone who is speaking regardless of the need for disambiguation.
+
+```{r eval=FALSE}
+lmer_data$trial_c <- as.numeric(langcog::scale(lmer_data$trial, scale = FALSE))
+lm_r_order <- summary(lmer(num_looks ~ trial_type *  age_c * gaze * trial_c  +
+                           (1| SID), 
+                         data = filter(lmer_data, phase_name == "response")))
+```
 
 
 ```{r}
