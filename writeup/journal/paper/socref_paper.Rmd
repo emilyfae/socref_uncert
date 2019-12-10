@@ -44,6 +44,7 @@ knitr::opts_chunk$set(fig.width=3, fig.height=3, fig.crop = FALSE,
 # install.packages("devtools")
 # devtools::install_github("langcog/langcog")
 
+library(here)
 library(papaja)
 library(tidyverse)
 library(png)
@@ -66,7 +67,7 @@ This burgeoning literature suggests that in many contexts children are able to i
 
 Here, we focus in particular on the case of children's awareness of referential ambiguity. For example, imagine a child hears the phrase “where’s the spatula” but doesn’t know the word “spatula.” At what point will she recognize that this is an unknown referential term and search for information to identify its referent? Awareness of referential ambiguity – or linguistic uncertainty more broadly – could be an important mechanism for language acquisition. Knowing that you have incomplete linguistic information could prompt active learning behaviors including asking for help or seeking other disambiguating referential information. There is still limited evidence about young children’s tracking of lexical uncertainty or associated active learning behaviors, however. In the following section we review previous evidence about linguistic uncertainty monitoring and uncertainty monitoring in other domains.
 
-##Development of uncertainty monitoring
+## Development of uncertainty monitoring
 
 One important question is whether children can explicitly report on their ignorance about words. Marazita and Merriman [-@Marazita2004] tested 2.5-year-olds and 4-year-olds' abilities to judge whether they knew the names for familiar and novel objects, and whether they knew what familiar and novel words meant. Both age groups struggled to report on their ignorance, but there were dramatic improvements between age 2.5 and 4. When asked if they knew the names for novel objects, 4-year-olds claimed knowledge 27% of the time and 2.5-year-olds claimed knowledge 70% of the time. When asked about novel words embedded in a story (e.g., "... Spot had other things he liked to hide such as a biffle, a truck, and a pug. Do you know what a biffle is?") 4-year-olds responded "yes" 27% of the time and 2.5-year-olds responded "yes" 79% of the time. In sum, although even 4-year-olds failed to report on their lexical ignorance with some frequency, there were considerable developmental improvements between ages 2.5 to 4. In another study by Lyons and Ghetti [-@Lyons2011], 3- to 5-year-olds reported higher confidence when they provided the correct labels for objects compared to incorrect labels. While 3-year-olds were only slightly less likely to report high confidence when incorrect compared to correct, 5-year-olds were much less likely to report high confidence when incorrect.
 
@@ -77,7 +78,7 @@ The studies outlined above ask children to reflect on their uncertainty in discr
 In sum, there is mixed evidence about young children’s metacognitive competencies in tasks that require explicit responses from children. However, these paradigms may underestimate children’s ability to track epistemic uncertainty and act on it, and critically, they have seldom addressed awareness of uncertainty in linguistic contexts. The few studies that investigated linguistic uncertainty directly showed that young children struggle to report when they don’t know the names for things, or when a label is unfamiliar. One possibility is that children’s tracking of linguistic uncertainty is apparent in their spontaneous information-seeking behaviors before they can report on it explicitly. In the following section we review evidence that young children who fail explicit non-linguistic metacognitive tasks nonetheless explore and seek information selectively based on uncertainty.
 
 
-##Development of Spontaneous Information-seeking
+## Development of Spontaneous Information-seeking
 
 A number of studies have now shown that children's spontaneous information-seeking behaviors track uncertainty. For example, Call and Carpenter [-@Call2001] had 2-year-olds choose between several tubes to find a hidden sticker. They found that the toddlers were more likely to peek inside a tube before choosing when they had not seen the baiting of the tubes compared to when they had, suggesting they were aware of their knowledge or ignorance and selectively sought confirmatory evidence before committing to a response when they did not know a sticker’s location.
 
@@ -89,7 +90,7 @@ Infants have also been shown to seek information selectively under conditions of
 
 While these studies suggest that young children and even infants may track the evidence associated with different possibilities and selectively seek disambiguating information, it remains unknown whether they do so when they have incomplete linguistic information. As outlined above, some mental states and processes may be more difficult to introspect on than others (e.g., younger preschoolers succeed at monitoring epistemic uncertainty in a perceptual identification task but fail in a memory task). Further, children may base their metacognitive judgments on superficial characteristics of words or objects, such as how perceptually familiar they are, without reflecting on whether they know the corresponding label or referent for either [@Marazita2004].  
 
-##Current study
+## Current study
 
 The present study investigates children's information-seeking behaviors on the basis of referential ambiguity. Specifically, we ask whether children are more likely to seek disambiguating social information by looking at the experimenter when they are uncertain of the referent of a label they have been asked to act on. We chose to examine this ability in early childhood (ages 2 to 5), because, as discussed, research under a metacognitive framework has identified this as a developmental period in which children improve substantially in their ability to identify their own ignorance and uncertainty, including in a linguistic domain [@Coughlin2014; @Hembacher2014; @Lyons2011, @Marazita2004; @Rohwer2012].
 
@@ -103,7 +104,7 @@ More generally, a complete theory of early metacognition and learning should enc
 
 
 ```{r design,  fig.cap= "Study design for Experiments 1 and 2. Children were shown one or two objects, heard a label, and were asked to place the labeled object in a bucket. Referential ambiguity was manipulated through the familiarity of the objects present and through the availability of referential gaze."}
-img <- png::readPNG("figs/socref_design.png")
+img <- png::readPNG(here("writeup/journal/paper/figs/socref_design.png"))
 grid::grid.raster(img)
 ```
 
@@ -114,10 +115,10 @@ In Experiment 1, we examined whether children would visually reference a speaker
 We were interested in the amount of information gathering children exhibited across the trial. We considered four different phases of each trial based on the notion that children might expect different social information at different stages of the task. Specifically, we predicted that children might expect the speaker's gaze direction to be informative during the labeling itself, as speakers tend to look at objects they refer to. We also predicted that later in the trial, as children reached for an object and placed it in the bucket, they might expect evaluative feedback about their choice (e.g., facial expressions of encouragement or discouragement).
 
 ```{r}
-load("../processed_data/soc_ref_e2.RData")
+load(here("writeup/journal/processed_data/soc_ref_e2.RData"))
 plength2 <- psych::describeBy(d$phase_length, d$phase_name)
 
-load("../processed_data/soc_ref_e1.RData")
+load(here("writeup/journal/processed_data/soc_ref_e1.RData"))
 
 age_months <- d %>%
   group_by(age_years) %>%
@@ -127,29 +128,30 @@ age_months$age_years <- factor(age_months$age_years,
 levels = c(2, 3, 4, 5),
 labels = c("two", "three", "four", "five"))
 
-halfs<- d %>%
+halfs <- d %>%
   mutate(first_half = between(trial, 1, 4)) 
 
 plength1 <- psych::describeBy(d$phase_length, d$phase_name)
 
 phases1 <- data.frame()
 phases2 <- data.frame()
-phases1 <- bind_rows(phases1, plength1$label, plength1$slide, plength1$planning, plength1$response)%>%
-  select(mean, sd)%>%
+phases1 <- bind_rows(phases1, plength1$label, plength1$slide, plength1$planning, plength1$response) %>%
+  select(mean, sd) %>%
   mutate(phase = c("label","slide","planning","response"), Experiment = "1")
-phases2 <- bind_rows(phases2, plength2$label, plength2$slide, plength2$planning, plength2$response)%>%
-  select(mean, sd)%>%
+phases2 <- bind_rows(phases2, plength2$label, plength2$slide, plength2$planning, plength2$response) %>%
+  select(mean, sd) %>%
   mutate(phase = c("label","slide","planning","response"), Experiment = "2")
 
-phases <- bind_rows(phases1, phases2)%>%
+phases <- bind_rows(phases1, phases2) %>%
   select(Experiment, phase, mean, sd)
 
-save(phases, file = "../processed_data/phases.RData")
+save(phases, file = here("writeup/journal/processed_data/phases.RData"))
 ```
 
 ## Methods
 
 ### Participants
+
 We recruited a planned sample of 80 children ages 2-5 years from the Children’s Discovery Museum in San Jose, California^[Planned sample size, exclusion criteria, and analysis plan preregistered at https://osf.io/y7mvt.]. The sample included 20 2-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="two"], 1)` months), 20 3-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="three"], 1)` months), 20 4-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="four"], 1)` months), and 20 5-year-olds (mean age `r broman::myround(age_months$mean[age_months$age_years=="five"], 1)` months). An additional 20 children participated but were removed from analyses because they heard English less than 75% of the time at home (*n* = 10), because they were unable to complete at least half of the trials in the task (*n* = 4), because of parental interference (*n* = 1), or due to experimenter or technical errors (*n* = 5). 
 
 ### Stimuli and Design
@@ -166,10 +168,11 @@ Throughout the study, the child sat at one end of a large circular table, and th
 ### Coding procedure and analytic plan
 
 ```{r}
-load("../processed_data/soc_ref_e1.RData")
+load(here("writeup/journal/processed_data/soc_ref_e1.RData"))
+
 #how many trials are missing because of child off-task?
 missing <- d %>%
-  group_by(age_years)%>%
+  group_by(age_years) %>%
   summarise(excluded = mean(exclude))
 
 missingtwo <- missing$excluded[missing$age_years == 2]
@@ -193,7 +196,8 @@ To quantify the effects of the number and familiarity of objects on children's l
 
 ###Accuracy
 
-```{r echo = FALSE}
+```{r, echo = FALSE}
+
 #how often did children select two objects or no objects?
 ids <- d %>%
  distinct(SID)
@@ -214,9 +218,9 @@ two_objs <- res %>%
   filter(response == "LR" | response == "RL")
 
 l1 <- length(unique(two_objs$SID[two_objs$age_years == 2]))
-l2<- length(unique(two_objs$SID[two_objs$age_years == 3]))
+l2 <- length(unique(two_objs$SID[two_objs$age_years == 3]))
 l3 <- length(unique(two_objs$SID[two_objs$age_years == 4]))
-l4 <-length(unique(two_objs$SID[two_objs$age_years == 5]))
+l4 <- length(unique(two_objs$SID[two_objs$age_years == 5]))
 
 two_kids <- unique(two_objs$SID)
 
@@ -250,17 +254,17 @@ tot5 <- 100*(lr5 + rl5 + b5) #percent of 2obj trials with two objects placed in 
 #are trials with 2 objects chosen more likely to be novel?
 
 nov_t <- d %>%
-  filter(num_objs == 2)%>%
-  distinct(SID, trial, response, familiarity, acc, age_years)%>%
-  mutate(both = response == "LR" | response == "RL" | response == "B")%>%
-  group_by(SID, age_years, familiarity)%>%
+  filter(num_objs == 2) %>%
+  distinct(SID, trial, response, familiarity, acc, age_years) %>%
+  mutate(both = response == "LR" | response == "RL" | response == "B") %>%
+  group_by(SID, age_years, familiarity) %>%
   summarise(both = mean(both))
 
 nov <- d %>%
-  filter(num_objs == 2)%>%
-  distinct(SID, trial, response, familiarity, acc, age_years)%>%
-  mutate(both = response == "LR" | response == "RL" | response == "B")%>%
-  group_by(age_years, familiarity)%>%
+  filter(num_objs == 2) %>%
+  distinct(SID, trial, response, familiarity, acc, age_years) %>%
+  mutate(both = response == "LR" | response == "RL" | response == "B") %>%
+  group_by(age_years, familiarity) %>%
   summarise(both = mean(both))
 
 t_nov_2 <- t.test(nov_t$both[nov_t$familiarity == "familiar" & nov_t$age_years == 2], nov_t$both[nov_t$familiarity == "novel" & nov_t$age_years == 2], paired = TRUE)
@@ -274,17 +278,17 @@ t_nov_5 <- t.test(nov_t$both[nov_t$familiarity == "familiar" & nov_t$age_years =
 #when kids put two objects in bucket, do they put the correct one in first if there is a correct answer?
 
 cor <- d %>%
-  filter(num_objs == 2, !is.na(acc), response != "B")%>%
-  distinct(SID, trial, response, familiarity, acc, age_years)%>%
+  filter(num_objs == 2, !is.na(acc), response != "B") %>%
+  distinct(SID, trial, response, familiarity, acc, age_years) %>%
   mutate(both = response == "LR" | response == "RL")
 
-acc_sum <- cor%>%
-  filter(acc == 1)%>%
-  group_by(age_years)%>%
+acc_sum <- cor %>%
+  filter(acc == 1) %>%
+  group_by(age_years) %>%
   summarize(both = sum(both))
 
-both_sum <- cor%>%
-  group_by(age_years)%>%
+both_sum <- cor %>%
+  group_by(age_years) %>%
   summarize(both = sum(both))
 ```
 
@@ -292,9 +296,9 @@ both_sum <- cor%>%
 #Get accuracy for plot
 d$acc <- as.numeric(as.character(d$acc))
 
-acctab_e1 <- d%>%
-  filter(!is.na(acc),familiarity == "familiar", exclude == 0, num_objs == 2)%>%
-  group_by(age_years)%>%
+acctab_e1 <- d %>%
+  filter(!is.na(acc),familiarity == "familiar", exclude == 0, num_objs == 2) %>%
+  group_by(age_years) %>%
   tidyboot_mean(column = acc)
 
 acctab_e1$age_years <- as.factor(acctab_e1$age_years)
@@ -302,7 +306,7 @@ acctab_e1$age_years <- as.factor(acctab_e1$age_years)
 
 ```{r acce1, fig.cap='Accuracy for FF trials in Experiment 1. Error bars are 95 percent confidence intervals.'}
 ggplot(acctab_e1, aes(age_years, mean)) +
-  geom_bar(stat="identity", position = "dodge") + 
+  geom_bar(stat = "identity", position = "dodge") + 
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
              position = position_dodge(width = .9))  +
   ggthemes::theme_base() + 
@@ -310,7 +314,7 @@ ggplot(acctab_e1, aes(age_years, mean)) +
 ```
 
 ```{r phasetable, echo = FALSE, results="asis"}
-load("../processed_data/phases.RData")
+load(here("writeup/journal/processed_data/phases.RData"))
 
 names(phases) <- c('Experiment','Phase','Mean Duration', 'SD')
 
@@ -329,16 +333,17 @@ print(xtable(phases,
 ```
 
 ```{r}
-load("../processed_data/soc_ref_e1.RData")
+load(here("writeup/journal/processed_data/soc_ref_e1.RData"))
+
 #t-test for 2-yo acc
 d$acc <- as.numeric(d$acc)
 
-acc_t <- d%>%
-  filter(!is.na(acc), exclude == 0)%>%
-  group_by(SID, age_years)%>%
-  dplyr::summarise(acc= mean(acc))
+acc_t <- d %>%
+  filter(!is.na(acc), exclude == 0) %>%
+  group_by(SID, age_years) %>%
+  dplyr::summarise(acc = mean(acc))
 
-acctest <- t.test(acc_t$acc[acc_t$age_years == 2], mu=.5)
+acctest <- t.test(acc_t$acc[acc_t$age_years == 2], mu = .5)
 ```
 
 We examined children's accuracy for those trials in which a correct response was possible (i.e., FF trials). Children sometimes put two items in the bucket (2-year-olds: `r broman::myround(tot2, 1)`% of 2-object trials; 3-year-olds: `r broman::myround(tot3, 1)`%; 4-year-olds: `r broman::myround(tot4, 1)`%; 5-year-olds: `r broman::myround(tot5, 1)`%), despite instructions to choose only one. The first object children put in the bucket was coded as their response. Children in each age group were equally likely to put two objects in the bucket for familiar and unfamiliar trials (2-year-olds: *t*(`r t_nov_2$parameter`) = `r broman::myround(t_nov_2$statistic, 2)`, *p* =`r broman::myround( t_nov_2$p.value, 2)`; 3-year-olds: *t*(`r t_nov_3$parameter`) = `r broman::myround(t_nov_3$statistic, 2)`, *p* =`r broman::myround( t_nov_3$p.value, 2)`; 4-year-olds: *t*(`r t_nov_4$parameter`) = `r broman::myround(t_nov_4$statistic, 2)`, *p* =`r broman::myround(t_nov_4$p.value, 2)`; 5-year-olds: *t*(`r t_nov_5$parameter`) = `r broman::myround(t_nov_5$statistic, 2)`, *p* =`r broman::myround(t_nov_5$p.value, 2)`), suggesting that they put two objects in the bucket because it was a fun activity and difficult to inhibit, and not because they did not know the referent. Among FF trials in which children placed two items in the bucket, they put the correct item in first about half of the time (8/19 trials total for 2-year-olds; 5/6 for 3-year-olds; 0/2 for 4-year-olds; 2/4 for 5-year-olds). 
@@ -346,8 +351,8 @@ We examined children's accuracy for those trials in which a correct response was
 Children also occasionally declined to choose an item (`r broman::myround(nc*100, 1)`% of trials); these trials are excluded from accuracy analyses. Children's accuracy is displayed in Figure \ref{fig:acce1}. Overall children generally chose the correct item for FF trials, indicating that they understood the task and were motivated to answer correctly. While 3- to 5-year-olds performed close to ceiling (92% - 99%), 2-year-olds were less accurate (76%), but still performed significantly above chance (*t*(19) = `r broman::myround(acctest$statistic, 1)` , *p* < .001).
 
 ```{r}
-rm(list=ls())
-load("../processed_data/soc_ref_e1.RData")
+rm(list = ls())
+load(here("writeup/journal/processed_data/soc_ref_e1.RData"))
 ```
 
 ```{r}
@@ -400,9 +405,9 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   geom_line(data = mslooks, aes(y = mean)) + 
   geom_pointrange(data = mslooks, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper), 
-                  position = position_dodge(width =.1)) + 
+                  position = position_dodge(width = .1)) + 
   facet_grid(age_years ~ num_objs) +
-  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  scale_y_continuous(limits = c(0,2), breaks = c(0,1,2)) +
   theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
   labs(x = "Phase", y = "Number of Looks") +
   ggthemes::theme_base() 
@@ -413,7 +418,7 @@ lmer_data <- d %>%
   filter(!exclude) %>%
   mutate(num_objs = factor(num_objs), 
          familiarity = factor(familiarity), 
-         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         age_c = as.numeric(langcog::scale(age_months, scale = FALSE)),
          phase_name = factor(phase_name),
          soc_ref = social_ref)
 ```
@@ -560,24 +565,24 @@ e1.tab %<>%
 
 names(e1.tab)[7] <- c("")
 
-save(e1.tab, file = "../processed_data/e1tab.RData")
+save(e1.tab, file = here("writeup/journal/processed_data/e1tab.RData"))
 ```
 
 ```{r echo = FALSE}
 #histogram for number of looks by phase. 
-load("../processed_data/soc_ref_e1.RData")
+load(here("writeup/journal/processed_data/soc_ref_e1.RData"))
 
 hist_e1 <- d %>%
-   select(phase_name, num_looks)%>%
+   select(phase_name, num_looks) %>%
   mutate(Experiment = "Experiment 1")
 
-load("../processed_data/soc_ref_e2.RData")
+load(here("writeup/journal/processed_data/soc_ref_e2.RData"))
 
 hist_e2 <- d %>%
-   select(phase_name, num_looks)%>%
+   select(phase_name, num_looks) %>%
   mutate(Experiment = "Experiment 2")
 
-hist<- hist_e1%>%
+hist <- hist_e1 %>%
   bind_rows(hist_e2)
 
 hist$phase_name <- factor(hist$phase_name,
@@ -591,10 +596,10 @@ labels = c("Label", "Slide", "Planning", "Response"))
    facet_grid(Experiment~phase_name) +
   ggthemes::theme_base() + 
   labs(x = "Number of looks", y = "Trial count") +
-  scale_fill_discrete(name="Trial type")
+  scale_fill_discrete(name = "Trial type")
 ```
 
-###Social information gathering and referential ambiguity
+### Social information gathering and referential ambiguity
 
 We next examined children's looking behavior for each trial type across the four phases of the trial (Figure \ref{fig:resultse1}). The distribution of number of looks are presented in figure \ref{fig:resultse1}. Note that the most common response is to reference the speaker at least once during the *label* phase, but to not reference the speaker at all during the other phases. To test our prediction that referential ambiguity (i.e., having two novel objects) would produce more looking, we fit mixed-effects linear regression models separately for each phase with the following structure: `number of looks ~ number of objects * familiarity * age in months + (number of objects + familiarity | subject)`. Our initial planned analysis, a single model with phase as a factor, did not converge, and the model was subsequently trimmed according to our standard laboratory analytic procedures. 
 
@@ -618,18 +623,18 @@ Since we did not observe any difference between F and N trials in Experiment 1, 
 ## Methods
 
 ```{r}
-rm(list=ls())
-load("../processed_data/soc_ref_e2.RData")
+rm(list = ls())
+load(here("writeup/journal/processed_data/soc_ref_e2.RData"))
 ```
 
 ```{r}
 #how many statements of uncertainty and questions?
 utterances <- d %>%
-  group_by(trial_type)%>%
+  group_by(trial_type) %>%
   summarise(sou = mean(num_sou), ques = mean(num_ques))
 
 missing <- d %>%
-  group_by(age_years)%>%
+  group_by(age_years) %>%
   summarise(excluded = mean(exclude))
 
 missingthree <- missing$excluded[missing$age_years == 3]
@@ -661,7 +666,7 @@ The mean durations of the phases for Experiment 2 are presented in Table 1. They
 
 ## Results and Discussion
 
-###Accuracy
+### Accuracy
 
 ```{r}
 d$acc <- as.numeric(as.character(d$acc))
@@ -683,7 +688,7 @@ acc_mss_e2$age_years <- as.factor(acc_mss_e2$age_years)
 ```
 
 ```{r acce2, fig.env='figure*',fig.width=6, fig.height=3, fig.cap='Accuracy for trials with a correct answer available (FF and FN, and all gaze trials) in Experiment 2. Error bars are 95 percent confidence intervals.'}
-ggplot(acc_mss_e2, aes(age_years, mean, fill=trial_type)) +
+ggplot(acc_mss_e2, aes(age_years, mean, fill = trial_type)) +
   geom_bar(stat="identity", position = "dodge") + 
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper), 
              position = position_dodge(width = .9)) + 
@@ -730,17 +735,17 @@ tot4 <- 100*(lr4 + rl4 + b4) #percent of 2obj trials with two objects placed in 
 #are trials with 2 objects chosen more likely to be novel?
 
 nov_t <- d %>%
-  distinct(SID, trial, response, trial_type, acc, age_years, Gaze)%>%
+  distinct(SID, trial, response, trial_type, acc, age_years, Gaze) %>%
   mutate(both = response == "LR" | response == "RL" | response == "B",
-         unambiguous = trial_type == "mutual" | trial_type == "familiar" | Gaze == "gaze")%>%
-  group_by(SID, age_years, trial_type)%>%
+         unambiguous = trial_type == "mutual" | trial_type == "familiar" | Gaze == "gaze") %>%
+  group_by(SID, age_years, trial_type) %>%
   summarise(both = mean(both))
 
 nov <- d %>%
-  distinct(SID, trial, response, trial_type, acc, age_years, Gaze)%>%
+  distinct(SID, trial, response, trial_type, acc, age_years, Gaze) %>%
   mutate(both = response == "LR" | response == "RL" | response == "B",
-         unambiguous = trial_type == "mutual" | trial_type == "familiar" | Gaze == "gaze")%>%
-  group_by(age_years, unambiguous)%>%
+         unambiguous = trial_type == "mutual" | trial_type == "familiar" | Gaze == "gaze") %>%
+  group_by(age_years, unambiguous) %>%
   summarise(both = mean(both))
 
 #not enough observations for t-test
@@ -748,19 +753,19 @@ nov <- d %>%
 #when kids put two objects in bucket, do they put the correct one in first if there is a correct answer?
 
 cor <- d %>%
-  filter(!is.na(acc), response != "B")%>%
-  distinct(SID, trial, response, trial_type, acc, age_years)%>%
+  filter(!is.na(acc), response != "B") %>%
+  distinct(SID, trial, response, trial_type, acc, age_years) %>%
   mutate(both = response == "LR" | response == "RL")
 
 cor$acc <- as.numeric(cor$acc)
 
-acc_sum <- cor%>%
-  filter(acc == 1)%>%
-  group_by(age_years)%>%
+acc_sum <- cor %>%
+  filter(acc == 1) %>%
+  group_by(age_years) %>%
   summarize(both = sum(both))
 
-both_sum <- cor%>%
-  group_by(age_years)%>%
+both_sum <- cor %>%
+  group_by(age_years) %>%
   summarize(both = sum(both))
 ```
 
@@ -768,7 +773,7 @@ both_sum <- cor%>%
 lmer_data <- d %>%
   filter(!exclude) %>%
   mutate(trial_type = factor(trial_type), 
-         age_c = as.numeric(langcog::scale(age_months, scale=FALSE)),
+         age_c = as.numeric(langcog::scale(age_months, scale = FALSE)),
          phase_name = factor(phase_name), 
          gaze = factor(Gaze),
          acc = factor(acc),
@@ -787,7 +792,7 @@ acc_mod <- summary(glmer(acc ~ trial_type * gaze + age_c  +
 
 Children's accuracy for trials with a correct answer possible (i.e., FF, FN, and all trials with gaze) was calculated using the same criteria as in Experiment 1 (Figure \ref{fig:acce2}). Children sometimes put two items in the bucket, although they did so less frequently than in Experiment 1, perhaps because there were two objects available on every trial and it was thus less of a novelty (3-year-olds: `r broman::myround(tot3, 1)`% of trials; 4-year-olds: `r broman::myround(tot4, 1)`%). As in Experiment 1, the first item they placed in the bucket was coded as their response. To quantify the effects of familiarity, gaze, and age on accuracy, we fit the following mixed-effects logistic regression model: `correct ~ trial type * gaze + age in months + (1| subject)`. Accuracy was significantly lower for NN ($\beta$ = `r broman::myround(acc_mod$coefficients[2], 2)`, *p* < .001) and FN trials ($\beta$ = `r broman::myround(acc_mod$coefficients[3], 2)`, *p* < .001) compared to FF trials, and trial type interacted with gaze condition such that accuracy was significantly higher in the gaze condition for NN ($\beta$ = `r broman::myround(acc_mod$coefficients[6], 2)`, *p* < .001) and FN trials ($\beta$ = `r broman::myround(acc_mod$coefficients[7], 2)`, *p* < .001). Age did not significantly predict accuracy ($\beta$ = `r broman::myround(acc_mod$coefficients[5], 2)`, *p* = .12). 
 
-###Information gathering and referential ambiguity
+### Information gathering and referential ambiguity
 
 ```{r}
 lmer_data$trial_type <- relevel(lmer_data$trial_type, ref = "mutual")
@@ -868,15 +873,15 @@ ggplot(msslooks, aes(x = phase_name, y = num_looks,
   geom_line(data = mslooks, aes(y = mean)) + 
   geom_pointrange(data = mslooks, 
                   aes(y = mean, ymin = ci_lower, ymax = ci_upper, shape = familiarity), 
-                  position = position_dodge(width =.1)) + 
+                  position = position_dodge(width = .1)) + 
   facet_grid(age_years ~ Gaze) + 
-  scale_y_continuous(limits=c(0,2), breaks=c(0,1,2)) +
+  scale_y_continuous(limits = c(0,2), breaks = c(0,1,2)) +
   theme(axis.text.x = element_text(angle = 0, hjust = .5, vjust = .5)) + 
   labs(x = "Phase", y = "Number of Looks")  +
   ggthemes::theme_base() 
 ```
 
-#General Discussion
+# General Discussion
 
 During the preschool years, children are increasingly able to actively gather information through help-seeking and exploration [@Chouinard2007; @Schulz2007]. They are also increasingly proficient at explicitly identifying their gaps in knowledge and their uncertainty in various domains [@Coughlin2014; @Hembacher2014; @Lyons2011; @Rohwer2012]. Do young children similarly identify referential uncertainty and engage in appropriate active learning behaviors in response? Here, we examined whether young children's social information gathering was associated with referential uncertainty in situations in which the referent was either completely novel or familiar (Experiment 1), and when there were differing amounts of referential evidence (Experiment 2).
 
