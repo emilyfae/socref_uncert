@@ -694,9 +694,9 @@ The mean durations of the phases for Experiment 2 are presented in Table 1. They
 ```{r}
 d$acc <- as.numeric(as.character(d$acc))
 
-acc_mss_e2 <- d%>%
-  filter(!is.na(acc), exclude == 0)%>%
-  group_by(trial_type, Gaze, age_years)%>%
+acc_mss_e2 <- d %>%
+  filter(!is.na(acc), exclude == 0) %>%
+  group_by(trial_type, Gaze, age_years) %>%
   multi_boot_standard(col = "acc")
 
 acc_mss_e2$Gaze <- factor(acc_mss_e2$Gaze,
