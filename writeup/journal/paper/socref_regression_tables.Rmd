@@ -1,7 +1,7 @@
 ---
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
   html_document: default
 ---
 
@@ -17,13 +17,15 @@ library(tidyverse)
 library(xtable)
 library(langcog)
 library(stringr)
-library(lme4)
+library(lmerTest)
 library(knitr)
 library(markdown)
 library(ggthemes)
 library(psych)
 library(magrittr)
 library(papaja)
+
+proj_root <- here::here()
 ```
 
 ```{r phasetable, eval = FALSE, echo = FALSE, results="asis"}
@@ -52,6 +54,7 @@ write_csv(phases, "phases_tab.csv")
 
 ```{r}
 rm(list=ls())
+proj_root <- here::here()
 load("../processed_data/soc_ref_e1.RData")
 
 lmer_data <- d %>%
@@ -211,6 +214,13 @@ caption <- function(x, y){
 paste0(x, '{\\emph{',y, '}}')
 }
 
+e1_location <-  
+  fs::path(proj_root, "writeup", "journal", "tables", "e1_reg_tab.csv")
+
+e1.tab %>% 
+  write_csv(e1_location)
+
+
 
 print(xtable(e1.tab,
              align = c("l","l","l","r","r","r","r", "l"),
@@ -225,6 +235,7 @@ print(xtable(e1.tab,
 
 ```{r}
 rm(list=ls())
+proj_root <- here::here()
 load("../processed_data/soc_ref_e2.RData")
 
 lmer_data <- d %>%
@@ -417,6 +428,13 @@ names(e2.tab)[7] <- c("")
 caption <- function(x, y){
 paste0(x, '{\\emph{',y, '}}')
 }
+
+e2_location <-  
+  fs::path(proj_root, "writeup", "journal", "tables", "e2_reg_tab.csv")
+
+e2.tab %>% 
+  write_csv(e2_location)
+
 
 print(xtable(e2.tab,
              align = c("l","l","l","r","r","r","r", "l"),

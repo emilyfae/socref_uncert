@@ -21,14 +21,14 @@ abstract: |
 keywords          : "information seeking; active learning; word learning; uncertainty."
 wordcount         : "4707"
 bibliography      : ["socref.bib"]
-figsintext        : no
+floatsintext      : no
 figurelist        : no
 tablelist         : no
 footnotelist      : no
 lineno            : no
 lang              : "english"
 class             : "man"
-output            : papaja::apa6_pdf
+output            : papaja::apa6_word
 editor_options: 
   chunk_output_type: console
 ---
