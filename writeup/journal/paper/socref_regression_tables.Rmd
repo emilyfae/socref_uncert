@@ -37,6 +37,9 @@ paste0(x, '{\\emph{',y, '}}')
 
 names(phases) <- c('Experiment','Phase','Mean Duration', 'SD')
 
+phases_location <-  
+  fs::path(proj_root, "writeup", "journal", "tables", "phases_tab.csv")
+
 print(xtable(phases,
              label = "tab:phases",
              caption = caption("Table 1. ", "Durations of phases (in ms) for Experiments 1 and 2."),
@@ -49,7 +52,12 @@ print(xtable(phases,
       hline.after = c(-1,0, 4,nrow(phases)),
       comment = F)
 
-write_csv(phases, "phases_tab.csv")
+phases %>% 
+  mutate(
+    `Mean Duration` = round(`Mean Duration`),
+    `SD` = round(`SD`)
+  ) %>% 
+  write_csv(phases_location)
 ```
 
 ```{r}
@@ -208,7 +216,7 @@ e1.tab %<>%
                                                      "Error")))))
   )
 
-names(e1.tab)[7] <- c("")
+names(e1.tab)[7] <- c("s")
 
 caption <- function(x, y){
 paste0(x, '{\\emph{',y, '}}')
@@ -218,6 +226,11 @@ e1_location <-
   fs::path(proj_root, "writeup", "journal", "tables", "e1_reg_tab.csv")
 
 e1.tab %>% 
+  mutate(
+    `Estimate` = round(`Estimate`, 2),
+    `Std. Error` = round(`Std. Error`, 2),
+    `$t$ value` = round(`$t$ value`, 2)
+  ) %>%
   write_csv(e1_location)
 
 
@@ -423,7 +436,7 @@ e2.tab %<>%
                                                      "Error")))))
   )
 
-names(e2.tab)[7] <- c("")
+names(e2.tab)[7] <- c("s")
 
 caption <- function(x, y){
 paste0(x, '{\\emph{',y, '}}')
@@ -433,6 +446,11 @@ e2_location <-
   fs::path(proj_root, "writeup", "journal", "tables", "e2_reg_tab.csv")
 
 e2.tab %>% 
+  mutate(
+    `Estimate` = round(`Estimate`, 2),
+    `Std. Error` = round(`Std. Error`, 2),
+    `$t$ value` = round(`$t$ value`, 2)
+  ) %>%
   write_csv(e2_location)
 
 
