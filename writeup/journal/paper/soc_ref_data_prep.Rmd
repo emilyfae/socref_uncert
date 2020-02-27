@@ -32,6 +32,10 @@ e1_demographics_path <-
   "/Users/benny/Box/Benjamin deMayo's Files/socref_uncert/soc_ref_uncertainty_EH_demo2016_E1.csv"
 e1_trial_info_path <- 
   fs::path(project_root, "writeup", "journal", "keys", "trial_info_e1.csv")
+e2_demographics_path <- 
+  "/Users/benny/Box/Benjamin deMayo's Files/socref_uncert/demo_soc_ref_uncert_exp2.csv"
+e2_trial_info_path <- 
+  fs::path(project_root, "writeup", "journal", "keys", "trial_info_e2.csv")
 ```
 
 ```{r include=FALSE}
@@ -93,18 +97,18 @@ Demographics to report in paper.
 
 ```{r}
 demo_report <- left_join(d.raw, demo)%>%
-  select(SID, age_years, gender, ethnicity, hispanic, parent_ed) %>% 
-  distinct()
+  select(SID, age_years, gender, ethnicity, hispanic, parent_ed)%>%
+  distinct
 
-gendertab <- table(demo_report$gender, demo_report$age_years)
+gendertab <- demo_report %>% count(gender)
 
 sestab <- demo_report %>%
-  group_by(parent_ed)%>%
-  summarise(years_ed = length(parent_ed))
+  count(parent_ed)
 
 ethnicitytab <- demo_report %>%
-  group_by(ethnicity, hispanic)%>%
-  summarise(ethnic = length(ethnicity))
+  count(ethnicity, hispanic)
+
+hispanictab <- demo_report %>% count(hispanic)
 ```
 
 Accuracy and original responses.
@@ -138,16 +142,25 @@ save(d, file = "../processed_data/soc_ref_e1.RData")
 ```
 
 ```{r}
+
+#Experiment 2 stuff
+
 rm(list=ls())
 
-d.raw <- data.frame()
-files <- dir("../../data_e2/coder_1")
 
-for (f in files) {
-  jf <- paste("../../data_e2/coder_1/",f,sep="")
+project_root <- here::here()
+
+e2_demographics_path <- 
+  "/Users/benny/Box/Benjamin deMayo's Files/socref_uncert/demo_soc_ref_uncert_exp2.csv"
+e2_trial_info_path <- 
+  fs::path(project_root, "writeup", "journal", "keys", "trial_info_e2.csv")
+
+d.raw <- data.frame()
+files_e2 <- fs::dir_ls(path = fs::path(project_root, "data", "e2", "coder_1"))
+
+for (jf in files_e2) {
   jd <- read.csv(jf)
-  
-  id <- data.frame(SID = str_replace(f, ".csv", ""),
+  id <- data.frame(SID = str_extract(jf, "[:digit:]{5,6}_[:digit:]{1,2}"),
                    line = jd$phase.ordinal,
                    phase = as.numeric(jd$phase.1_2_3_4),
                    phase_onset = jd$phase.onset,
@@ -156,16 +169,17 @@ for (f in files) {
                    num_ques = as.numeric(jd$reference.num_ques),
                    num_sou = jd$reference.num_SOU,
                    exclude = as.numeric(jd$reference.exclude))
-  d.raw <- bind_rows(d.raw, id)}
+  d.raw <- bind_rows(d.raw, id)
+}
 ```
 
 ```{r}
-demo <- read.csv("../../demographics/demo_soc_ref_uncert_exp2.csv") 
+demo <- read.csv(e2_demographics_path) 
 demo$age <- as.numeric(demo$age)
 demo$age_years <- trunc(demo$age, digits = 0)
 demo$age_months <- demo$age*12
 
-trial_info <- read.csv("../keys/trial_info_e2.csv")
+trial_info <- read.csv(e2_trial_info_path)
 ```
 
 ```{r}
@@ -192,15 +206,15 @@ demo_report <- left_join(d.raw, demo)%>%
   select(SID, age_years, gender, ethnicity, hispanic, parent_ed)%>%
   distinct
 
-gendertab <- table(demo_report$gender, demo_report$age_years)
+gendertab <- demo_report %>% count(gender)
 
 sestab <- demo_report %>%
-  group_by(parent_ed)%>%
-  summarise(years_ed = length(parent_ed))
+  count(parent_ed)
 
 ethnicitytab <- demo_report %>%
-  group_by(ethnicity, hispanic)%>%
-  summarise(ethnic = length(ethnicity))
+  count(ethnicity, hispanic)
+
+hispanictab <- demo_report %>% count(hispanic)
 ```
 
 Accuracy and original responses
